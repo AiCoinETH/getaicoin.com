@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,22 +14,94 @@
         margin: 0;
         padding: 0;
         background: #ffffff;
+        font-family: monospace;
+        color: #000;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-        height: 100vh;
-        font-family: Arial, sans-serif;
       }
-      img {
+
+      img.logo {
         max-width: 320px;
-        height: auto;
+        margin-top: 50px;
+      }
+
+      .site-name {
+        font-size: 24px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 20px;
+      }
+
+      .typewriter {
+        margin-top: 40px;
+        white-space: pre-wrap;
+        text-align: center;
+        width: 90%;
+        max-width: 700px;
+        font-size: 18px;
+        line-height: 1.5;
+        min-height: 4em;
+      }
+
+      .social-links {
+        margin-top: 60px;
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        margin-bottom: 40px;
+      }
+
+      .social-links img {
+        width: 48px;
+        height: 48px;
+        transition: transform 0.2s;
+      }
+
+      .social-links img:hover {
+        transform: scale(1.1);
       }
     </style>
   </head>
   <body>
     <img
+      class="logo"
       src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreievz55xgdx5g4rqgzfkshk6lue3qnj7lhwtjs2346egf2wj6mvqxu"
       alt="GetAI Coin Logo"
     />
+    <div class="site-name">Get AI Coin</div>
+    <div class="typewriter" id="typewriter"></div>
+
+    <div class="social-links">
+      <a href="https://x.com/aicoin_eth?s=21&t=3NLPwkiguAdff3m24wfDcQ" target="_blank">
+        <img
+          src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafybeie26szqlz4aponsdqfdffzna4znkqn5td7kglw7gufbignhylbkse"
+          alt="Twitter"
+        />
+      </a>
+      <a href="https://t.me/AiCoin_ETH" target="_blank">
+        <img
+          src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafybeibsn64u6ygjttchwnbcdqteza2f6zl3xfomdfdmufafms35c5mj3i"
+          alt="Telegram"
+        />
+      </a>
+    </div>
+
+    <script>
+      const text = `GetAI Coin is a token for the future of Web3 and AI. Our project is just at the beginning of its journey, and we are actively looking for influencers. It is powered by artificial intelligence and built based on recommendations from ChatGPT.com. Our goal is to become an official partner of ChatGPT.com.`;
+
+      const target = document.getElementById("typewriter");
+      let i = 0;
+
+      function type() {
+        if (i < text.length) {
+          target.textContent += text[i];
+          i++;
+          setTimeout(type, 40);
+        }
+      }
+
+      type();
+    </script>
   </body>
 </html>
