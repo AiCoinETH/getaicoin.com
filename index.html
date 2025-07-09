@@ -1,170 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AiCoin</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Coin</title>
+  <meta name="description" content="AI Coin is a token for the future of Web3 and AI. Join the Web3 revolution and earn generous airdrops." />
+  <meta name="keywords" content="AI Coin, cryptocurrency, Web3, airdrop, token, memecoin, artificial intelligence, Ethereum" />
 
-    <!-- SEO: Multi-language meta tags -->
-<!-- Многоязычные мета-теги SEO -->
-<!-- Russian -->
-<meta name="description" lang="ru" content="Get AI Coin — криптовалюта нового поколения, созданная с помощью искусственного интеллекта. Участвуйте в Web3-революции, получайте щедрые airdrop, инвестируйте в перспективные токены и мемкойны. Мы ищем инфлюенсеров и медиа-партнёров. chatgpt.com.">
-<meta name="keywords" lang="ru" content="AI coin, ИИ, криптовалюта, Web3, airdrop, мемкоины, токен, искусственный интеллект, Ethereum, инфлюенсеры, медиа, блокчейн, цифровые активы, инвестиции, будущее денег, chatgpt.com">
+  <link rel="alternate" hreflang="en" href="https://getaicoin.com/" />
+  <link rel="alternate" hreflang="ru" href="https://getaicoin.com/ru" />
+  <link rel="alternate" hreflang="de" href="https://getaicoin.com/de" />
+  <link rel="alternate" hreflang="es" href="https://getaicoin.com/es" />
+  <link rel="alternate" hreflang="fr" href="https://getaicoin.com/fr" />
+  <link rel="alternate" hreflang="it" href="https://getaicoin.com/it" />
+  <link rel="alternate" hreflang="pt" href="https://getaicoin.com/pt" />
+  <link rel="alternate" hreflang="ja" href="https://getaicoin.com/ja" />
+  <link rel="alternate" hreflang="zh" href="https://getaicoin.com/zh" />
 
-<!-- Chinese -->
-<meta name="description" lang="zh" content="Get AI Coin 是基于人工智能的下一代加密货币。加入 Web3 革命，领取丰厚空投，投资热门代币和迷因币。我们正在寻找网红和媒体合作伙伴。chatgpt.com.">
-<meta name="keywords" lang="zh" content="AI coin, 人工智能, 加密货币, Web3, 空投, 代币, 迷因币, Ethereum, 网红, 媒体合作, 区块链, 投资, 数字资产, chatgpt.com">
+  <link rel="icon" type="image/png" href="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreifxr2tnxa46nwgec5uq2p25ojs2joemqeofoujjgdoir6nbtzrivq" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      font-family: 'Inter', sans-serif;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    img.logo {
+      max-width: 320px;
+      margin-top: 50px;
+    }
+    .site-name {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .flags {
+      margin: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .flags img {
+      width: 32px;
+      height: 24px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: none;
+      border-radius: 0;
+      background: none;
+    }
+    .flags img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+    .typewriter {
+      white-space: pre-wrap;
+      text-align: center;
+      width: 90%;
+      max-width: 700px;
+      font-size: 18px;
+      line-height: 1.5;
+      min-height: 4em;
+    }
+    .social-links {
+      margin-top: 40px;
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .social-links img {
+      width: 48px;
+      height: 48px;
+      transition: transform 0.2s;
+    }
+    .social-links img:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <img class="logo" src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreievz55xgdx5g4rqgzfkshk6lue3qnj7lhwtjs2346egf2wj6mvqxu" alt="AI Coin Logo" />
+  <div class="site-name">Get AI Coin</div>
 
-<!-- Japanese -->
-<meta name="description" lang="ja" content="Get AI Coin はAIを活用した次世代の暗号通貨です。Web3革命に参加し、大規模なエアドロップを獲得し、話題のミームコインやトークンに投資しましょう。インフルエンサーやメディアパートナーを募集中。chatgpt.com.">
-<meta name="keywords" lang="ja" content="AIコイン, 人工知能, 暗号通貨, Web3, エアドロップ, ミームコイン, トークン, Ethereum, インフルエンサー, メディア, ブロックチェーン, 投資, デジタル資産, chatgpt.com">
+  <div class="flags" id="language-switcher">
+    <img src="https://flagcdn.com/32x24/gb.png" alt="English" data-lang="en" />
+    <img src="https://flagcdn.com/32x24/ru.png" alt="Русский" data-lang="ru" />
+    <img src="https://flagcdn.com/32x24/de.png" alt="Deutsch" data-lang="de" />
+    <img src="https://flagcdn.com/32x24/es.png" alt="Español" data-lang="es" />
+    <img src="https://flagcdn.com/32x24/fr.png" alt="Français" data-lang="fr" />
+    <img src="https://flagcdn.com/32x24/it.png" alt="Italiano" data-lang="it" />
+    <img src="https://flagcdn.com/32x24/pt.png" alt="Português" data-lang="pt" />
+    <img src="https://flagcdn.com/32x24/jp.png" alt="日本語" data-lang="ja" />
+    <img src="https://flagcdn.com/32x24/cn.png" alt="中文" data-lang="zh" />
+  </div>
 
-<!-- Spanish -->
-<meta name="description" lang="es" content="Get AI Coin es la criptomoneda de próxima generación con inteligencia artificial. Únete a la revolución Web3, obtén grandes airdrops, invierte en tokens prometedores y memecoins. Buscamos influencers y medios. chatgpt.com.">
-<meta name="keywords" lang="es" content="AI coin, inteligencia artificial, cripto, Web3, airdrop, memecoin, token, Ethereum, influencers, medios, blockchain, activos digitales, inversión, futuro del dinero, chatgpt.com">
+  <div class="typewriter" id="typewriter"></div>
 
-<!-- Italian -->
-<meta name="description" lang="it" content="Get AI Coin è la criptovaluta di nuova generazione alimentata dall'intelligenza artificiale. Partecipa alla rivoluzione Web3, ricevi airdrop generosi e investi in token innovativi e memecoin. Cerchiamo influencer e media partner. chatgpt.com.">
-<meta name="keywords" lang="it" content="AI coin, intelligenza artificiale, cripto, Web3, airdrop, memecoin, token, Ethereum, influencer, media, blockchain, asset digitali, investimento, chatgpt.com">
+  <div class="social-links">
+    <a href="https://x.com/aicoin_eth" target="_blank">
+      <img src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafybeie26szqlz4aponsdqfdffzna4znkqn5td7kglw7gufbignhylbkse" alt="Twitter" />
+    </a>
+    <a href="https://t.me/AiCoin_ETH" target="_blank">
+      <img src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafybeibsn64u6ygjttchwnbcdqteza2f6zl3xfomdfdmufafms35c5mj3i" alt="Telegram" />
+    </a>
+  </div>
 
-<!-- German -->
-<meta name="description" lang="de" content="Get AI Coin ist die nächste Generation von Kryptowährungen, angetrieben durch künstliche Intelligenz. Nimm an der Web3-Revolution teil, sichere dir großzügige Airdrops und investiere in Memecoins und innovative Token. Wir suchen Influencer und Medienpartner. chatgpt.com.">
-<meta name="keywords" lang="de" content="AI coin, künstliche Intelligenz, Krypto, Web3, Airdrop, Memecoin, Token, Ethereum, Influencer, Medien, Blockchain, digitale Vermögenswerte, Geldanlage, chatgpt.com">
+  <script>
+    const translations = {
+      en: "AI Coin is a token for the future of Web3 and AI. Our project is just at the beginning of its journey, and we are actively looking for influencers. It is powered by artificial intelligence and built based on recommendations from ChatGPT.com. Our goal is to become an official partner of ChatGPT.com.",
+      ru: "AI Coin — это токен будущего для Web3 и искусственного интеллекта. Наш проект только начинает свой путь, и мы активно ищем инфлюенсеров. Он создан с использованием технологий ИИ и разработан на основе рекомендаций ChatGPT.com. Наша цель — стать официальным партнёром ChatGPT.com.",
+      de: "AI Coin ist ein Token für die Zukunft von Web3 und KI. Unser Projekt steht noch am Anfang, und wir suchen aktiv nach Influencern. Es basiert auf künstlicher Intelligenz und wurde nach Empfehlungen von ChatGPT.com entwickelt. Unser Ziel ist es, offizieller Partner von ChatGPT.com zu werden.",
+      es: "AI Coin es un token para el futuro de Web3 y la inteligencia artificial. Nuestro proyecto está comenzando su camino y estamos buscando activamente influencers. Está impulsado por inteligencia artificial y construido según las recomendaciones de ChatGPT.com. Nuestro objetivo es convertirnos en un socio oficial de ChatGPT.com.",
+      fr: "AI Coin est un token pour l’avenir du Web3 et de l’intelligence artificielle. Notre projet n’en est qu’à ses débuts et nous recherchons activement des influenceurs. Il est alimenté par l’intelligence artificielle et construit sur les recommandations de ChatGPT.com. Notre objectif est de devenir un partenaire officiel de ChatGPT.com.",
+      it: "AI Coin è un token per il futuro del Web3 e dell’intelligenza artificiale. Il nostro progetto è appena iniziato e stiamo cercando attivamente influencer. È alimentato dall’intelligenza artificiale e sviluppato seguendo le raccomandazioni di ChatGPT.com. Il nostro obiettivo è diventare partner ufficiale di ChatGPT.com.",
+      pt: "AI Coin é um token para o futuro do Web3 e da inteligência artificial. Nosso projeto está apenas começando e estamos procurando ativamente influenciadores. Ele é impulsionado por IA e desenvolvido com base nas recomendações do ChatGPT.com. Nosso objetivo é tornar-se um parceiro oficial do ChatGPT.com.",
+      ja: "AI CoinはWeb3とAIの未来のためのトークンです。プロジェクトは始まったばかりで、現在インフルエンサーを積極的に募集しています。これはAI技術により駆動され、ChatGPT.comの提案に基づいて構築されています。私たちの目標は、ChatGPT.comの公式パートナーになることです。",
+      zh: "AI Coin 是面向 Web3 和人工智能未来的代币。我们的项目刚刚起步，正在积极寻找影响者。它由人工智能驱动，基于 ChatGPT.com 的建议构建。我们的目标是成为 ChatGPT.com 的官方合作伙伴。"
+    };
 
-<!-- French -->
-<meta name="description" lang="fr" content="Get AI Coin est une cryptomonnaie de nouvelle génération propulsée par l’intelligence artificielle. Rejoignez la révolution Web3, recevez des airdrops massifs et investissez dans des memecoins et tokens innovants. Nous recherchons des influenceurs et des partenaires médias. chatgpt.com.">
-<meta name="keywords" lang="fr" content="AI coin, intelligence artificielle, crypto, Web3, airdrop, memecoin, token, Ethereum, influenceurs, médias, blockchain, actifs numériques, investissement, avenir de l’argent, chatgpt.com">
+    const target = document.getElementById("typewriter");
+    const flagSwitcher = document.getElementById("language-switcher");
 
-    <!-- hreflang -->
-    <link rel="alternate" hreflang="en" href="https://getaicoin.com/" />
-    <link rel="alternate" hreflang="ru" href="https://getaicoin.com/ru" />
-    <link rel="alternate" hreflang="fr" href="https://getaicoin.com/fr" />
-    <link rel="alternate" hreflang="ja" href="https://getaicoin.com/ja" />
-    <link rel="alternate" hreflang="zh" href="https://getaicoin.com/zh" />
-    <link rel="alternate" hreflang="es" href="https://getaicoin.com/es" />
-    <link rel="alternate" hreflang="it" href="https://getaicoin.com/it" />
-
-    <!-- Schema.org markup for rich snippets -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Get AI Coin",
-        "url": "https://getaicoin.com",
-        "logo": "https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreifxr2tnxa46nwgec5uq2p25ojs2joemqeofoujjgdoir6nbtzrivq",
-        "sameAs": [
-          "https://x.com/aicoin_eth?s=21&t=3NLPwkiguAdff3m24wfDcQ",
-          "https://t.me/AiCoin_ETH"
-        ],
-        "description": "Get AI Coin — a next-gen cryptocurrency powered by artificial intelligence. Join the Web3 revolution and participate in our airdrop."
-      }
-    </script>
-
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8J5398GPX0"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-8J5398GPX0');
-    </script>
-
-    <!-- Plausible Analytics -->
-    <script defer data-domain="getaicoin.com"
-      src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js">
-    </script>
-    <script>
-      window.plausible = window.plausible || function(){
-        (window.plausible.q = window.plausible.q || []).push(arguments);
-      };
-    </script>
-
-    <link rel="icon" type="image/png" href="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreifxr2tnxa46nwgec5uq2p25ojs2joemqeofoujjgdoir6nbtzrivq" />
-
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background: #ffffff;
-        font-family: monospace;
-        color: #000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      img.logo {
-        max-width: 320px;
-        margin-top: 50px;
-      }
-
-      .site-name {
-        font-size: 24px;
-        font-weight: bold;
-        color: #000;
-        margin-bottom: 20px;
-      }
-
-      .typewriter {
-        margin-top: 40px;
-        white-space: pre-wrap;
-        text-align: center;
-        width: 90%;
-        max-width: 700px;
-        font-size: 18px;
-        line-height: 1.5;
-        min-height: 4em;
-      }
-
-      .social-links {
-        margin-top: 60px;
-        display: flex;
-        gap: 40px;
-        justify-content: center;
-        margin-bottom: 40px;
-      }
-
-      .social-links img {
-        width: 48px;
-        height: 48px;
-        transition: transform 0.2s;
-      }
-
-      .social-links img:hover {
-        transform: scale(1.1);
-      }
-    </style>
-  </head>
-  <body>
-    <img
-      class="logo"
-      src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreievz55xgdx5g4rqgzfkshk6lue3qnj7lhwtjs2346egf2wj6mvqxu"
-      alt="AI Coin Logo"
-    />
-    <div class="site-name">Get AI Coin</div>
-    <div class="typewriter" id="typewriter"></div>
-
-    <div class="social-links">
-      <a href="https://x.com/aicoin_eth?s=21&t=3NLPwkiguAdff3m24wfDcQ" target="_blank">
-        <img
-          src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafybeie26szqlz4aponsdqfdffzna4znkqn5td7kglw7gufbignhylbkse"
-          alt="Twitter"
-        />
-      </a>
-      <a href="https://t.me/AiCoin_ETH" target="_blank">
-        <img
-          src="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafybeibsn64u6ygjttchwnbcdqteza2f6zl3xfomdfdmufafms35c5mj3i"
-          alt="Telegram"
-        />
-      </a>
-    </div>
-
-    <script>
-      const text = `AI Coin is a token for the future of Web3 and AI. Our project is just at the beginning of its journey, and we are actively looking for influencers. It is powered by artificial intelligence and built based on recommendations from ChatGPT.com. Our goal is to become an official partner of ChatGPT.com.`;
-
-      const target = document.getElementById("typewriter");
+    function showText(lang) {
+      target.textContent = "";
+      const text = translations[lang] || translations.en;
       let i = 0;
-
       function type() {
         if (i < text.length) {
           target.textContent += text[i];
@@ -172,8 +139,16 @@
           setTimeout(type, 40);
         }
       }
-
       type();
-    </script>
-  </body>
+    }
+
+    flagSwitcher.querySelectorAll('img').forEach(flag => {
+      flag.addEventListener('click', () => {
+        showText(flag.dataset.lang);
+      });
+    });
+
+    showText("en");
+  </script>
+</body>
 </html>
