@@ -1,0 +1,16 @@
+[
+  {
+    "title": "AI Revolution in Healthcare",
+    "summary": "AI is transforming how doctors diagnose and treat patients.",
+    "image_url": "https://gateway.pinata.cloud/ipfs/QmExampleImageHash1",
+    "lang": "en",
+    "date": "2025-07-24"
+  },
+  {
+    "title": "ИИ в банковской сфере",
+    "summary": "Искусственный интеллект помогает банкам выявлять мошенничество и улучшать обслуживание клиентов.",
+    "image_url": "https://gateway.pinata.cloud/ipfs/QmExampleImageHash2",
+    "lang": "ru",
+    "date": "2025-07-24"
+  }
+]
