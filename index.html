@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Coin</title>
-  <meta name="description" content="AI Coin is a token for the future of Web3 and AI. Join the Web3 revolution and earn generous airdrops." />
-  <meta name="keywords" content="AI Coin, cryptocurrency, Web3, airdrop, token, memecoin, artificial intelligence, Ethereum" />
+  <title>Get AI Coin</title>
+  <meta name="description" content="AI Coin is the token for the AI-powered future of Web3." />
+  <meta name="keywords" content="AI Coin, Web3, AI, криптовалюта, ИИ токен, блокчейн, Google Trends" />
 
   <link rel="alternate" hreflang="en" href="https://getaicoin.com/" />
   <link rel="alternate" hreflang="ru" href="https://getaicoin.com/ru" />
@@ -18,70 +18,78 @@
   <link rel="alternate" hreflang="zh" href="https://getaicoin.com/zh" />
 
   <link rel="icon" type="image/png" href="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreifxr2tnxa46nwgec5uq2p25ojs2joemqeofoujjgdoir6nbtzrivq" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8J5398GPX0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8J5398GPX0');
+  </script>
+
+  <!-- Plausible Analytics -->
+  <script defer data-domain="getaicoin.com" src="https://plausible.io/js/script.js"></script>
+
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #fff;
       font-family: 'Inter', sans-serif;
-      color: #000;
+      color: #0a0a0a;
+      background: linear-gradient(to bottom, #f9f9f9, #fff);
       display: flex;
       flex-direction: column;
       align-items: center;
+      text-align: center;
     }
-    img.logo {
-      max-width: 320px;
-      margin-top: 50px;
+    .logo {
+      max-width: 200px;
+      margin: 40px auto 20px;
     }
     .site-name {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
+      font-size: 32px;
+      font-weight: 800;
+      color: #0047ff;
+      margin-bottom: 10px;
     }
     .flags {
-      margin: 20px;
+      margin: 20px 0;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       justify-content: center;
     }
     .flags img {
-      width: 32px;
-      height: 24px;
+      width: 30px;
+      height: 22px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      border: none;
-      border-radius: 0;
-      background: none;
+      transition: transform 0.2s;
     }
     .flags img:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     }
     .typewriter {
-      white-space: pre-wrap;
-      text-align: center;
-      width: 90%;
-      max-width: 700px;
       font-size: 18px;
-      line-height: 1.5;
-      min-height: 4em;
+      max-width: 800px;
+      padding: 0 20px;
+      line-height: 1.6;
+      min-height: 120px;
     }
     .social-links {
-      margin-top: 40px;
       display: flex;
-      gap: 40px;
       justify-content: center;
-      margin-bottom: 40px;
+      gap: 30px;
+      margin: 40px 0;
     }
     .social-links img {
-      width: 48px;
-      height: 48px;
+      width: 36px;
+      height: 36px;
       transition: transform 0.2s;
     }
     .social-links img:hover {
-      transform: scale(1.1);
+      transform: scale(1.15);
     }
   </style>
 </head>
@@ -114,41 +122,42 @@
 
   <script>
     const translations = {
-      en: "AI Coin is a token for the future of Web3 and AI. Our project is just at the beginning of its journey, and we are actively looking for influencers. It is powered by artificial intelligence and built based on recommendations from ChatGPT.com. Our goal is to become an official partner of ChatGPT.com.",
-      ru: "AI Coin — это токен будущего для Web3 и искусственного интеллекта. Наш проект только начинает свой путь, и мы активно ищем инфлюенсеров. Он создан с использованием технологий ИИ и разработан на основе рекомендаций ChatGPT.com. Наша цель — стать официальным партнёром ChatGPT.com.",
-      de: "AI Coin ist ein Token für die Zukunft von Web3 und KI. Unser Projekt steht noch am Anfang, und wir suchen aktiv nach Influencern. Es basiert auf künstlicher Intelligenz und wurde nach Empfehlungen von ChatGPT.com entwickelt. Unser Ziel ist es, offizieller Partner von ChatGPT.com zu werden.",
-      es: "AI Coin es un token para el futuro de Web3 y la inteligencia artificial. Nuestro proyecto está comenzando su camino y estamos buscando activamente influencers. Está impulsado por inteligencia artificial y construido según las recomendaciones de ChatGPT.com. Nuestro objetivo es convertirnos en un socio oficial de ChatGPT.com.",
-      fr: "AI Coin est un token pour l’avenir du Web3 et de l’intelligence artificielle. Notre projet n’en est qu’à ses débuts et nous recherchons activement des influenceurs. Il est alimenté par l’intelligence artificielle et construit sur les recommandations de ChatGPT.com. Notre objectif est de devenir un partenaire officiel de ChatGPT.com.",
-      it: "AI Coin è un token per il futuro del Web3 e dell’intelligenza artificiale. Il nostro progetto è appena iniziato e stiamo cercando attivamente influencer. È alimentato dall’intelligenza artificiale e sviluppato seguendo le raccomandazioni di ChatGPT.com. Il nostro obiettivo è diventare partner ufficiale di ChatGPT.com.",
-      pt: "AI Coin é um token para o futuro do Web3 e da inteligência artificial. Nosso projeto está apenas começando e estamos procurando ativamente influenciadores. Ele é impulsionado por IA e desenvolvido com base nas recomendações do ChatGPT.com. Nosso objetivo é tornar-se um parceiro oficial do ChatGPT.com.",
-      ja: "AI CoinはWeb3とAIの未来のためのトークンです。プロジェクトは始まったばかりで、現在インフルエンサーを積極的に募集しています。これはAI技術により駆動され、ChatGPT.comの提案に基づいて構築されています。私たちの目標は、ChatGPT.comの公式パートナーになることです。",
-      zh: "AI Coin 是面向 Web3 和人工智能未来的代币。我们的项目刚刚起步，正在积极寻找影响者。它由人工智能驱动，基于 ChatGPT.com 的建议构建。我们的目标是成为 ChatGPT.com 的官方合作伙伴。"
+      en: "AI Coin is the future token of Web3 and artificial intelligence. We're at the beginning of our journey and looking for passionate collaborators. Built using AI technologies and guided by insights from ChatGPT.com, our vision is to become its official Web3 partner.",
+      ru: "AI Coin — токен будущего для Web3 и искусственного интеллекта. Мы только начинаем свой путь и ищем заинтересованных партнёров. Создан с помощью ИИ и на основе рекомендаций ChatGPT.com. Наша цель — стать его официальным партнёром в Web3.",
+      de: "AI Coin ist ein Zukunftstoken für Web3 und künstliche Intelligenz. Wir stehen am Anfang und suchen engagierte Partner. Entwickelt mit KI-Technologien und Empfehlungen von ChatGPT.com. Unser Ziel: offizieller Web3-Partner von ChatGPT.com.",
+      es: "AI Coin es un token para el futuro de Web3 y la inteligencia artificial. Estamos empezando y buscamos socios apasionados. Construido con IA y basado en recomendaciones de ChatGPT.com. Nuestro objetivo: ser socio oficial de Web3 de ChatGPT.com.",
+      fr: "AI Coin est un token pour l'avenir du Web3 et de l'intelligence artificielle. Nous en sommes aux débuts et recherchons des partenaires engagés. Créé avec l'IA et guidé par ChatGPT.com. Objectif : devenir le partenaire Web3 officiel de ChatGPT.com.",
+      it: "AI Coin è un token per il futuro del Web3 e dell'intelligenza artificiale. Siamo all'inizio e cerchiamo collaboratori motivati. Creato con IA e consigliato da ChatGPT.com. Obiettivo: diventare partner ufficiale Web3 di ChatGPT.com.",
+      pt: "AI Coin é um token para o futuro do Web3 e da inteligência artificial. Estamos começando e buscamos colaboradores entusiastas. Criado com IA e baseado nas recomendações da ChatGPT.com. Nosso objetivo: ser parceiro Web3 oficial da ChatGPT.com.",
+      ja: "AI CoinはWeb3とAIの未来を担うトークンです。今は始まったばかりで、熱意ある仲間を募集中。AI技術とChatGPT.comの知見に基づいて開発。目標はChatGPT.comの公式Web3パートナーになること。",
+      zh: "AI Coin 是为 Web3 和人工智能未来打造的代币。我们刚起步，寻找热情的合作伙伴。借助 AI 技术和 ChatGPT.com 的建议开发。目标：成为 ChatGPT.com 的官方 Web3 合作伙伴。"
     };
 
-    const target = document.getElementById("typewriter");
-    const flagSwitcher = document.getElementById("language-switcher");
+    const typewriter = document.getElementById("typewriter");
+    const flags = document.getElementById("language-switcher");
 
-    function showText(lang) {
-      target.textContent = "";
-      const text = translations[lang] || translations.en;
+    function typeText(text) {
+      typewriter.textContent = "";
       let i = 0;
-      function type() {
+      (function type() {
         if (i < text.length) {
-          target.textContent += text[i];
+          typewriter.textContent += text.charAt(i);
           i++;
-          setTimeout(type, 40);
+          setTimeout(type, 35);
         }
-      }
-      type();
+      })();
     }
 
-    flagSwitcher.querySelectorAll('img').forEach(flag => {
-      flag.addEventListener('click', () => {
-        showText(flag.dataset.lang);
-      });
+    function setLanguage(lang) {
+      const text = translations[lang] || translations.en;
+      typeText(text);
+    }
+
+    flags.querySelectorAll("img").forEach(flag => {
+      flag.addEventListener("click", () => setLanguage(flag.dataset.lang));
     });
 
-    showText("en");
+    setLanguage("en");
   </script>
 </body>
 </html>
