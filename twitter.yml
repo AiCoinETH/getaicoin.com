@@ -1,0 +1,63 @@
+name: Twitter & Telegram AutoPost
+
+on:
+  schedule:
+    # Запуск 3 раза в день: 09:00, 14:00, 22:00 по UTC (в соответствии с Google Trends)
+    - cron: '0 9 * * *'     # 09:00 UTC
+    - cron: '0 14 * * *'    # 14:00 UTC
+    - cron: '0 19 * * *'    # 22:00 UTC
+    # Обновление мета-тегов сайта раз в день в 07:00 UTC
+    - cron: '0 7 * * *'     # 07:00 UTC
+  workflow_dispatch:        # Возможность запустить вручную
+
+jobs:
+  run-twitter-bot:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas requests openai tweepy python-telegram-bot pytrends PyGithub
+
+    - name: Run Twitter Bot
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        API_KEY: ${{ secrets.API_KEY }}
+        API_SECRET: ${{ secrets.API_SECRET }}
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+        PINATA_JWT: ${{ secrets.PINATA_JWT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+      run: python twitter_bot.py
+
+  update-meta-tags:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas requests pytrends beautifulsoup4 PyGithub
+
+    - name: Update meta tags in index.html
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: python update_meta_tags.py
