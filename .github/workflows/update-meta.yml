@@ -1,28 +1,32 @@
-name: Update meta tags (trends)
+name: Update meta tags
 
 on:
-  workflow_dispatch: {}          # запуск вручную из вкладки Actions
+  workflow_dispatch:
   schedule:
-    - cron: "17 */6 * * *"       # каждые 6 часов
+    - cron: "0 6 */3 * *"   # каждые 3 дня в 06:00 UTC
 
 permissions:
-  contents: write                # важно: мы уже включили Read & write в Settings
+  contents: write   # нужно, чтобы обновлять файл через API
 
 jobs:
-  run:
+  update-meta:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO_NAME: ${{ github.repository }}      # чтобы не писать вручную owner/repo
+      HTML_PATH: index.html
+      # необязательно: токен X/Twitter API v2, если есть
+      X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - run: pip install pytrends PyGithub
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytrends PyGithub
 
-      - name: Update meta tags via script
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # встроенный токен
-          REPO_NAME: <owner>/<repo>                   # ← замени на свой, например AiCoinETH/getaicoin.com
-          HTML_PATH: index.html                       # путь к файлу (если он в корне)
+      - name: Run updater
         run: python scripts/update_meta.py
