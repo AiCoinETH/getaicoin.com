@@ -72,21 +72,30 @@
       text-align: center; font-size: clamp(16px, 2.2vw, 20px);
       font-weight: 400; color: #000; z-index: 2; line-height: 1.35; padding: 0 12px;
     }
-    /* Соц. ссылки ниже подписи */
+
+    /* ===== Соц. ссылки — одинаковые контейнеры ===== */
     .social-links {
       position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
       display: flex; gap: 28px; align-items: center; z-index: 3;
     }
-    .social-links img, .social-links svg {
-      width: 36px; height: 36px; filter: grayscale(100%) brightness(0);
-      transition: transform .2s, opacity .2s; opacity: 0.9;
-      display: block;
+    /* одинаковый «квадрат» под каждую иконку */
+    .social-links a{
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
     }
-    .social-links a:hover img, .social-links a:hover svg { transform: scale(1.12); opacity: 1; }
+    /* сами значки вписываются одинаково */
+    .social-links a > img,
+    .social-links a > svg{
+      width: 88%; height: 88%; display: block; object-fit: contain;
+      filter: grayscale(100%) brightness(0); /* делаем чёрными и одинаковыми */
+      opacity: 0.92; transition: transform .18s ease, opacity .18s ease;
+    }
+    .social-links a:hover > img,
+    .social-links a:hover > svg{ transform: scale(1.08); opacity: 1; }
 
     @media (max-height: 680px) {
       :root { --gap-bottom: 70px; }
-      .social-links img, .social-links svg { width: 30px; height: 30px; }
+      .social-links a{ width: 40px; height: 40px; }
     }
   </style>
 </head>
@@ -102,8 +111,8 @@
     <a href="https://x.com/aicoin_eth" target="_blank" rel="noopener" aria-label="X (Twitter)">
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg" alt="X">
     </a>
-    <!-- Telegram — «самолёт» без круга, монохром -->
     <a href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener" aria-label="Telegram">
+      <!-- самолёт как монохромный SVG -->
       <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
         <path d="M196.7 79.2 175.3 179.2c-1.6 7.2-5.9 9-12 5.6l-33.2-24.5-16 15.4c-1.8 1.8-3.3 3.3-6.7 3.3l2.4-34.7 63.2-57c2.7-2.4-0.6-3.7-4.2-1.4l-78 49-33.6-10.5c-7.3-2.3-7.5-7.3 1.6-10.8l131.5-50.7c6.1-2.8 11.6 1.5 9.8 10.3Z" fill="#000"/>
       </svg>
