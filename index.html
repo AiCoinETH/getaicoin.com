@@ -35,182 +35,179 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-  <!-- Google Analytics -->
+  <!-- Analytics (как было) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8J5398GPX0"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-8J5398GPX0');
+    gtag('js', new Date()); gtag('config', 'G-8J5398GPX0');
   </script>
-
-  <!-- Plausible Analytics -->
   <script defer data-domain="getaicoin.com" src="https://plausible.io/js/script.js"></script>
 
   <style>
+    :root {
+      --gap-bottom: 100px; /* расстояние между подписью и соц. иконками */
+    }
+    html, body {
+      height: 100%;
+    }
     body {
       margin: 0;
-      padding: 0;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(to bottom, #f9f9f9, #fff);
-      height: 100vh;
+      background: #fff; /* чисто белый */
       overflow: hidden;
+      position: relative;
     }
+    /* Canvas с шаром */
     #net-canvas {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
       z-index: 0;
+      background: #fff;
     }
-    .footer-text {
+    /* Подпись – МЕЖДУ шаром и соц. иконками */
+    .caption {
       position: absolute;
-      bottom: 10px;
-      width: 100%;
+      left: 50%;
+      bottom: calc(40px + var(--gap-bottom));
+      transform: translateX(-50%);
+      width: min(92vw, 900px);
       text-align: center;
-      font-size: 18px;
-      font-weight: 400;
+      font-size: clamp(16px, 2.2vw, 20px);
+      font-weight: 400; /* как основной шрифт */
       color: #000;
-      z-index: 1;
+      z-index: 2;
+      line-height: 1.35;
+      padding: 0 12px;
     }
+    /* Соц. ссылки ниже подписи */
     .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
       position: absolute;
-      bottom: 50px;
-      width: 100%;
-      z-index: 1;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      z-index: 3;
     }
     .social-links img {
       width: 36px;
       height: 36px;
-      filter: grayscale(100%);
-      transition: transform 0.2s;
+      /* строго чёрно-белые иконки */
+      filter: grayscale(100%) brightness(0);
+      transition: transform .2s, opacity .2s;
+      opacity: 0.9;
     }
-    .social-links img:hover {
-      transform: scale(1.15);
+    .social-links img:hover { transform: scale(1.12); opacity: 1; }
+
+    @media (max-height: 680px) {
+      :root { --gap-bottom: 70px; }
+      .social-links img { width: 30px; height: 30px; }
     }
   </style>
 </head>
 <body>
   <canvas id="net-canvas"></canvas>
 
+  <!-- Подпись между шаром и соц. иконками -->
+  <div class="caption">
+    Get AI Coin — A social crypto project where people and AI decide together
+  </div>
+
   <div class="social-links">
-    <a href="https://x.com/aicoin_eth" target="_blank" rel="noopener">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg" alt="Twitter">
+    <a href="https://x.com/aicoin_eth" target="_blank" rel="noopener" aria-label="X (Twitter)">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg" alt="X">
     </a>
-    <a href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">
+    <a href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener" aria-label="Telegram">
       <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
     </a>
   </div>
 
-  <div class="footer-text">Get AI Coin — A social crypto project where people and AI decide together</div>
-
+  <!-- Ч/Б «плотный шар» -->
   <script>
+  (()=>{
     const canvas = document.getElementById('net-canvas');
     const ctx = canvas.getContext('2d');
-    let W=0,H=0,dpr=1,cx=0,cy=0;
+    let W,H,DPR;
 
     function resize(){
-      dpr = window.devicePixelRatio || 1;
-      W = Math.round(window.innerWidth);
-      H = Math.round(window.innerHeight);
-      canvas.style.width = W+'px';
-      canvas.style.height = H+'px';
-      canvas.width  = Math.round(W*dpr);
-      canvas.height = Math.round(H*dpr);
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-      cx=W/2; cy=H/2;
+      DPR = Math.min(window.devicePixelRatio||1,2);
+      W = canvas.clientWidth = window.innerWidth;
+      H = canvas.clientHeight = window.innerHeight;
+      canvas.width = W*DPR; canvas.height = H*DPR;
+      ctx.setTransform(DPR,0,0,DPR,0,0);
     }
-    window.addEventListener('resize', resize);
-    resize();
+    window.addEventListener('resize', resize, {passive:true}); resize();
 
-    const N = 666;
-    const R = Math.min(W,H)*0.38;
-    const connectDist = 70;
-    const maxNeighbors = 4;
-    const speed = 0.002;
+    // параметры
+    const N = 520;             // узлы
+    const K = 12;              // k-ближайших рёбер
+    const LONG_EDGES = 900;    // случайные длинные рёбра
+    const ROT = 0.002;         // скорость
 
-    const nodes = [];
+    // равномерная сфера (фибоначчи)
+    const pts = [];
     for (let i=0;i<N;i++){
-      const a = Math.random()*Math.PI*2;
-      const r = Math.sqrt(Math.random())*R;
-      nodes.push({x: cx + Math.cos(a)*r, y: cy + Math.sin(a)*r});
+      const t = i/N;
+      const z = 1 - 2*t;
+      const r = Math.sqrt(1 - z*z);
+      const phi = 2*Math.PI*i*(0.61803398875); // золотое сечение
+      pts.push({x:r*Math.cos(phi), y:r*Math.sin(phi), z});
     }
 
-    let angle=0;
+    function ang(a,b){ return Math.acos(Math.min(1,Math.max(-1, a.x*b.x + a.y*b.y + a.z*b.z))); }
+
+    // рёбра: k ближайших + длинные
+    const edges=[];
+    for(let i=0;i<N;i++){
+      const ord = pts.map((p,j)=>({j,d:ang(pts[i],p)})).sort((a,b)=>a.d-b.d);
+      for(let t=1;t<=K;t++) edges.push([i, ord[t].j, true]);
+    }
+    for(let t=0;t<LONG_EDGES;t++){
+      let a=(Math.random()*N)|0, b=(Math.random()*N)|0; if(a===b){t--; continue;}
+      edges.push([a,b,false]);
+    }
+
+    let t=0; 
+    function R(){ return Math.min(W,H)*0.35; }
+    function proj(p){
+      const ry=t, rx=t*0.7;
+      const cY=Math.cos(ry), sY=Math.sin(ry);
+      const cX=Math.cos(rx), sX=Math.sin(rx);
+      let x =  p.x*cY + p.z*sY;
+      let z = -p.x*sY + p.z*cY;
+      let y =  p.y*cX - z*sX;
+      z =  p.y*sX + z*cX;
+      const d = 2.6, s = R()/(d - z*0.9);
+      return {X: W/2 + x*s, Y: H/2 + y*s, Z:z};
+    }
+
     function draw(){
-      angle += speed;
+      t += ROT;
       ctx.clearRect(0,0,W,H);
-      const c = Math.cos(angle), s = Math.sin(angle);
-      const pts = new Array(N);
-      for (let i=0;i<N;i++){
-        const x = nodes[i].x - cx, y = nodes[i].y - cy;
-        pts[i] = { x: cx + x*c - y*s, y: cy + x*s + y*c };
+
+      // рёбра
+      for(const [a,b,isNear] of edges){
+        const pa=proj(pts[a]), pb=proj(pts[b]);
+        ctx.globalAlpha = isNear ? 0.07 : 0.025;
+        ctx.beginPath(); ctx.moveTo(pa.X,pa.Y); ctx.lineTo(pb.X,pb.Y); ctx.strokeStyle='#000'; ctx.lineWidth=1; ctx.stroke();
       }
+      ctx.globalAlpha=1;
 
-      const cell = connectDist|0;
-      const cols = Math.max(1, Math.ceil(W/cell));
-      const rows = Math.max(1, Math.ceil(H/cell));
-      const bins = new Array(cols*rows);
-      for (let i=0;i<bins.length;i++) bins[i]=[];
-      for (let i=0;i<N;i++){
-        const px = Math.min(cols-1, Math.max(0, (pts[i].x/cell)|0));
-        const py = Math.min(rows-1, Math.max(0, (pts[i].y/cell)|0));
-        bins[py*cols+px].push(i);
+      // точки (сортировка по глубине для объёма)
+      const projected = pts.map(p=>proj(p)).sort((a,b)=>a.Z-b.Z);
+      ctx.fillStyle='#000';
+      for(const p of projected){
+        ctx.beginPath(); ctx.arc(p.X,p.Y,1.3*(1+0.4*(p.Z+1)),0,Math.PI*2); ctx.fill();
       }
-
-      const neighCnt = new Uint8Array(N);
-      ctx.lineWidth = 1;
-
-      for (let py=0; py<rows; py++){
-        for (let px=0; px<cols; px++){
-          const here = bins[py*cols+px];
-          if (!here.length) continue;
-
-          for (const i of here){
-            const pi = pts[i];
-            const minx = Math.max(0, px-1), maxx = Math.min(cols-1, px+1);
-            const miny = Math.max(0, py-1), maxy = Math.min(rows-1, py+1);
-
-            for (let ny=miny; ny<=maxy; ny++){
-              for (let nx=minx; nx<=maxx; nx++){
-                const box = bins[ny*cols+nx];
-                for (const j of box){
-                  if (j <= i) continue;
-                  if (neighCnt[i] >= maxNeighbors && neighCnt[j] >= maxNeighbors) continue;
-                  const pj = pts[j];
-                  const dx = pi.x - pj.x, dy = pi.y - pj.y;
-                  const d = Math.hypot(dx,dy);
-                  if (d < connectDist){
-                    const a = 1 - d/connectDist;
-                    ctx.globalAlpha = a;
-                    ctx.beginPath();
-                    ctx.moveTo(pi.x, pi.y);
-                    ctx.lineTo(pj.x, pj.y);
-                    ctx.stroke();
-                    neighCnt[i]++;
-                    neighCnt[j]++;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      ctx.globalAlpha = 0.9;
-      for (let i=0;i<N;i++){
-        const p = pts[i];
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 0.9, 0, Math.PI*2);
-        ctx.fill();
-      }
-
       requestAnimationFrame(draw);
     }
     draw();
+  })();
   </script>
 </body>
 </html>
