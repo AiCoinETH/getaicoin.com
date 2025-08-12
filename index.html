@@ -3,49 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get AI Coin — криптовалюта будущего Web3 и AI</title>
-  <meta name="description" content="Следите за трендами AI Coin, криптовалют и блокчейна. Актуальные данные от Google Trends и ChatGPT." />
-  <meta name="keywords" content="AI Coin, криптовалюта, Web3, ИИ токен, Google Trends, blockchain, ChatGPT, artificial intelligence" />
+  <title>Get AI Coin — cryptocurrency & AI-powered blockchain</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Get AI Coin — a social crypto project where people, in synergy with artificial intelligence, can make decisions for the development of the project." />
+  <meta name="keywords" content="AI Coin, cryptocurrency, AI token, blockchain, Web3, artificial intelligence, social crypto project" />
+
+  <!-- Localized Meta Tags -->
+  <meta name="description" lang="ru" content="Get AI Coin — социальный криптопроект, в котором люди в симбиозе с искусственным интеллектом принимают решения для развития проекта." />
+  <meta name="description" lang="de" content="Get AI Coin — ein soziales Kryptoprojekt, bei dem Menschen in Symbiose mit künstlicher Intelligenz Entscheidungen für die Entwicklung des Projekts treffen." />
+  <meta name="description" lang="es" content="Get AI Coin — un proyecto cripto social donde las personas, en simbiosis con inteligencia artificial, toman decisiones para el desarrollo del proyecto." />
+  <meta name="description" lang="fr" content="Get AI Coin — un projet crypto social où les gens, en symbiose avec l'intelligence artificielle, prennent des décisions pour le développement du projet." />
+  <meta name="description" lang="it" content="Get AI Coin — un progetto cripto sociale in cui le persone, in simbiosi con l'intelligenza artificiale, prendono decisioni per lo sviluppo del progetto." />
+  <meta name="description" lang="pt" content="Get AI Coin — um projeto cripto social onde as pessoas, em simbiose com inteligência artificial, tomam decisões para o desenvolvimento do projeto." />
+  <meta name="description" lang="ja" content="Get AI Coin — 人々が人工知能と共生しながらプロジェクトの発展のために意思決定を行うソーシャル暗号プロジェクト。" />
+  <meta name="description" lang="zh" content="Get AI Coin — 一个社会化加密项目，人类与人工智能协作，共同为项目发展做出决策。" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Get AI Coin — криптовалюта будущего Web3 и AI">
-  <meta property="og:description" content="Следите за трендами AI Coin, криптовалют и блокчейна. Актуальные данные от Google Trends и ChatGPT.">
+  <meta property="og:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain">
+  <meta property="og:description" content="A social crypto project where people and AI decide together on its future.">
   <meta property="og:image" content="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreievz55xgdx5g4rqgzfkshk6lue3qnj7lhwtjs2346egf2wj6mvqxu">
   <meta property="og:url" content="https://getaicoin.com">
   <meta property="og:type" content="website">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Get AI Coin — будущее Web3 и AI">
-  <meta name="twitter:description" content="AI Coin на волне трендов. Следите за новостями и аналитикой.">
+  <meta name="twitter:title" content="Get AI Coin — social cryptocurrency & AI blockchain">
+  <meta name="twitter:description" content="Social crypto project with AI decision-making power.">
   <meta name="twitter:image" content="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreievz55xgdx5g4rqgzfkshk6lue3qnj7lhwtjs2346egf2wj6mvqxu">
 
-  <!-- JSON-LD for Schema.org -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "AI Coin",
-    "url": "https://getaicoin.com",
-    "logo": "https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreievz55xgdx5g4rqgzfkshk6lue3qnj7lhwtjs2346egf2wj6mvqxu",
-    "sameAs": [
-      "https://x.com/aicoin_eth",
-      "https://t.me/AiCoin_ETH"
-    ]
-  }
-  </script>
-
-  <link rel="alternate" hreflang="en" href="https://getaicoin.com/" />
-  <link rel="alternate" hreflang="ru" href="https://getaicoin.com/ru" />
-  <link rel="alternate" hreflang="de" href="https://getaicoin.com/de" />
-  <link rel="alternate" hreflang="es" href="https://getaicoin.com/es" />
-  <link rel="alternate" hreflang="fr" href="https://getaicoin.com/fr" />
-  <link rel="alternate" hreflang="it" href="https://getaicoin.com/it" />
-  <link rel="alternate" hreflang="pt" href="https://getaicoin.com/pt" />
-  <link rel="alternate" hreflang="ja" href="https://getaicoin.com/ja" />
-  <link rel="alternate" hreflang="zh" href="https://getaicoin.com/zh" />
-
-  <link rel="icon" type="image/png" href="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreifxr2tnxa46nwgec5uq2p25ojs2joemqeofoujjgdoir6nbtzrivq" />
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <!-- Google Analytics -->
@@ -65,55 +52,40 @@
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
-      color: #0a0a0a;
       background: linear-gradient(to bottom, #f9f9f9, #fff);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #net-canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+    }
+    .footer-text {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
       text-align: center;
-    }
-    .logo {
-      max-width: 200px;
-      margin: 40px auto 20px;
-    }
-    .site-name {
-      font-size: 32px;
-      font-weight: 800;
-      color: #0047ff;
-      margin-bottom: 10px;
-    }
-    .flags {
-      margin: 20px 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-    .flags img {
-      width: 30px;
-      height: 22px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .flags img:hover {
-      transform: scale(1.1);
-    }
-    .typewriter {
       font-size: 18px;
-      max-width: 800px;
-      padding: 0 20px;
-      line-height: 1.6;
-      min-height: 120px;
+      font-weight: 400;
+      color: #000;
+      z-index: 1;
     }
     .social-links {
       display: flex;
       justify-content: center;
       gap: 30px;
-      margin: 40px 0;
+      position: absolute;
+      bottom: 50px;
+      width: 100%;
+      z-index: 1;
     }
     .social-links img {
       width: 36px;
       height: 36px;
+      filter: grayscale(100%);
       transition: transform 0.2s;
     }
     .social-links img:hover {
@@ -122,6 +94,123 @@
   </style>
 </head>
 <body>
-  <!-- остальной HTML остаётся без изменений -->
+  <canvas id="net-canvas"></canvas>
+
+  <div class="social-links">
+    <a href="https://x.com/aicoin_eth" target="_blank" rel="noopener">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg" alt="Twitter">
+    </a>
+    <a href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
+    </a>
+  </div>
+
+  <div class="footer-text">Get AI Coin — A social crypto project where people and AI decide together</div>
+
+  <script>
+    const canvas = document.getElementById('net-canvas');
+    const ctx = canvas.getContext('2d');
+    let W=0,H=0,dpr=1,cx=0,cy=0;
+
+    function resize(){
+      dpr = window.devicePixelRatio || 1;
+      W = Math.round(window.innerWidth);
+      H = Math.round(window.innerHeight);
+      canvas.style.width = W+'px';
+      canvas.style.height = H+'px';
+      canvas.width  = Math.round(W*dpr);
+      canvas.height = Math.round(H*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      cx=W/2; cy=H/2;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const N = 1666;
+    const R = Math.min(W,H)*0.38;
+    const connectDist = 70;
+    const maxNeighbors = 4;
+    const speed = 0.002;
+
+    const nodes = [];
+    for (let i=0;i<N;i++){
+      const a = Math.random()*Math.PI*2;
+      const r = Math.sqrt(Math.random())*R;
+      nodes.push({x: cx + Math.cos(a)*r, y: cy + Math.sin(a)*r});
+    }
+
+    let angle=0;
+    function draw(){
+      angle += speed;
+      ctx.clearRect(0,0,W,H);
+      const c = Math.cos(angle), s = Math.sin(angle);
+      const pts = new Array(N);
+      for (let i=0;i<N;i++){
+        const x = nodes[i].x - cx, y = nodes[i].y - cy;
+        pts[i] = { x: cx + x*c - y*s, y: cy + x*s + y*c };
+      }
+
+      const cell = connectDist|0;
+      const cols = Math.max(1, Math.ceil(W/cell));
+      const rows = Math.max(1, Math.ceil(H/cell));
+      const bins = new Array(cols*rows);
+      for (let i=0;i<bins.length;i++) bins[i]=[];
+      for (let i=0;i<N;i++){
+        const px = Math.min(cols-1, Math.max(0, (pts[i].x/cell)|0));
+        const py = Math.min(rows-1, Math.max(0, (pts[i].y/cell)|0));
+        bins[py*cols+px].push(i);
+      }
+
+      const neighCnt = new Uint8Array(N);
+      ctx.lineWidth = 1;
+
+      for (let py=0; py<rows; py++){
+        for (let px=0; px<cols; px++){
+          const here = bins[py*cols+px];
+          if (!here.length) continue;
+
+          for (const i of here){
+            const pi = pts[i];
+            const minx = Math.max(0, px-1), maxx = Math.min(cols-1, px+1);
+            const miny = Math.max(0, py-1), maxy = Math.min(rows-1, py+1);
+
+            for (let ny=miny; ny<=maxy; ny++){
+              for (let nx=minx; nx<=maxx; nx++){
+                const box = bins[ny*cols+nx];
+                for (const j of box){
+                  if (j <= i) continue;
+                  if (neighCnt[i] >= maxNeighbors && neighCnt[j] >= maxNeighbors) continue;
+                  const pj = pts[j];
+                  const dx = pi.x - pj.x, dy = pi.y - pj.y;
+                  const d = Math.hypot(dx,dy);
+                  if (d < connectDist){
+                    const a = 1 - d/connectDist;
+                    ctx.globalAlpha = a;
+                    ctx.beginPath();
+                    ctx.moveTo(pi.x, pi.y);
+                    ctx.lineTo(pj.x, pj.y);
+                    ctx.stroke();
+                    neighCnt[i]++;
+                    neighCnt[j]++;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      ctx.globalAlpha = 0.9;
+      for (let i=0;i<N;i++){
+        const p = pts[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 0.9, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
 </body>
 </html>
