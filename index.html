@@ -60,124 +60,127 @@
       margin: 0; font-family: 'Inter', sans-serif;
       background: #fff; overflow: hidden; position: relative;
     }
-
-    /* Canvas */
-    #net-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; background: #fff; }
-
-    /* Caption above the linkbar */
-    .caption{
-      position: absolute; left:50%; bottom: calc(48px + var(--gap-bottom));
+    /* Canvas с шаром */
+    #net-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      display: block; z-index: 0; background: #fff;
+    }
+    /* Подпись – над соц.иконками/спонсорами */
+    .caption {
+      position: absolute; left: 50%; bottom: calc(120px + var(--gap-bottom));
       transform: translateX(-50%); width: min(92vw, 900px);
-      text-align:center; font-size: clamp(16px, 2.2vw, 20px);
-      font-weight: 400; color:#000; z-index: 2; line-height:1.35; padding:0 12px;
+      text-align: center; font-size: clamp(16px, 2.2vw, 20px);
+      font-weight: 400; color: #000; z-index: 2; line-height: 1.35; padding: 0 12px;
     }
 
-    /* Text link bar */
-    .linkbar{
-      position:absolute; left:50%; bottom: 28px; transform:translateX(-50%);
-      display:flex; gap:18px; align-items:center; z-index:3;
-      font-size: clamp(15px, 2vw, 18px); font-weight:600;
+    /* Небольшие иконки + Contact us */
+    .social-links {
+      position: absolute; left: 50%; bottom: 76px; transform: translateX(-50%);
+      display: flex; gap: 18px; align-items: center; z-index: 3;
+      font-size: 14px;
     }
-    .linkbar a{
-      color:#000; text-decoration:none; opacity:.9; padding:6px 4px; border-radius:6px;
+    .social-links img {
+      width: 24px; height: 24px; display: block;
+      filter: grayscale(100%) brightness(0); opacity:.9;
+      transition: transform .2s, opacity .2s;
     }
-    .linkbar a:hover{ opacity:1; text-decoration:underline; }
-    .linkbar .sep{ opacity:.35; user-select:none; }
+    .social-links a:hover img { transform: scale(1.12); opacity: 1; }
+    .contact-link {
+      margin-left: 10px; color:#000; text-decoration: underline; opacity:.9;
+    }
+    .contact-link:hover { opacity:1; }
 
-    @media (max-height: 680px){
-      :root{ --gap-bottom: 70px; }
-      .linkbar{ bottom: 20px; }
+    /* Блок спонсоров — самый низ */
+    .sponsors {
+      position: absolute; left:50%; bottom: 18px; transform: translateX(-50%);
+      z-index: 3; text-align: center; width: min(92vw, 880px);
+      font-size: 14px; color:#000;
     }
+    .sponsors .title { font-weight: 600; margin-bottom: 6px; }
+    .addr-row { display:flex; gap:8px; justify-content:center; align-items:center; flex-wrap:wrap; margin:4px 0; }
+    .addr-row .label { opacity:.8; }
+    .addr { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#f4f4f4; padding:6px 8px; border-radius:6px; }
+    .copy-btn {
+      border:1px solid #000; background:#fff; border-radius:6px; padding:4px 8px;
+      cursor:pointer; font-size:12px;
+    }
+    .copy-btn:active { transform: translateY(1px); }
 
-    /* Simple modal */
-    .modal{ position: fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.45); z-index: 10; }
-    .modal.is-open{ display:flex; }
-    .card{
-      width:min(92vw, 520px); background:#fff; border-radius:14px; padding:18px;
+    /* Модалка контакта */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,.36); display:none; z-index: 10;
+    }
+    .modal {
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      background:#fff; border-radius:12px; width:min(92vw, 560px); padding:18px; z-index: 11; display:none;
       box-shadow: 0 10px 30px rgba(0,0,0,.15);
     }
-    .card h3{ margin: 0 0 12px; font-size:20px; }
-    .row{ display:flex; gap:10px; }
-    .field{ display:flex; flex-direction:column; gap:6px; margin: 10px 0; width:100%; }
-    .field label{ font-size:13px; color:#555; }
-    input[type="text"], textarea{
-      width:100%; padding:12px 12px; border:1px solid #e5e5e5; border-radius:10px; font: inherit; outline:none;
+    .modal h3 { margin: 0 0 12px 0; font-size:18px; }
+    .modal label { display:block; font-size:13px; margin:8px 0 4px; }
+    .modal input, .modal textarea {
+      width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-family:inherit;
     }
-    textarea{ min-height:140px; resize: vertical; }
-    .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top: 6px; }
-    .btn{ padding:10px 14px; border-radius:10px; border:1px solid #ddd; background:#fff; cursor:pointer; font-weight:600; }
-    .btn-primary{ background:#000; color:#fff; border-color:#000; }
-    .copy{ white-space:nowrap; }
-
-    .muted{ font-size:12px; color:#777; margin-top:4px; }
+    .modal textarea { min-height: 120px; resize: vertical; }
+    .modal .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
+    .btn {
+      border:1px solid #000; background:#000; color:#fff; padding:8px 14px; border-radius:8px; cursor:pointer;
+    }
+    .btn.secondary { background:#fff; color:#000; }
+    @media (max-height: 700px) {
+      :root { --gap-bottom: 90px; }
+      .social-links { bottom: 74px; }
+    }
   </style>
 </head>
 <body>
   <canvas id="net-canvas"></canvas>
 
+  <!-- Подпись -->
   <div class="caption">
     Get AI Coin — A social crypto project where people and AI decide together
   </div>
 
-  <!-- Text links -->
-  <nav class="linkbar" aria-label="Social and contacts">
-    <a href="https://x.com/aicoin_eth" target="_blank" rel="noopener">Twitter X</a>
-    <span class="sep">|</span>
-    <a href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">Telegram</a>
-    <span class="sep">|</span>
-    <a href="#" id="open-contact">Contact us</a>
-    <span class="sep">|</span>
-    <a href="#" id="open-sponsor">For sponsors</a>
-  </nav>
+  <!-- Маленькие иконки + Contact -->
+  <div class="social-links">
+    <a href="https://x.com/aicoin_eth" target="_blank" rel="noopener" aria-label="X (Twitter)">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg" alt="X">
+    </a>
+    <a href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener" aria-label="Telegram">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
+    </a>
+    <a href="#" class="contact-link" id="openContact">Contact us</a>
+  </div>
+
+  <!-- For sponsors -->
+  <div class="sponsors">
+    <div class="title">For sponsors</div>
+    <div class="addr-row">
+      <span class="label">ETH (ERC-20):</span>
+      <span class="addr" id="ethAddr">0x5Daf8D49b5cc17e4f5C575BeFc9880Fdc6A76037</span>
+      <button class="copy-btn" data-copy="#ethAddr">Copy</button>
+    </div>
+    <div class="addr-row">
+      <span class="label">USDT (TRC-20):</span>
+      <span class="addr" id="usdtAddr">TSn6jiZydc4sKTKqJbyMJhypdtNdFcF64c</span>
+      <button class="copy-btn" data-copy="#usdtAddr">Copy</button>
+    </div>
+  </div>
 
   <!-- Contact modal -->
-  <div class="modal" id="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-title">
-    <div class="card">
-      <h3 id="contact-title">Contact us</h3>
-      <form id="contact-form">
-        <div class="field">
-          <label for="subj">Subject</label>
-          <input id="subj" type="text" placeholder="Partnership / Question / Media…" required />
-        </div>
-        <div class="field">
-          <label for="msg">Message</label>
-          <textarea id="msg" placeholder="Write your message…" required></textarea>
-        </div>
-        <div class="actions">
-          <button type="button" class="btn" data-close="#contact-modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Send</button>
-        </div>
-        <div class="muted">Email will open in your default mail app.</div>
-      </form>
+  <div class="modal-backdrop" id="modalBg"></div>
+  <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <h3 id="contactTitle">Contact us</h3>
+    <label for="contactSubject">Subject</label>
+    <input id="contactSubject" type="text" placeholder="Topic">
+    <label for="contactBody">Message</label>
+    <textarea id="contactBody" placeholder="Write your message…"></textarea>
+    <div class="actions">
+      <button class="btn secondary" id="closeContact">Cancel</button>
+      <button class="btn" id="sendContact">Send</button>
     </div>
   </div>
 
-  <!-- Sponsors modal -->
-  <div class="modal" id="sponsor-modal" role="dialog" aria-modal="true" aria-labelledby="sponsor-title">
-    <div class="card">
-      <h3 id="sponsor-title">For sponsors</h3>
-      <div class="field">
-        <label for="eth">ETH (ERC-20)</label>
-        <div class="row">
-          <input id="eth" type="text" value="0x0000000000000000000000000000000000000000" readonly />
-          <button class="btn copy" data-copy="#eth" type="button">Copy</button>
-        </div>
-      </div>
-      <div class="field">
-        <label for="usdt">USDT (ERC-20)</label>
-        <div class="row">
-          <input id="usdt" type="text" value="0x0000000000000000000000000000000000000000" readonly />
-          <button class="btn copy" data-copy="#usdt" type="button">Copy</button>
-        </div>
-      </div>
-      <div class="actions">
-        <button type="button" class="btn btn-primary" data-close="#sponsor-modal">Done</button>
-      </div>
-      <div class="muted">Replace the wallet addresses in code with your real ones.</div>
-    </div>
-  </div>
-
-  <!-- Pink rotating network sphere -->
+  <!-- «Шар» -->
   <script>
   (()=>{
     const canvas = document.getElementById('net-canvas');
@@ -193,102 +196,104 @@
     }
     window.addEventListener('resize', resize, {passive:true}); resize();
 
-    // sphere params
-    const N = 320, K = 8, LONG_EDGES = 500;
-    const ROT = 0.002, PINK = '#ff4fa3';
-
-    const pts=[];
-    for(let i=0;i<N;i++){
-      const t=i/N, z=1-2*t, r=Math.sqrt(1-z*z), phi=2*Math.PI*i*0.61803398875;
+    const N = 320, K = 8, LONG_EDGES = 500, ROT = 0.002, PINK = '#ff4fa3';
+    const pts = [];
+    for (let i=0;i<N;i++){
+      const t = i/N, z = 1 - 2*t, r = Math.sqrt(1 - z*z), phi = 2*Math.PI*i*(0.61803398875);
       pts.push({x:r*Math.cos(phi), y:r*Math.sin(phi), z});
     }
+    function ang(a,b){ return Math.acos(Math.min(1,Math.max(-1, a.x*b.x + a.y*b.y + a.z*b.z))); }
     const edges=[];
-    function ang(a,b){ return Math.acos(Math.min(1,Math.max(-1,a.x*b.x+a.y*b.y+a.z*b.z))); }
     for(let i=0;i<N;i++){
-      const ord=pts.map((p,j)=>({j,d:ang(pts[i],p)})).sort((a,b)=>a.d-b.d);
-      for(let t=1;t<=K;t++) edges.push([i,ord[t].j,true]);
+      const ord = pts.map((p,j)=>({j,d:ang(pts[i],p)})).sort((a,b)=>a.d-b.d);
+      for(let t=1;t<=K;t++) edges.push([i, ord[t].j, true]);
     }
     for(let t=0;t<LONG_EDGES;t++){
-      let a=(Math.random()*N)|0, b=(Math.random()*N)|0; if(a===b){t--;continue;}
+      let a=(Math.random()*N)|0, b=(Math.random()*N)|0; if(a===b){t--; continue;}
       edges.push([a,b,false]);
     }
 
     let t=0;
-    const R=()=>Math.min(W,H)*0.50;
+    function R(){ return Math.min(W,H)*0.50; }
     function proj(p){
       const ry=t, rx=t*0.7;
       const cY=Math.cos(ry), sY=Math.sin(ry);
       const cX=Math.cos(rx), sX=Math.sin(rx);
-      let x= p.x*cY + p.z*sY;
-      let z=-p.x*sY + p.z*cY;
-      let y= p.y*cX - z*sX;
+      let x =  p.x*cY + p.z*sY;
+      let z = -p.x*sY + p.z*cY;
+      let y =  p.y*cX - z*sX;
       z =  p.y*sX + z*cX;
-      const d=2.6, s=R()/(d - z*0.9);
-      return {X:W/2 + x*s, Y:H/2 + y*s, Z:z};
+      const d = 2.6, s = R()/(d - z*0.9);
+      return {X: W/2 + x*s, Y: H/2 + y*s, Z:z};
     }
-
     function draw(){
-      t += ROT;
-      ctx.clearRect(0,0,W,H);
-      for(const [a,b,near] of edges){
+      t += ROT; ctx.clearRect(0,0,W,H);
+      for(const [a,b,isNear] of edges){
         const pa=proj(pts[a]), pb=proj(pts[b]);
-        ctx.globalAlpha = near ? 0.08 : 0.035;
-        ctx.strokeStyle=PINK; ctx.lineWidth=1;
+        ctx.globalAlpha = isNear ? 0.08 : 0.035;
+        ctx.strokeStyle = PINK; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(pa.X,pa.Y); ctx.lineTo(pb.X,pb.Y); ctx.stroke();
       }
       ctx.globalAlpha=1;
-      const projected=pts.map(p=>proj(p)).sort((a,b)=>a.Z-b.Z);
+      const projected = pts.map(p=>proj(p)).sort((a,b)=>a.Z-b.Z);
       ctx.fillStyle=PINK;
       for(const p of projected){
-        const r=1.2*(1+0.4*(p.Z+1));
+        const r = 1.2*(1+0.4*(p.Z+1));
+        ctx.globalAlpha = 0.9;
         ctx.beginPath(); ctx.arc(p.X,p.Y,r,0,Math.PI*2); ctx.fill();
       }
+      ctx.globalAlpha=1;
       requestAnimationFrame(draw);
     }
     draw();
   })();
   </script>
 
-  <!-- Modals script -->
+  <!-- UI логика: копирование и контакт без показа email -->
   <script>
-    // open/close helpers
-    const $ = (q)=>document.querySelector(q);
-    function openModal(id){ $(id).classList.add('is-open'); }
-    function closeModal(id){ $(id).classList.remove('is-open'); }
-
-    // open links
-    $('#open-contact').addEventListener('click', (e)=>{ e.preventDefault(); openModal('#contact-modal'); });
-    $('#open-sponsor').addEventListener('click', (e)=>{ e.preventDefault(); openModal('#sponsor-modal'); });
-
-    // close buttons
-    document.querySelectorAll('[data-close]').forEach(btn=>{
-      btn.addEventListener('click', ()=> closeModal(btn.getAttribute('data-close')));
-    });
-
-    // click backdrop to close
-    document.querySelectorAll('.modal').forEach(m=>{
-      m.addEventListener('click', (e)=>{ if(e.target===m) m.classList.remove('is-open'); });
-    });
-
-    // copy buttons
-    document.querySelectorAll('.btn.copy').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const input = $(btn.getAttribute('data-copy'));
-        input.select(); input.setSelectionRange(0,99999);
-        navigator.clipboard?.writeText(input.value);
-        const old = btn.textContent; btn.textContent='Copied!';
-        setTimeout(()=>btn.textContent=old, 900);
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const sel = btn.getAttribute('data-copy');
+        const el = document.querySelector(sel);
+        try {
+          await navigator.clipboard.writeText(el.textContent.trim());
+          const old = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(()=>btn.textContent = old, 1200);
+        } catch(e) {
+          // Фолбэк
+          const rng = document.createRange(); rng.selectNodeContents(el);
+          const selObj = window.getSelection(); selObj.removeAllRanges(); selObj.addRange(rng);
+          document.execCommand('copy'); selObj.removeAllRanges();
+          const old = btn.textContent; btn.textContent='Copied!'; setTimeout(()=>btn.textContent=old,1200);
+        }
       });
     });
 
-    // contact form -> mailto:
-    document.getElementById('contact-form').addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const to = 'mdkosd@gmail.com';
-      const subject = encodeURIComponent(document.getElementById('subj').value.trim());
-      const body = encodeURIComponent(document.getElementById('msg').value.trim() + '\n\n— sent from getaicoin.com');
+    // Contact modal
+    const bg = document.getElementById('modalBg');
+    const modal = document.getElementById('contactModal');
+    const openBtn = document.getElementById('openContact');
+    const closeBtn = document.getElementById('closeContact');
+    const sendBtn = document.getElementById('sendContact');
+
+    function openModal(){ bg.style.display='block'; modal.style.display='block'; }
+    function closeModal(){ bg.style.display='none'; modal.style.display='none'; }
+    openBtn.addEventListener('click', (e)=>{ e.preventDefault(); openModal(); });
+    closeBtn.addEventListener('click', closeModal);
+    bg.addEventListener('click', closeModal);
+
+    // Почта спрятана (base64), на странице не показывается
+    const hiddenMailB64 = 'bWRrb3NkQGdtYWlsLmNvbQ=='; // mdkosd@gmail.com
+
+    sendBtn.addEventListener('click', ()=>{
+      const subject = encodeURIComponent(document.getElementById('contactSubject').value.trim());
+      const body    = encodeURIComponent(document.getElementById('contactBody').value.trim());
+      const to = atob(hiddenMailB64);
+      // Открываем почтовый клиент пользователя (без показа адреса на странице)
       window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
-      closeModal('#contact-modal');
+      closeModal();
     });
   </script>
 </body>
