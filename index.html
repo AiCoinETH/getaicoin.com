@@ -11,6 +11,7 @@
 
   <!-- Localized Meta Tags -->
   <meta name="description" lang="ru" content="Get AI Coin — социальный криптопроект, в котором люди в симбиозе с искусственным интеллектом принимают решения для развития проекта." />
+  <meta name="keywords" lang="ru" content="AI Coin, криптовалюта, токен, блокчейн, Web3, искусственный интеллект, социальный криптопроект" />
   <meta name="description" lang="de" content="Get AI Coin — ein soziales Kryptoprojekt, bei dem Menschen in Symbiose mit künstlicher Intelligenz Entscheidungen für die Entwicklung des Projekts treffen." />
   <meta name="description" lang="es" content="Get AI Coin — un proyecto cripto social donde las personas, en simbiosis con inteligencia artificial, toman decisiones para el desarrollo del proyecto." />
   <meta name="description" lang="fr" content="Get AI Coin — un projet crypto social où les gens, en symbiose avec l'intelligence artificielle, prennent des décisions pour le développement du projet." />
@@ -25,6 +26,15 @@
   <meta property="og:image" content="https://cyan-legal-guanaco-817.mypinata.cloud/ipfs/bafkreievz55xgdx5g4rqgzfkshk6lue3qnj7lhwtjs2346egf2wj6mvqxu">
   <meta property="og:url" content="https://getaicoin.com">
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="pt_PT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="zh_CN">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -35,78 +45,48 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-  <!-- Analytics (как было) -->
+  <!-- Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8J5398GPX0"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config', 'G-8J5398GPX0');
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-8J5398GPX0');
   </script>
   <script defer data-domain="getaicoin.com" src="https://plausible.io/js/script.js"></script>
 
   <style>
-    :root {
-      --gap-bottom: 100px; /* расстояние между подписью и соц. иконками */
-    }
-    html, body {
-      height: 100%;
-    }
+    :root { --gap-bottom: 100px; --pink: #ff4fa3; }
+    html, body { height: 100%; }
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #fff; /* чисто белый */
-      overflow: hidden;
-      position: relative;
+      margin: 0; font-family: 'Inter', sans-serif;
+      background: #fff; overflow: hidden; position: relative;
     }
     /* Canvas с шаром */
     #net-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      z-index: 0;
-      background: #fff;
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      display: block; z-index: 0; background: #fff;
     }
     /* Подпись – МЕЖДУ шаром и соц. иконками */
     .caption {
-      position: absolute;
-      left: 50%;
-      bottom: calc(40px + var(--gap-bottom));
-      transform: translateX(-50%);
-      width: min(92vw, 900px);
-      text-align: center;
-      font-size: clamp(16px, 2.2vw, 20px);
-      font-weight: 400; /* как основной шрифт */
-      color: #000;
-      z-index: 2;
-      line-height: 1.35;
-      padding: 0 12px;
+      position: absolute; left: 50%; bottom: calc(40px + var(--gap-bottom));
+      transform: translateX(-50%); width: min(92vw, 900px);
+      text-align: center; font-size: clamp(16px, 2.2vw, 20px);
+      font-weight: 400; color: #000; z-index: 2; line-height: 1.35; padding: 0 12px;
     }
     /* Соц. ссылки ниже подписи */
     .social-links {
-      position: absolute;
-      left: 50%;
-      bottom: 24px;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 28px;
-      align-items: center;
-      z-index: 3;
+      position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
+      display: flex; gap: 28px; align-items: center; z-index: 3;
     }
-    .social-links img {
-      width: 36px;
-      height: 36px;
-      /* строго чёрно-белые иконки */
-      filter: grayscale(100%) brightness(0);
-      transition: transform .2s, opacity .2s;
-      opacity: 0.9;
+    .social-links img, .social-links svg {
+      width: 36px; height: 36px; filter: grayscale(100%) brightness(0);
+      transition: transform .2s, opacity .2s; opacity: 0.9;
+      display: block;
     }
-    .social-links img:hover { transform: scale(1.12); opacity: 1; }
+    .social-links a:hover img, .social-links a:hover svg { transform: scale(1.12); opacity: 1; }
 
     @media (max-height: 680px) {
       :root { --gap-bottom: 70px; }
-      .social-links img { width: 30px; height: 30px; }
+      .social-links img, .social-links svg { width: 30px; height: 30px; }
     }
   </style>
 </head>
@@ -122,12 +102,15 @@
     <a href="https://x.com/aicoin_eth" target="_blank" rel="noopener" aria-label="X (Twitter)">
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg" alt="X">
     </a>
+    <!-- Telegram — «самолёт» без круга, монохром -->
     <a href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener" aria-label="Telegram">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
+      <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+        <path d="M196.7 79.2 175.3 179.2c-1.6 7.2-5.9 9-12 5.6l-33.2-24.5-16 15.4c-1.8 1.8-3.3 3.3-6.7 3.3l2.4-34.7 63.2-57c2.7-2.4-0.6-3.7-4.2-1.4l-78 49-33.6-10.5c-7.3-2.3-7.5-7.3 1.6-10.8l131.5-50.7c6.1-2.8 11.6 1.5 9.8 10.3Z" fill="#000"/>
+      </svg>
     </a>
   </div>
 
-  <!-- Ч/Б «плотный шар» -->
+  <!-- Розовый, более редкий «шар» -->
   <script>
   (()=>{
     const canvas = document.getElementById('net-canvas');
@@ -143,11 +126,12 @@
     }
     window.addEventListener('resize', resize, {passive:true}); resize();
 
-    // параметры
-    const N = 520;             // узлы
-    const K = 12;              // k-ближайших рёбер
-    const LONG_EDGES = 900;    // случайные длинные рёбра
-    const ROT = 0.002;         // скорость
+    // Параметры под запрос: больше, реже, розовый
+    const N = 320;            // узлы (меньше — реже)
+    const K = 8;              // ближайших соседей
+    const LONG_EDGES = 500;   // дальние рёбра
+    const ROT = 0.002;        // скорость
+    const PINK = '#ff4fa3';   // розовый
 
     // равномерная сфера (фибоначчи)
     const pts = [];
@@ -155,7 +139,7 @@
       const t = i/N;
       const z = 1 - 2*t;
       const r = Math.sqrt(1 - z*z);
-      const phi = 2*Math.PI*i*(0.61803398875); // золотое сечение
+      const phi = 2*Math.PI*i*(0.61803398875);
       pts.push({x:r*Math.cos(phi), y:r*Math.sin(phi), z});
     }
 
@@ -172,8 +156,8 @@
       edges.push([a,b,false]);
     }
 
-    let t=0; 
-    function R(){ return Math.min(W,H)*0.35; }
+    let t=0;
+    function R(){ return Math.min(W,H)*0.50; } // БОЛЬШЕ
     function proj(p){
       const ry=t, rx=t*0.7;
       const cY=Math.cos(ry), sY=Math.sin(ry);
@@ -190,20 +174,25 @@
       t += ROT;
       ctx.clearRect(0,0,W,H);
 
-      // рёбра
+      // рёбра (полупрозрачные розовые)
       for(const [a,b,isNear] of edges){
         const pa=proj(pts[a]), pb=proj(pts[b]);
-        ctx.globalAlpha = isNear ? 0.07 : 0.025;
-        ctx.beginPath(); ctx.moveTo(pa.X,pa.Y); ctx.lineTo(pb.X,pb.Y); ctx.strokeStyle='#000'; ctx.lineWidth=1; ctx.stroke();
+        ctx.globalAlpha = isNear ? 0.08 : 0.035; // прозрачность
+        ctx.strokeStyle = PINK; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pa.X,pa.Y); ctx.lineTo(pb.X,pb.Y); ctx.stroke();
       }
       ctx.globalAlpha=1;
 
-      // точки (сортировка по глубине для объёма)
+      // точки (розовые, с эффектом глубины)
       const projected = pts.map(p=>proj(p)).sort((a,b)=>a.Z-b.Z);
-      ctx.fillStyle='#000';
+      ctx.fillStyle=PINK;
       for(const p of projected){
-        ctx.beginPath(); ctx.arc(p.X,p.Y,1.3*(1+0.4*(p.Z+1)),0,Math.PI*2); ctx.fill();
+        const r = 1.2*(1+0.4*(p.Z+1));
+        ctx.globalAlpha = 0.9;
+        ctx.beginPath(); ctx.arc(p.X,p.Y,r,0,Math.PI*2); ctx.fill();
       }
+      ctx.globalAlpha=1;
+
       requestAnimationFrame(draw);
     }
     draw();
