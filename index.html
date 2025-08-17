@@ -5,30 +5,46 @@
   <!-- фиксируем мобильный зум -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>AI Coin — news &amp; insights on AI Coin</title>
+  <link rel="canonical" href="https://getaicoin.com/">
 
   <!-- Base SEO -->
   <meta name="description" content="Latest trends: AI Coin. Learn about AI Coin, crypto tokens, and AI trends today.">
-  <meta name="keywords" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" content="AI Coin, crypto, blockchain, Web3">
 
   <!-- Localized (минимум — остальное обновит бот) -->
   <meta name="description" lang="ru" content="Последние тренды: AI Coin. Узнайте об AI Coin, криптотокенах и нейротрендах сегодня.">
-  <meta name="description" lang="de" content="Aktuelle Trends: ethereum kurs, bio protocol coin. Erfahren Sie mehr über AI Coin, Kryptotoken und KI-Trends.">
+  <meta name="description" lang="de" content="Aktuelle Trends: AI Coin. Erfahren Sie mehr über AI Coin, Kryptotoken und KI-Trends.">
+  <meta name="description" lang="es" content="Tendencias recientes: AI Coin. Conozca AI Coin, los criptoactivos y las tendencias de IA.">
+  <meta name="description" lang="fr" content="Tendances récentes : AI Coin. En savoir plus sur AI Coin, les cryptos et les tendances IA.">
+  <meta name="description" lang="it" content="Trend recenti: AI Coin. Scopri AI Coin, i token crypto e i trend dell’IA.">
+  <meta name="description" lang="pt" content="Tendências recentes: AI Coin. Saiba mais sobre AI Coin, criptoativos e tendências de IA.">
+  <meta name="description" lang="ja" content="最新トレンド: AI Coin。AI Coin、暗号トークン、AIトレンドについて。">
+  <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
 
-  <!-- Open Graph / Twitter (локальный GIF для предпросмотра) -->
+  <!-- Open Graph (статичное PNG как основное превью) -->
   <meta property="og:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain">
   <meta property="og:description" content="A social crypto project where people and AI decide together on its future.">
-  <meta property="og:image" content="https://getaicoin.com/IMG_8741.gif">
-  <meta property="og:image:secure_url" content="https://getaicoin.com/IMG_8741.gif">
-  <meta property="og:image:type" content="image/gif">
-  <meta property="og:image:alt" content="Get AI Coin — animated preview">
-  <meta property="og:url" content="https://getaicoin.com">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://getaicoin.com">
+  <meta property="og:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png">
+  <meta property="og:image:secure_url" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Get AI Coin — preview image">
+  <!-- Второй og:image как fallback-анимация для платформ, поддерживающих несколько изображений -->
+  <meta property="og:image" content="https://getaicoin.com/IMG_8741.gif">
+  <meta property="og:image:type" content="image/gif">
 
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Get AI Coin — social cryptocurrency & AI blockchain">
   <meta name="twitter:description" content="Social crypto project with AI decision-making power.">
-  <meta name="twitter:image" content="https://getaicoin.com/IMG_8741.gif">
-  <meta name="twitter:image:alt" content="Get AI Coin — animated preview">
+  <meta name="twitter:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png">
+  <meta name="twitter:image:alt" content="Get AI Coin — preview image">
+
+  <!-- Preload превью (ускорение первого запроса на соц.ботах и в браузере) -->
+  <link rel="preload" as="image" href="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png" imagesrcset="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png 1200w">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -43,9 +59,9 @@
 
   <style>
     :root{
-      --bg-0:#0b1220;          /* фон */
-      --bg-1:#111a2b;          /* панели */
-      --grid:#182236;          /* сетка */
+      --bg-0:#0b1220;
+      --bg-1:#111a2b;
+      --grid:#182236;
       --text:#e8eefc;
       --muted:#9fb2d1;
       --pink:#ff4fa3;
@@ -68,7 +84,7 @@
       background: radial-gradient(1200px 800px at 70% 10%, #1a2440 0%, #0d1526 45%, var(--bg-0) 100%);
       overflow:hidden; position:relative; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       -webkit-text-size-adjust:100%;
-      overscroll-behavior: none; /* без «резинок» и нежелательных масштабов */
+      overscroll-behavior: none;
     }
 
     /* тонкая «сеточка» на фоне */
@@ -98,12 +114,11 @@
     .subtitle{
       text-align:center; color:var(--muted);
       font-size:clamp(16px, 3.7vw, 24px);
-      line-height:1.35; min-height:3.2em;   /* резерв под 2 строки, чтобы не прыгало */
+      line-height:1.35; min-height:3.2em;
     }
     .typing::after{
       content:""; display:inline-block; width:1ch; border-right:2px solid var(--muted);
-      transform:translateY(2px); animation:blink .9s step-end infinite;
-      margin-left:2px;
+      transform:translateY(2px); animation:blink .9s step-end infinite; margin-left:2px;
     }
     @keyframes blink{ 50%{ border-color:transparent } }
 
@@ -114,13 +129,10 @@
       border-radius:999px; background:#121b2e; color:var(--text); text-decoration:none;
       border:1px solid #1e2a46; box-shadow:0 6px 18px rgba(0,0,0,.25) inset, 0 6px 18px rgba(0,0,0,.15);
       transition:transform .12s ease, background .12s ease, border-color .12s ease, opacity .12s ease;
-      font-weight:600; font-size:16px; /* чтобы Safari не увеличивал инпуты */
-      -webkit-tap-highlight-color: transparent;
+      font-weight:600; font-size:16px; -webkit-tap-highlight-color: transparent;
     }
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
-
-    /* Иконки внутри пиллов */
     .pill svg{ width:18px; height:18px; display:block; }
 
     /* Формы: минимум 16px для iOS, чтобы не было авто-зума */
@@ -154,8 +166,7 @@
     .copybox{
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: clamp(11px, 2.9vw, 13px);
-      line-height:1.3;
-      overflow-wrap:anywhere; word-break: break-all; white-space: normal;
+      line-height:1.3; overflow-wrap:anywhere; word-break: break-all; white-space: normal;
     }
 
     .btn{
@@ -180,21 +191,15 @@
     }
   </style>
 
-  <!-- i18n keywords/descriptions -->
-  <meta name="keywords" lang="ru" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="keywords" lang="de" content="ethereum kurs, bio protocol coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="es" content="Tendencias recientes: AI Coin. Conozca AI Coin, los criptoactivos y las tendencias de IA.">
-  <meta name="keywords" lang="es" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="fr" content="Tendances récentes : open ai. En savoir plus sur AI Coin, les cryptos et les tendances IA.">
-  <meta name="keywords" lang="fr" content="open ai, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="it" content="Trend recenti: AI Coin. Scopri AI Coin, i token crypto e i trend dell’IA.">
-  <meta name="keywords" lang="it" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="pt" content="Tendências recentes: AI Coin. Saiba mais sobre AI Coin, criptoativos e tendências de IA.">
-  <meta name="keywords" lang="pt" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="ja" content="最新トレンド: AI Coin。AI Coin、暗号トークン、AIトレンドについて。">
-  <meta name="keywords" lang="ja" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
-  <meta name="keywords" lang="zh" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <!-- i18n keywords -->
+  <meta name="keywords" lang="ru" content="AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="de" content="AI Coin, Krypto, Blockchain, Web3">
+  <meta name="keywords" lang="es" content="AI Coin, cripto, blockchain, Web3">
+  <meta name="keywords" lang="fr" content="AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="it" content="AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="pt" content="AI Coin, cripto, blockchain, Web3">
+  <meta name="keywords" lang="ja" content="AI Coin, 暗号資産, ブロックチェーン, Web3">
+  <meta name="keywords" lang="zh" content="AI Coin, 加密货币, 区块链, Web3">
 </head>
 <body>
   <canvas id="net-canvas" aria-hidden="true"></canvas>
@@ -205,13 +210,11 @@
 
     <div class="row">
       <a class="pill" href="https://x.com/aicoin_eth" target="_blank" rel="noopener">
-        <!-- X -->
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.39 2H21l-6.54 7.47L22 22h-6.83l-4.8-6.27L4.8 22H2.2l7.04-8.04L2 2h6.9l4.33 5.73L18.39 2Zm-1.2 18h1.67L7.93 4h-1.7l10.96 16Z"/></svg>
         Twitter X
       </a>
       <span class="sep">|</span>
       <a class="pill" href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">
-        <!-- Telegram -->
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.04 15.3 8.9 19.7c.31 0 .44-.13.6-.29l2.88-2.76 5.98 4.38c1.1.61 1.88.29 2.18-1.02l3.95-18.5h0c.35-1.63-.59-2.26-1.66-1.87L1.06 9.7C-.53 10.35-.51 11.23.78 11.63l5.64 1.76 13.11-8.25c.62-.37 1.19-.17.72.2L9.04 15.3Z"/></svg>
         Telegram
       </a>
