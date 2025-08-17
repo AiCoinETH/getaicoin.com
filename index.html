@@ -28,6 +28,9 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- Preload GIF preview -->
+  <link rel="preload" as="image" href="IMG_8741.gif" imagesrcset="IMG_8741.gif 1x">
+
   <!-- Analytics (при необходимости) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8J5398GPX0"></script>
   <script>
@@ -158,6 +161,28 @@
     }
     .toast.show{ opacity:1 }
 
+    /* ===== GIF PREVIEW ===== */
+    .hero-gif{
+      position:absolute;
+      inset:auto auto 45% 50%;
+      transform:translate(-50%, 50%);
+      width:min(680px, 86vw);
+      max-height:48vh;
+      object-fit:contain;
+      border-radius:16px;
+      border:1px solid #273455;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
+      pointer-events:none;               /* клики проходят сквозь */
+      user-select:none;
+      opacity:.96;
+    }
+    @media (max-width:520px){
+      .hero-gif{ width:min(520px, 92vw); bottom:48% }
+    }
+    @media (max-height:640px){
+      .hero-gif{ max-height:40vh; bottom:50% }
+    }
+
     @media (max-height:720px){
       .wrap{ padding-bottom:20px }
       .subtitle{ font-size:clamp(15px, 3.6vw, 20px) }
@@ -182,6 +207,9 @@
   <canvas id="net-canvas" aria-hidden="true"></canvas>
 
   <main class="wrap" aria-label="Hero">
+    <!-- GIF Preview -->
+    <img src="IMG_8741.gif" alt="AI Coin preview animation" class="hero-gif" loading="eager" decoding="async">
+
     <h1 class="title">$Get Ai Coin</h1>
     <div id="typed" class="subtitle typing" aria-live="polite"></div>
 
