@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- фиксируем мобильный зум -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>AI Coin — news &amp; insights on AI Coin</title>
 
   <!-- Base SEO -->
@@ -13,7 +14,7 @@
   <meta name="description" lang="ru" content="Последние тренды: AI Coin. Узнайте об AI Coin, криптотокенах и нейротрендах сегодня.">
   <meta name="description" lang="de" content="Aktuelle Trends: ethereum kurs, bio protocol coin. Erfahren Sie mehr über AI Coin, Kryptotoken und KI-Trends.">
 
-  <!-- Open Graph / Twitter (ГЛАВНАЯ ПРАВКА — ставим локальный GIF) -->
+  <!-- Open Graph / Twitter (локальный GIF для предпросмотра) -->
   <meta property="og:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain">
   <meta property="og:description" content="A social crypto project where people and AI decide together on its future.">
   <meta property="og:image" content="https://getaicoin.com/IMG_8741.gif">
@@ -55,10 +56,19 @@
 
     *{ box-sizing:border-box }
     html,body{ height:100% }
+
+    html{
+      /* гасим дабл-тап/пинч по максимуму на уровне жестов */
+      touch-action: manipulation;
+      -ms-touch-action: manipulation;
+    }
+
     body{
       margin:0; color:var(--text); font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background: radial-gradient(1200px 800px at 70% 10%, #1a2440 0%, #0d1526 45%, var(--bg-0) 100%);
       overflow:hidden; position:relative; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      -webkit-text-size-adjust:100%;
+      overscroll-behavior: none; /* без «резинок» и нежелательных масштабов */
     }
 
     /* тонкая «сеточка» на фоне */
@@ -104,13 +114,17 @@
       border-radius:999px; background:#121b2e; color:var(--text); text-decoration:none;
       border:1px solid #1e2a46; box-shadow:0 6px 18px rgba(0,0,0,.25) inset, 0 6px 18px rgba(0,0,0,.15);
       transition:transform .12s ease, background .12s ease, border-color .12s ease, opacity .12s ease;
-      font-weight:600;
+      font-weight:600; font-size:16px; /* чтобы Safari не увеличивал инпуты */
+      -webkit-tap-highlight-color: transparent;
     }
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
 
     /* Иконки внутри пиллов */
     .pill svg{ width:18px; height:18px; display:block; }
+
+    /* Формы: минимум 16px для iOS, чтобы не было авто-зума */
+    input, textarea, select, button { font-size:16px; }
 
     /* Оверлеи */
     .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10; }
@@ -136,14 +150,12 @@
     }
     textarea{ min-height:120px; resize:vertical }
 
-    /* Адреса: меньше шрифт и ПЕРЕНОСЫ внутри строки (не вылезают) */
+    /* Адреса: переносы внутри строки */
     .copybox{
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: clamp(11px, 2.9vw, 13px);
       line-height:1.3;
-      overflow-wrap:anywhere;
-      word-break: break-all;
-      white-space: normal;
+      overflow-wrap:anywhere; word-break: break-all; white-space: normal;
     }
 
     .btn{
@@ -419,6 +431,36 @@
 
       location.href=`mailto:${hiddenEmail}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
     });
+
+    /* === Жёсткая блокировка масштабирования === */
+    (function () {
+      // запрет pinch (многопальцевые жесты)
+      document.addEventListener('touchstart', function (e) {
+        if (e.touches && e.touches.length > 1) e.preventDefault();
+      }, { passive: false });
+
+      document.addEventListener('touchmove', function (e) {
+        if (e.touches && e.touches.length > 1) e.preventDefault();
+      }, { passive: false });
+
+      // запрет двойного тапа
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function (e) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) e.preventDefault();
+        lastTouchEnd = now;
+      }, { passive: false });
+
+      // iOS жесты
+      ['gesturestart','gesturechange','gestureend'].forEach(ev=>{
+        document.addEventListener(ev, e => e.preventDefault(), { passive:false });
+      });
+
+      // На всякий— запрет Ctrl/Cmd + колесо (desktop)
+      document.addEventListener('wheel', function(e){
+        if (e.ctrlKey || e.metaKey) e.preventDefault();
+      }, { passive:false });
+    })();
   </script>
 </body>
 </html>
