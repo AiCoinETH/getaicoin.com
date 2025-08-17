@@ -21,30 +21,30 @@
   <meta name="description" lang="ja" content="最新トレンド: AI Coin。AI Coin、暗号トークン、AIトレンドについて。">
   <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
 
-  <!-- Open Graph (статичное PNG как основное превью) -->
+  <!-- Open Graph (одна статичная картинка, с пробитием кэша v=2) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://getaicoin.com/">
+  <meta property="og:site_name" content="Get AI Coin">
   <meta property="og:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain">
   <meta property="og:description" content="A social crypto project where people and AI decide together on its future.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://getaicoin.com">
-  <meta property="og:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png">
-  <meta property="og:image:secure_url" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png">
+  <meta property="og:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2">
+  <meta property="og:image:secure_url" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Get AI Coin — preview image">
-  <!-- Второй og:image как fallback-анимация для платформ, поддерживающих несколько изображений -->
-  <meta property="og:image" content="https://getaicoin.com/IMG_8741.gif">
-  <meta property="og:image:type" content="image/gif">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://getaicoin.com/">
+  <meta name="twitter:domain" content="getaicoin.com">
   <meta name="twitter:title" content="Get AI Coin — social cryptocurrency & AI blockchain">
   <meta name="twitter:description" content="Social crypto project with AI decision-making power.">
-  <meta name="twitter:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png">
+  <meta name="twitter:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2">
   <meta name="twitter:image:alt" content="Get AI Coin — preview image">
 
-  <!-- Preload превью (ускорение первого запроса на соц.ботах и в браузере) -->
-  <link rel="preload" as="image" href="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png" imagesrcset="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png 1200w">
+  <!-- Preload превью -->
+  <link rel="preload" as="image" href="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" imagesrcset="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2 1200w">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -74,7 +74,6 @@
     html,body{ height:100% }
 
     html{
-      /* гасим дабл-тап/пинч по максимуму на уровне жестов */
       touch-action: manipulation;
       -ms-touch-action: manipulation;
     }
@@ -87,7 +86,6 @@
       overscroll-behavior: none;
     }
 
-    /* тонкая «сеточка» на фоне */
     body::before{
       content:""; position:absolute; inset:-200vh -200vw; pointer-events:none; opacity:.15;
       background:
@@ -96,10 +94,8 @@
       transform:translateZ(0);
     }
 
-    /* Canvas с шаром */
     #net-canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; }
 
-    /* Контентный блок */
     .wrap{
       position:relative; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
       padding:24px 18px 28px;
@@ -122,7 +118,6 @@
     }
     @keyframes blink{ 50%{ border-color:transparent } }
 
-    /* Кнопки-ссылки */
     .row{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; justify-content:center }
     .pill{
       display:inline-flex; align-items:center; gap:10px; padding:12px 18px;
@@ -135,10 +130,8 @@
     .sep{ opacity:.35 }
     .pill svg{ width:18px; height:18px; display:block; }
 
-    /* Формы: минимум 16px для iOS, чтобы не было авто-зума */
     input, textarea, select, button { font-size:16px; }
 
-    /* Оверлеи */
     .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10; }
     .overlay.show{ display:flex }
     .veil{ position:absolute; inset:0; background:rgba(2,8,18,.55); backdrop-filter: blur(4px); }
@@ -162,7 +155,6 @@
     }
     textarea{ min-height:120px; resize:vertical }
 
-    /* Адреса: переносы внутри строки */
     .copybox{
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: clamp(11px, 2.9vw, 13px);
@@ -363,7 +355,6 @@
     const q = s => document.querySelector(s);
     const on = (el,ev,fn)=> el && el.addEventListener(ev,fn);
 
-    // typing subtitle
     const full = "A social crypto project\nwhere people and AI decide together";
     const typedEl = q('#typed');
     let idx = 0;
@@ -377,7 +368,6 @@
     }
     typeStep();
 
-    // overlays
     const contactOverlay=q('#contactOverlay');
     const donateOverlay =q('#donateOverlay');
     const show = el=>el.classList.add('show');
@@ -392,7 +382,6 @@
     });
     on(document,'keydown',e=>{ if(e.key==='Escape'){ hide(contactOverlay); hide(donateOverlay);} });
 
-    // copy buttons
     const toast=q('#toast');
     function showToast(txt='Copied'){ toast.textContent=txt; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1100); }
     document.querySelectorAll('[data-copy]').forEach(btn=>{
@@ -407,7 +396,6 @@
       });
     });
 
-    // contact form (fallback mailto)
     const CONTACT_ENDPOINT = "";
 
     function sendToSheet(payload){
@@ -435,9 +423,7 @@
       location.href=`mailto:${hiddenEmail}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
     });
 
-    /* === Жёсткая блокировка масштабирования === */
     (function () {
-      // запрет pinch (многопальцевые жесты)
       document.addEventListener('touchstart', function (e) {
         if (e.touches && e.touches.length > 1) e.preventDefault();
       }, { passive: false });
@@ -446,7 +432,6 @@
         if (e.touches && e.touches.length > 1) e.preventDefault();
       }, { passive: false });
 
-      // запрет двойного тапа
       let lastTouchEnd = 0;
       document.addEventListener('touchend', function (e) {
         const now = Date.now();
@@ -454,12 +439,10 @@
         lastTouchEnd = now;
       }, { passive: false });
 
-      // iOS жесты
       ['gesturestart','gesturechange','gestureend'].forEach(ev=>{
         document.addEventListener(ev, e => e.preventDefault(), { passive:false });
       });
 
-      // На всякий— запрет Ctrl/Cmd + колесо (desktop)
       document.addEventListener('wheel', function(e){
         if (e.ctrlKey || e.metaKey) e.preventDefault();
       }, { passive:false });
