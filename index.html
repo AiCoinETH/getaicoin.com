@@ -12,11 +12,11 @@
   <link rel="shortcut icon" href="/Logo.png" type="image/png">
   <link rel="apple-touch-icon" href="/Logo.png">
 
-  <!-- Base SEO (одна, без дублей по языкам) -->
+  <!-- Base SEO -->
   <meta name="description" content="Latest trends: coin stock, ai stock, ai stock price. Learn about AI Coin, crypto tokens, and AI trends today.">
   <meta name="keywords" content="coin stock, ai stock, ai stock price, AI Coin, crypto, blockchain, Web3">
 
-  <!-- Open Graph (минимально необходимый набор) -->
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://getaicoin.com/" />
   <meta property="og:site_name" content="Get AI Coin" />
@@ -32,7 +32,7 @@
   <meta name="twitter:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
   <meta name="twitter:site" content="@aicoin_eth" />
 
-  <!-- Preload превью (опционально, не влияет на X, но ускоряет первую загрузку) -->
+  <!-- Preload превью -->
   <link rel="preload" as="image" href="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" imagesrcset="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2 1200w">
 
   <!-- Fonts -->
@@ -46,14 +46,16 @@
   </script>
   <script defer data-domain="getaicoin.com" src="https://plausible.io/js/script.js"></script>
 
+  <!-- three.js r121 (нужна эта версия для DeviceOrientationControls) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
+
   <style>
     :root{
       --bg-0:#0b1220;
-      --bg-1:#111a2b;
-      --grid:#182236;
       --text:#e8eefc;
       --muted:#9fb2d1;
-      --pink:#ff4fa3;
       --radius:16px;
       --radius-sm:12px;
       --shadow:0 20px 60px rgba(0,0,0,.35);
@@ -62,44 +64,40 @@
     *{ box-sizing:border-box }
     html,body{ height:100% }
 
-    html{
-      touch-action: manipulation;
-      -ms-touch-action: manipulation;
-    }
+    html{ touch-action: manipulation; -ms-touch-action: manipulation; }
 
+    /* Чистый тёмный фон, без старой сетки и радиального градиента (three.js будет подложкой) */
     body{
-      margin:0; color:var(--text); font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background: radial-gradient(1200px 800px at 70% 10%, #1a2440 0%, #0d1526 45%, var(--bg-0) 100%);
+      margin:0; color:var(--text);
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:#0b1220;
       overflow:hidden; position:relative; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-      -webkit-text-size-adjust:100%;
-      overscroll-behavior: none;
+      -webkit-text-size-adjust:100%; overscroll-behavior:none;
     }
+    body::before{ content:none !important; }
 
-    body::before{
-      content:""; position:absolute; inset:-200vh -200vw; pointer-events:none; opacity:.15;
-      background:
-        linear-gradient(var(--grid) 1px, transparent 1px) 0 0/60px 60px,
-        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/60px 60px;
-      transform:translateZ(0);
-    }
+    /* THREE.js сцена на заднем плане, ровно по 100dvh (устойчиво на iOS) */
+    #stage{ position:fixed; inset:0; height:100dvh; width:100%; z-index:0; }
+    #app{ position:absolute; inset:0; }
+    canvas{ display:block; touch-action:none; -ms-touch-action:none; -webkit-user-select:none; -webkit-touch-callout:none; }
 
-    #net-canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; }
-
+    /* Поверх — твой контент */
     .wrap{
-      position:relative; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-      padding:24px 18px 28px;
-      gap:18px; z-index:1;
+      position:relative; height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+      padding:24px 18px 28px; gap:18px; z-index:1;
     }
 
     .title{
       font-weight:800;
       font-size:clamp(28px, 6.5vw, 56px);
       line-height:1.06; letter-spacing:.01em; text-align:center;
+      text-shadow:0 2px 20px rgba(0,0,0,.55);
     }
     .subtitle{
       text-align:center; color:var(--muted);
       font-size:clamp(16px, 3.7vw, 24px);
       line-height:1.35; min-height:3.2em;
+      text-shadow:0 2px 14px rgba(0,0,0,.45);
     }
     .typing::after{
       content:""; display:inline-block; width:1ch; border-right:2px solid var(--muted);
@@ -170,9 +168,14 @@
       .wrap{ padding-bottom:20px }
       .subtitle{ font-size:clamp(15px, 3.6vw, 20px) }
     }
+
+    /* Мелкие правки для мобилы */
+    @media (max-width: 640px){
+      /* можно скрыть dbg, если добавишь его */
+    }
   </style>
 
-  <!-- i18n keywords (не мешают предпросмотру, можно оставить) -->
+  <!-- i18n keywords -->
   <meta name="keywords" lang="ru" content="AI Coin, AI Coin, crypto, blockchain, Web3">
   <meta name="keywords" lang="de" content="AI Coin, AI Coin, crypto, blockchain, Web3">
   <meta name="keywords" lang="es" content="AI Coin, AI Coin, crypto, blockchain, Web3">
@@ -191,7 +194,8 @@
   <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
 </head>
 <body>
-  <canvas id="net-canvas" aria-hidden="true"></canvas>
+  <!-- three.js фон -->
+  <div id="stage"><div id="app" aria-hidden="true"></div></div>
 
   <main class="wrap" aria-label="Hero">
     <h1 class="title">$Get Ai Coin</h1>
@@ -204,7 +208,7 @@
       </a>
       <span class="sep">|</span>
       <a class="pill" href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.04 15.3 8.9 19.7c.31 0 .44-.13 .6-.29l2.88-2.76 5.98 4.38c1.1.61 1.88.29 2.18-1.02l3.95-18.5h0c.35-1.63-.59-2.26-1.66-1.87L1.06 9.7C-.53 10.35-.51 11.23 .78 11.63l5.64 1.76 13.11-8.25c.62-.37 1.19-.17 .72 .2L9.04 15.3Z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.04 15.3 8.9 19.7c.31 0 .44-.13 .6-.29l2.88-2.76 5.98 4.38c1.1 .61 1.88 .29 2.18-1.02l3.95-18.5h0c.35-1.63-.59-2.26-1.66-1.87L1.06 9.7C-.53 10.35-.51 11.23 .78 11.63l5.64 1.76 13.11-8.25c.62-.37 1.19-.17 .72 .2L9.04 15.3Z"/></svg>
         Telegram
       </a>
     </div>
@@ -272,98 +276,98 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 
-  <!-- Шар -->
+  <!-- three.js: Gyro Sphere -->
   <script>
-  (()=>{
-    const canvas = document.getElementById('net-canvas');
-    const ctx = canvas.getContext('2d');
-    let W,H,DPR;
+    const stage = document.getElementById('stage');
+    const app   = document.getElementById('app');
 
-    function resize(){
-      DPR = Math.min(window.devicePixelRatio||1, 2);
-      W = canvas.clientWidth = window.innerWidth;
-      H = canvas.clientHeight = window.innerHeight;
-      canvas.width = W*DPR; canvas.height = H*DPR;
-      ctx.setTransform(DPR,0,0,DPR,0,0);
+    // Сцена/камера/рендерер
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
+    app.appendChild(renderer.domElement);
+    renderer.domElement.style.touchAction = 'none';
+
+    // Сфера (точки + wireframe)
+    const group = new THREE.Group(); scene.add(group);
+    const R = 2.2;
+    const sphereGeom = new THREE.SphereBufferGeometry(R, 40, 26);
+    const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
+    group.add(new THREE.Points(sphereGeom, dotsMat));
+    group.add(new THREE.LineSegments(
+      new THREE.WireframeGeometry(sphereGeom),
+      new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })
+    ));
+
+    // Свет
+    scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
+    const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
+
+    // OrbitControls: мышь/тач
+    const orbit = new THREE.OrbitControls(camera, renderer.domElement);
+    orbit.enableDamping = true; orbit.dampingFactor = 0.06;
+    orbit.rotateSpeed = 0.6; orbit.enablePan = false; orbit.enableZoom = false;
+
+    // Fit: стабильный масштаб (100dvh), смещение вправо на ширинах
+    function sizeOf(el){ const r=el.getBoundingClientRect(); return { w:Math.round(r.width), h:Math.round(r.height) }; }
+    function fit(){
+      const {w,h} = sizeOf(stage);
+      camera.aspect = w/h; camera.updateProjectionMatrix();
+      renderer.setSize(w,h,false);
+
+      const fov = camera.fov * Math.PI/180;
+      const wide = w>900, isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const fill = wide ? 0.62 : (isIOS ? 0.46 : 0.50); // доля высоты под диаметр
+      const dist = (R / fill) / Math.tan(fov/2);
+
+      camera.position.set(0,0,dist);
+      orbit.update();
+
+      const aspect = w/h;
+      group.position.x = aspect > 1.2 ? Math.min((aspect-1.2)*1.6, 1.8) : 0;
     }
-    addEventListener('resize', resize, {passive:true}); resize();
+    addEventListener('resize', fit, { passive:true });
+    addEventListener('orientationchange', () => setTimeout(fit, 200));
+    if (window.visualViewport) visualViewport.addEventListener('resize', fit, { passive:true });
+    fit();
 
-    const N = 260, K = 7, LONG_EDGES = 360, ROT = 0.0022, PINK = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim();
+    // Плавная «жизнь» точек + автоворот в простое
+    let t=0, idle=true, idleTimer=null;
+    const pokeIdle=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true, 2400); };
+    renderer.domElement.addEventListener('pointerdown', pokeIdle, { passive:true });
+    renderer.domElement.addEventListener('pointermove', pokeIdle, { passive:true });
 
-    const pts=[];
-    for(let i=0;i<N;i++){
-      const t=i/N, z=1-2*t, r=Math.sqrt(1-z*z), phi=2*Math.PI*i*0.61803398875;
-      pts.push({x:r*Math.cos(phi), y:r*Math.sin(phi), z});
+    function tick(){
+      requestAnimationFrame(tick);
+      if (idle) group.rotation.y += 0.0022;
+      t += 0.02; dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
+      orbit.update();
+      renderer.render(scene, camera);
     }
-    const ang=(a,b)=>Math.acos(Math.min(1,Math.max(-1,a.x*b.x+a.y*b.y+a.z*b.z)));
-
-    const edges=[];
-    for(let i=0;i<N;i++){
-      const ord=pts.map((p,j)=>({j,d:ang(pts[i],p)})).sort((a,b)=>a.d-b.d);
-      for(let t=1;t<=K;t++) edges.push([i,ord[t].j,true]);
-    }
-    for(let t=0;t<LONG_EDGES;t++){
-      let a=(Math.random()*N)|0, b=(Math.random()*N)|0; if(a===b){t--; continue;}
-      edges.push([a,b,false]);
-    }
-
-    let t=0;
-    const R=()=>Math.min(W,H)*0.48;
-    function proj(p){
-      const ry=t, rx=t*0.7;
-      const cY=Math.cos(ry), sY=Math.sin(ry);
-      const cX=Math.cos(rx), sX=Math.sin(rx);
-      let x= p.x*cY + p.z*sY;
-      let z=-p.x*sY + p.z*cY;
-      let y= p.y*cX - z*sX;
-      z= p.y*sX + z*cX;
-      const d=2.7, s=R()/(d - z*0.9);
-      return {X:W/2 + x*s, Y:H*0.43 + y*s, Z:z};
-    }
-
-    function draw(){
-      t += ROT;
-      ctx.clearRect(0,0,W,H);
-
-      ctx.strokeStyle=PINK; ctx.lineWidth=1;
-      for(const [a,b,isNear] of edges){
-        const pa=proj(pts[a]), pb=proj(pts[b]);
-        ctx.globalAlpha = isNear ? 0.09 : 0.04;
-        ctx.beginPath(); ctx.moveTo(pa.X,pa.Y); ctx.lineTo(pb.X,pb.Y); ctx.stroke();
-      }
-
-      const projected=pts.map(p=>proj(p)).sort((a,b)=>a.Z-b.Z);
-      ctx.fillStyle=PINK;
-      for(const p of projected){
-        const r=1*(1+0.35*(p.Z+1));
-        ctx.globalAlpha=0.95;
-        ctx.beginPath(); ctx.arc(p.X,p.Y,r,0,Math.PI*2); ctx.fill();
-      }
-      ctx.globalAlpha=1;
-
-      requestAnimationFrame(draw);
-    }
-    draw();
-  })();
+    tick();
   </script>
 
-  <!-- UI: модалки/копирование/контакты -->
+  <!-- UI: модалки/копирование/контакты + тайпинг -->
   <script>
     const q = s => document.querySelector(s);
     const on = (el,ev,fn)=> el && el.addEventListener(ev,fn);
 
-    const full = "A social crypto project\nwhere people and AI decide together";
-    const typedEl = q('#typed');
-    let idx = 0;
-    function typeStep(){
-      if(idx <= full.length){
-        typedEl.textContent = full.slice(0, idx++);
-        setTimeout(typeStep, 18);
-      } else {
-        typedEl.classList.remove('typing');
+    // Тайпинг подзаголовка
+    (function () {
+      const full = "A social crypto project\nwhere people and AI decide together";
+      const typedEl = q('#typed');
+      let idx = 0;
+      function typeStep(){
+        if(idx <= full.length){
+          typedEl.textContent = full.slice(0, idx++);
+          setTimeout(typeStep, 18);
+        } else {
+          typedEl.classList.remove('typing');
+        }
       }
-    }
-    typeStep();
+      typeStep();
+    })();
 
     const contactOverlay=q('#contactOverlay');
     const donateOverlay =q('#donateOverlay');
@@ -420,6 +424,7 @@
       location.href=`mailto:${hiddenEmail}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
     });
 
+    // Блокировка жестов масштабирования (как было у тебя)
     (function () {
       document.addEventListener('touchstart', function (e) {
         if (e.touches && e.touches.length > 1) e.preventDefault();
