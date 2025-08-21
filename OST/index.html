@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- фиксируем мобильный зум -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>coin stock — news &amp; insights on AI Coin</title>
+  <link rel="canonical" href="https://getaicoin.com/">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/Logo.png" type="image/png">
+  <link rel="shortcut icon" href="/Logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="/Logo.png">
+
+  <!-- Base SEO (одна, без дублей по языкам) -->
+  <meta name="description" content="Latest trends: coin stock, ai stock, ai stock price. Learn about AI Coin, crypto tokens, and AI trends today.">
+  <meta name="keywords" content="coin stock, ai stock, ai stock price, AI Coin, crypto, blockchain, Web3">
+
+  <!-- Open Graph (минимально необходимый набор) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://getaicoin.com/" />
+  <meta property="og:site_name" content="Get AI Coin" />
+  <meta property="og:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain" />
+  <meta property="og:description" content="A social crypto project where people and AI decide together on its future." />
+  <meta property="og:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
+
+  <!-- Twitter Card (X) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://getaicoin.com/" />
+  <meta name="twitter:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain" />
+  <meta name="twitter:description" content="A social crypto project where people and AI decide together on its future." />
+  <meta name="twitter:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
+  <meta name="twitter:site" content="@aicoin_eth" />
+
+  <!-- Preload превью (опционально, не влияет на X, но ускоряет первую загрузку) -->
+  <link rel="preload" as="image" href="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" imagesrcset="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2 1200w">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8J5398GPX0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-8J5398GPX0');
+  </script>
+  <script defer data-domain="getaicoin.com" src="https://plausible.io/js/script.js"></script>
+
+  <style>
+    :root{
+      --bg-0:#0b1220;
+      --bg-1:#111a2b;
+      --grid:#182236;
+      --text:#e8eefc;
+      --muted:#9fb2d1;
+      --pink:#ff4fa3;
+      --radius:16px;
+      --radius-sm:12px;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+
+    html{
+      touch-action: manipulation;
+      -ms-touch-action: manipulation;
+    }
+
+    body{
+      margin:0; color:var(--text); font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1200px 800px at 70% 10%, #1a2440 0%, #0d1526 45%, var(--bg-0) 100%);
+      overflow:hidden; position:relative; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      -webkit-text-size-adjust:100%;
+      overscroll-behavior: none;
+    }
+
+    body::before{
+      content:""; position:absolute; inset:-200vh -200vw; pointer-events:none; opacity:.15;
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px) 0 0/60px 60px,
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/60px 60px;
+      transform:translateZ(0);
+    }
+
+    #net-canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; }
+
+    .wrap{
+      position:relative; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+      padding:24px 18px 28px;
+      gap:18px; z-index:1;
+    }
+
+    .title{
+      font-weight:800;
+      font-size:clamp(28px, 6.5vw, 56px);
+      line-height:1.06; letter-spacing:.01em; text-align:center;
+    }
+    .subtitle{
+      text-align:center; color:var(--muted);
+      font-size:clamp(16px, 3.7vw, 24px);
+      line-height:1.35; min-height:3.2em;
+    }
+    .typing::after{
+      content:""; display:inline-block; width:1ch; border-right:2px solid var(--muted);
+      transform:translateY(2px); animation:blink .9s step-end infinite; margin-left:2px;
+    }
+    @keyframes blink{ 50%{ border-color:transparent } }
+
+    .row{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; justify-content:center }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px; padding:12px 18px;
+      border-radius:999px; background:#121b2e; color:var(--text); text-decoration:none;
+      border:1px solid #1e2a46; box-shadow:0 6px 18px rgba(0,0,0,.25) inset, 0 6px 18px rgba(0,0,0,.15);
+      transition:transform .12s ease, background .12s ease, border-color .12s ease, opacity .12s ease;
+      font-weight:600; font-size:16px; -webkit-tap-highlight-color: transparent;
+    }
+    .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
+    .sep{ opacity:.35 }
+    .pill svg{ width:18px; height:18px; display:block; }
+
+    input, textarea, select, button { font-size:16px; }
+
+    .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10; }
+    .overlay.show{ display:flex }
+    .veil{ position:absolute; inset:0; background:rgba(2,8,18,.55); backdrop-filter: blur(4px); }
+    .panel{
+      position:relative; width:min(740px, 94vw); max-height:min(80vh, 760px); overflow:auto;
+      background:linear-gradient(180deg, rgba(20,29,48,.92), rgba(14,22,39,.92));
+      border:1px solid #253252; border-radius:var(--radius); padding:22px 20px 18px; box-shadow:var(--shadow);
+    }
+    .panel h3{ margin:0 0 14px; font-size:clamp(18px, 4.4vw, 24px); }
+    .panel p{ margin:0 0 16px; color:var(--muted) }
+
+    .field{
+      display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center;
+      margin:16px 0;
+    }
+    .field label{
+      grid-column:1 / -1; margin-bottom:4px; color:#b9c6e4; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+    }
+    .copybox, input[type="text"], textarea{
+      background:#0e1628; color:var(--text); border:1px solid #273455; border-radius:12px; padding:10px 12px; font:inherit;
+    }
+    textarea{ min-height:120px; resize:vertical }
+
+    .copybox{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: clamp(11px, 2.9vw, 13px);
+      line-height:1.3; overflow-wrap:anywhere; word-break: break-all; white-space: normal;
+    }
+
+    .btn{
+      border:1px solid #2a3860; background:#13203a; color:var(--text);
+      padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700; min-height:40px;
+      transition:transform .12s, background .12s, border-color .12s, opacity .12s;
+    }
+    .btn:hover{ transform:translateY(-1px); background:#18284d; border-color:#395298 }
+    .btn.primary{ background:#0f1d37; border-color:#324c86 }
+    .panel .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:8px }
+
+    .toast{
+      position:fixed; left:50%; bottom:16px; transform:translateX(-50%);
+      background:#0f1a2e; color:#fff; padding:8px 12px; border-radius:999px; font-size:14px; z-index:20;
+      border:1px solid #2b3961; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .15s;
+    }
+    .toast.show{ opacity:1 }
+
+    @media (max-height:720px){
+      .wrap{ padding-bottom:20px }
+      .subtitle{ font-size:clamp(15px, 3.6vw, 20px) }
+    }
+  </style>
+
+  <!-- i18n keywords (не мешают предпросмотру, можно оставить) -->
+  <meta name="keywords" lang="ru" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="de" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="es" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="fr" content="open ai, AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="it" content="coin stock, AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="pt" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="ja" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="keywords" lang="zh" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="description" lang="ru" content="Последние тренды: AI Coin. Узнайте об AI Coin, криптотокенах и нейротрендах сегодня.">
+  <meta name="description" lang="de" content="Aktuelle Trends: AI Coin. Erfahren Sie mehr über AI Coin, Kryptotoken und KI-Trends.">
+  <meta name="description" lang="es" content="Tendencias recientes: AI Coin. Conozca AI Coin, los criptoactivos y las tendencias de IA.">
+  <meta name="description" lang="fr" content="Tendances récentes : open ai. En savoir plus sur AI Coin, les cryptos et les tendances IA.">
+  <meta name="description" lang="it" content="Trend recenti: coin stock. Scopri AI Coin, i token crypto e i trend dell’IA.">
+  <meta name="description" lang="pt" content="Tendências recentes: AI Coin. Saiba mais sobre AI Coin, criptoativos e tendências de IA.">
+  <meta name="description" lang="ja" content="最新トレンド: AI Coin。AI Coin、暗号トークン、AIトレンドについて。">
+  <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
+</head>
+<body>
+  <canvas id="net-canvas" aria-hidden="true"></canvas>
+
+  <main class="wrap" aria-label="Hero">
+    <h1 class="title">$Get Ai Coin</h1>
+    <div id="typed" class="subtitle typing" aria-live="polite"></div>
+
+    <div class="row">
+      <a class="pill" href="https://x.com/aicoin_eth" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.39 2H21l-6.54 7.47L22 22h-6.83l-4.8-6.27L4.8 22H2.2l7.04-8.04L2 2h6.9l4.33 5.73L18.39 2Zm-1.2 18h1.67L7.93 4h-1.7l10.96 16Z"/></svg>
+        Twitter X
+      </a>
+      <span class="sep">|</span>
+      <a class="pill" href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.04 15.3 8.9 19.7c.31 0 .44-.13 .6-.29l2.88-2.76 5.98 4.38c1.1.61 1.88.29 2.18-1.02l3.95-18.5h0c.35-1.63-.59-2.26-1.66-1.87L1.06 9.7C-.53 10.35-.51 11.23 .78 11.63l5.64 1.76 13.11-8.25c.62-.37 1.19-.17 .72 .2L9.04 15.3Z"/></svg>
+        Telegram
+      </a>
+    </div>
+
+    <div class="row">
+      <button class="pill" id="openContact">Contact us</button>
+      <span class="sep">|</span>
+      <button class="pill" id="openDonate">For sponsors</button>
+    </div>
+  </main>
+
+  <!-- Contact -->
+  <div id="contactOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <div class="veil"></div>
+    <section class="panel" role="document">
+      <h3 id="contactTitle">Contact us</h3>
+      <p>Send us a message — we’ll get back to you.</p>
+
+      <div class="field">
+        <label for="cSubj">Subject</label>
+        <input id="cSubj" type="text" placeholder="Topic of your message">
+      </div>
+
+      <div class="field" style="grid-template-columns:minmax(0,1fr);">
+        <label for="cBody">Message</label>
+        <textarea id="cBody" placeholder="Your text"></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="contactClose">Close</button>
+        <button class="btn primary" id="contactSend">Send</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Sponsors -->
+  <div id="donateOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
+    <div class="veil"></div>
+    <section class="panel" role="document">
+      <h3 id="donateTitle">For sponsors</h3>
+
+      <div class="field">
+        <label>ETH (ERC-20)</label>
+        <div class="copybox" id="ethAddr">0x5Daf8D49b5cc17e4f5C575BeFc9880Fdc6A76037</div>
+        <button class="btn" data-copy="#ethAddr">Copy</button>
+      </div>
+
+      <div class="field">
+        <label>BTC (bech32)</label>
+        <div class="copybox" id="btcAddr">bc1q0572x8gusvkyh9we8qxtas90mdupgfhsc2al4q</div>
+        <button class="btn" data-copy="#btcAddr">Copy</button>
+      </div>
+
+      <div class="field">
+        <label>USDT (TRC-20)</label>
+        <div class="copybox" id="usdtAddr">TSn6jiZydc4sKTKqJbyMJhypdtNdFcF64c</div>
+        <button class="btn" data-copy="#usdtAddr">Copy</button>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="donateClose">Close</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
+
+  <!-- Шар -->
+  <script>
+  (()=>{
+    const canvas = document.getElementById('net-canvas');
+    const ctx = canvas.getContext('2d');
+    let W,H,DPR;
+
+    function resize(){
+      DPR = Math.min(window.devicePixelRatio||1, 2);
+      W = canvas.clientWidth = window.innerWidth;
+      H = canvas.clientHeight = window.innerHeight;
+      canvas.width = W*DPR; canvas.height = H*DPR;
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+    }
+    addEventListener('resize', resize, {passive:true}); resize();
+
+    const N = 260, K = 7, LONG_EDGES = 360, ROT = 0.0022, PINK = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim();
+
+    const pts=[];
+    for(let i=0;i<N;i++){
+      const t=i/N, z=1-2*t, r=Math.sqrt(1-z*z), phi=2*Math.PI*i*0.61803398875;
+      pts.push({x:r*Math.cos(phi), y:r*Math.sin(phi), z});
+    }
+    const ang=(a,b)=>Math.acos(Math.min(1,Math.max(-1,a.x*b.x+a.y*b.y+a.z*b.z)));
+
+    const edges=[];
+    for(let i=0;i<N;i++){
+      const ord=pts.map((p,j)=>({j,d:ang(pts[i],p)})).sort((a,b)=>a.d-b.d);
+      for(let t=1;t<=K;t++) edges.push([i,ord[t].j,true]);
+    }
+    for(let t=0;t<LONG_EDGES;t++){
+      let a=(Math.random()*N)|0, b=(Math.random()*N)|0; if(a===b){t--; continue;}
+      edges.push([a,b,false]);
+    }
+
+    let t=0;
+    const R=()=>Math.min(W,H)*0.48;
+    function proj(p){
+      const ry=t, rx=t*0.7;
+      const cY=Math.cos(ry), sY=Math.sin(ry);
+      const cX=Math.cos(rx), sX=Math.sin(rx);
+      let x= p.x*cY + p.z*sY;
+      let z=-p.x*sY + p.z*cY;
+      let y= p.y*cX - z*sX;
+      z= p.y*sX + z*cX;
+      const d=2.7, s=R()/(d - z*0.9);
+      return {X:W/2 + x*s, Y:H*0.43 + y*s, Z:z};
+    }
+
+    function draw(){
+      t += ROT;
+      ctx.clearRect(0,0,W,H);
+
+      ctx.strokeStyle=PINK; ctx.lineWidth=1;
+      for(const [a,b,isNear] of edges){
+        const pa=proj(pts[a]), pb=proj(pts[b]);
+        ctx.globalAlpha = isNear ? 0.09 : 0.04;
+        ctx.beginPath(); ctx.moveTo(pa.X,pa.Y); ctx.lineTo(pb.X,pb.Y); ctx.stroke();
+      }
+
+      const projected=pts.map(p=>proj(p)).sort((a,b)=>a.Z-b.Z);
+      ctx.fillStyle=PINK;
+      for(const p of projected){
+        const r=1*(1+0.35*(p.Z+1));
+        ctx.globalAlpha=0.95;
+        ctx.beginPath(); ctx.arc(p.X,p.Y,r,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha=1;
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
+
+  <!-- UI: модалки/копирование/контакты -->
+  <script>
+    const q = s => document.querySelector(s);
+    const on = (el,ev,fn)=> el && el.addEventListener(ev,fn);
+
+    const full = "A social crypto project\nwhere people and AI decide together";
+    const typedEl = q('#typed');
+    let idx = 0;
+    function typeStep(){
+      if(idx <= full.length){
+        typedEl.textContent = full.slice(0, idx++);
+        setTimeout(typeStep, 18);
+      } else {
+        typedEl.classList.remove('typing');
+      }
+    }
+    typeStep();
+
+    const contactOverlay=q('#contactOverlay');
+    const donateOverlay =q('#donateOverlay');
+    const show = el=>el.classList.add('show');
+    const hide = el=>el.classList.remove('show');
+
+    on(q('#openContact'),'click',()=>show(contactOverlay));
+    on(q('#openDonate'),'click',()=>show(donateOverlay));
+    on(q('#contactClose'),'click',()=>hide(contactOverlay));
+    on(q('#donateClose'),'click',()=>hide(donateOverlay));
+    [contactOverlay,donateOverlay].forEach(ov=>{
+      on(ov,'click',e=>{ if(e.target===ov || e.target.classList.contains('veil')) hide(ov); });
+    });
+    on(document,'keydown',e=>{ if(e.key==='Escape'){ hide(contactOverlay); hide(donateOverlay);} });
+
+    const toast=q('#toast');
+    function showToast(txt='Copied'){ toast.textContent=txt; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1100); }
+    document.querySelectorAll('[data-copy]').forEach(btn=>{
+      on(btn,'click',()=>{
+        const el=q(btn.getAttribute('data-copy')); if(!el) return;
+        const text=el.textContent.replace(/\s+/g,'').trim();
+        (navigator.clipboard?.writeText(text) || Promise.reject()).then(()=>showToast()).catch(()=>{
+          const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+          ta.select(); try{ document.execCommand('copy'); showToast(); }catch(_){}
+          ta.remove();
+        });
+      });
+    });
+
+    const CONTACT_ENDPOINT = "";
+
+    function sendToSheet(payload){
+      return fetch(CONTACT_ENDPOINT, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+
+    const hiddenEmail = atob('bWRrb3NkQGdtYWlsLmNvbQ=='); // mdkosd@gmail.com
+
+    on(q('#contactSend'),'click', async ()=>{
+      const subj=q('#cSubj').value.trim()||'Ai Coin — message';
+      const body=q('#cBody').value.trim();
+
+      if(CONTACT_ENDPOINT){
+        try{
+          const res = await sendToSheet({subject:subj, message:body, ts: new Date().toISOString()});
+          if(res.ok){ showToast('Sent'); hide(contactOverlay); q('#cSubj').value=''; q('#cBody').value=''; return; }
+        }catch(_){}
+        showToast('Error — fallback to mail');
+      }
+
+      location.href=`mailto:${hiddenEmail}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+    });
+
+    (function () {
+      document.addEventListener('touchstart', function (e) {
+        if (e.touches && e.touches.length > 1) e.preventDefault();
+      }, { passive: false });
+
+      document.addEventListener('touchmove', function (e) {
+        if (e.touches && e.touches.length > 1) e.preventDefault();
+      }, { passive: false });
+
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function (e) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) e.preventDefault();
+        lastTouchEnd = now;
+      }, { passive: false });
+
+      ['gesturestart','gesturechange','gestureend'].forEach(ev=>{
+        document.addEventListener(ev, e => e.preventDefault(), { passive:false });
+      });
+
+      document.addEventListener('wheel', function(e){
+        if (e.ctrlKey || e.metaKey) e.preventDefault();
+      }, { passive:false });
+    })();
+  </script>
+</body>
+</html>
