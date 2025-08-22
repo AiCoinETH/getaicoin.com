@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>ai stock — news &amp; insights on AI Coin</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>ai stock — news & insights on AI Coin</title>
   <link rel="canonical" href="https://getaicoin.com/">
 
   <!-- Favicon -->
@@ -11,19 +12,17 @@
   <link rel="shortcut icon" href="/Logo.png" type="image/png">
   <link rel="apple-touch-icon" href="/Logo.png">
 
-  <!-- Base SEO -->
+  <!-- SEO (сжатый набор) -->
   <meta name="description" content="Latest trends: ai stock, coin flip, google ai. Learn about AI Coin, crypto tokens, and AI trends today.">
   <meta name="keywords" content="ai stock, coin flip, google ai, AI Coin, crypto, blockchain, Web3">
 
-  <!-- Open Graph -->
+  <!-- OG/Twitter -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://getaicoin.com/" />
   <meta property="og:site_name" content="Get AI Coin" />
   <meta property="og:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain" />
   <meta property="og:description" content="A social crypto project where people and AI decide together on its future." />
   <meta property="og:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://getaicoin.com/" />
   <meta name="twitter:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain" />
@@ -31,120 +30,96 @@
   <meta name="twitter:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
   <meta name="twitter:site" content="@aicoin_eth" />
 
-  <!-- Preload -->
-  <link rel="preload" as="image" href="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" imagesrcset="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2 1200w">
-
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8J5398GPX0"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-8J5398GPX0');
-  </script>
-  <script defer data-domain="getaicoin.com" src="https://plausible.io/js/script.js"></script>
-
-  <!-- three.js r121 -->
+  <!-- three.js r121 (важна версия для DeviceOrientationControls) -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
 
   <style>
     :root{
-      --bg-0:#0b1220;
-      --text:#e8eefc; --muted:#9fb2d1;
-      --radius:16px; --radius-sm:12px; --shadow:0 20px 60px rgba(0,0,0,.35);
+      --bg:#0b1220; --text:#e8eefc; --muted:#9fb2d1;
+      --card:#121b2e; --border:#1e2a46;
+      --radius:16px; --shadow:0 20px 60px rgba(0,0,0,.35);
     }
     *{ box-sizing:border-box }
     html,body{ height:100% }
-    html{ touch-action:manipulation; -ms-touch-action:manipulation }
-
     body{
-      margin:0; color:var(--text);
+      margin:0; color:var(--text); background:var(--bg);
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:#0b1220;
-      overflow:hidden; position:relative; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-      -webkit-text-size-adjust:100%; overscroll-behavior:none;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      overflow:hidden; position:relative;
     }
 
-    /* THREE: слой сцены (ниже контента, но принимает жесты по всей площади) */
-    #stage{ position:fixed; inset:0; width:100%; height:100dvh; z-index:0; }
-    #app{ position:absolute; inset:0; }
-    canvas{ display:block; touch-action:none; -ms-touch-action:none; -webkit-user-select:none; -webkit-touch-callout:none; }
+    /* three.js слой */
+    #stage{ position:fixed; inset:0; width:100%; height:100dvh; z-index:0 }
+    #app{ position:absolute; inset:0 }
+    canvas{
+      display:block; touch-action:none; -ms-touch-action:none;
+      -webkit-user-select:none; -webkit-touch-callout:none;
+    }
 
-    /* Контент поверх (заглушаем pointer-events, чтобы свайпы уходили в канвас) */
+    /* Кнопки поверх */
+    .topbar{
+      position:fixed; left:12px; top:12px; z-index:10; display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .chip{
+      padding:10px 14px; border-radius:10px;
+      border:1px solid #27e1ff33; background:#06101a; color:#27e1ff;
+      font:600 14px/1 system-ui; box-shadow:0 0 1px #000 inset, 0 6px 18px #0008;
+      cursor:pointer; -webkit-tap-highlight-color:transparent;
+      user-select:none;
+    }
+    .chip select{
+      background:transparent; color:#27e1ff; border:none; font:inherit; outline:none; cursor:pointer;
+    }
+
+    /* Контент (пропускает свайпы в канвас) */
     .wrap{
-      position:relative; height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-      padding:24px 18px 28px; gap:18px; z-index:1;
-      pointer-events:none; /* ключ: весь слой пропускает жесты к канвасу */
+      position:relative; height:100dvh;
+      display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+      padding:24px 18px 28px; gap:18px; z-index:1; pointer-events:none;
     }
-    /* кроме кликабельных элементов — им возвращаем события */
-    .wrap .pill, .overlay, .panel, .btn, input, textarea, select, button { pointer-events:auto; }
+    .wrap .pill, .overlay, .panel, .btn { pointer-events:auto }
 
-    .title{
-      font-weight:800; font-size:clamp(28px,6.5vw,56px);
-      line-height:1.06; letter-spacing:.01em; text-align:center;
-      text-shadow:0 2px 20px rgba(0,0,0,.55);
-    }
-    .subtitle{
-      text-align:center; color:var(--muted);
-      font-size:clamp(16px,3.7vw,24px);
-      line-height:1.35; min-height:3.0em;
-      text-shadow:0 2px 14px rgba(0,0,0,.45);
-    }
-    .typing::after{
-      content:""; display:inline-block; width:1ch; border-right:2px solid var(--muted);
-      transform:translateY(2px); animation:blink .9s step-end infinite; margin-left:2px;
-    }
-    @keyframes blink{ 50%{ border-color:transparent } }
+    .title{ font-weight:800; font-size:clamp(32px,6.4vw,72px); line-height:1.05; text-align:center }
+    .subtitle{ text-align:center; color:var(--muted); font-size:clamp(16px,3.6vw,24px); line-height:1.35; min-height:3em }
 
-    .row{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; justify-content:center }
+    .row{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; align-items:center }
     .pill{
       display:inline-flex; align-items:center; gap:10px; padding:12px 18px;
-      border-radius:999px; background:#121b2e; color:var(--text); text-decoration:none;
-      border:1px solid #1e2a46; box-shadow:0 6px 18px rgba(0,0,0,.25) inset, 0 6px 18px rgba(0,0,0,.15);
-      transition:transform .12s ease, background .12s ease, border-color .12s ease, opacity .12s ease;
-      font-weight:600; font-size:16px; -webkit-tap-highlight-color: transparent;
+      border-radius:999px; background:var(--card); color:var(--text);
+      border:1px solid var(--border); font-weight:600; text-decoration:none;
+      transition:transform .12s, background .12s, border-color .12s;
     }
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
-    .pill svg{ width:18px; height:18px; display:block }
 
-    /* Модалки/панели — как у тебя */
-    .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10; }
+    /* Модалки */
+    .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10 }
     .overlay.show{ display:flex }
-    .veil{ position:absolute; inset:0; background:rgba(2,8,18,.55); backdrop-filter: blur(4px); }
+    .veil{ position:absolute; inset:0; background:rgba(2,8,18,.55); backdrop-filter: blur(4px) }
     .panel{
       position:relative; width:min(740px, 94vw); max-height:min(80vh, 760px); overflow:auto;
       background:linear-gradient(180deg, rgba(20,29,48,.92), rgba(14,22,39,.92));
       border:1px solid #253252; border-radius:var(--radius); padding:22px 20px 18px; box-shadow:var(--shadow);
     }
-    .panel h3{ margin:0 0 14px; font-size:clamp(18px, 4.4vw, 24px); }
+    .panel h3{ margin:0 0 14px; font-size:clamp(18px, 4.4vw, 24px) }
     .panel p{ margin:0 0 16px; color:var(--muted) }
-
-    .field{
-      display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; margin:16px 0;
-    }
-    .field label{
-      grid-column:1 / -1; margin-bottom:4px; color:#b9c6e4; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
-    }
+    .field{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; margin:16px 0 }
+    .field label{ grid-column:1 / -1; margin-bottom:4px; color:#b9c6e4; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700 }
     .copybox, input[type="text"], textarea{
       background:#0e1628; color:var(--text); border:1px solid #273455; border-radius:12px; padding:10px 12px; font:inherit;
     }
     textarea{ min-height:120px; resize:vertical }
-
-    .copybox{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:clamp(11px,2.9vw,13px); line-height:1.3; overflow-wrap:anywhere; }
-
     .btn{
       border:1px solid #2a3860; background:#13203a; color:var(--text);
       padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700; min-height:40px;
       transition:transform .12s, background .12s, border-color .12s, opacity .12s;
     }
     .btn:hover{ transform:translateY(-1px); background:#18284d; border-color:#395298 }
-    .btn.primary{ background:#0f1d37; border-color:#324c86 }
-    .panel .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:8px }
-
     .toast{
       position:fixed; left:50%; bottom:16px; transform:translateX(-50%);
       background:#0f1a2e; color:#fff; padding:8px 12px; border-radius:999px; font-size:14px; z-index:20;
@@ -152,41 +127,31 @@
     }
     .toast.show{ opacity:1 }
   </style>
-  <meta name="description" lang="ru" content="Последние тренды: AI Coin. Узнайте об AI Coin, криптотокенах и нейротрендах сегодня.">
-  <meta name="keywords" lang="ru" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="de" content="Aktuelle Trends: fetch ai, bio protocol coin. Erfahren Sie mehr über AI Coin, Kryptotoken und KI-Trends.">
-  <meta name="keywords" lang="de" content="fetch ai, bio protocol coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="es" content="Tendencias recientes: AI Coin. Conozca AI Coin, los criptoactivos y las tendencias de IA.">
-  <meta name="keywords" lang="es" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="fr" content="Tendances récentes : bon coin, le bon coin, open ai. En savoir plus sur AI Coin, les cryptos et les tendances IA.">
-  <meta name="keywords" lang="fr" content="bon coin, le bon coin, open ai, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="it" content="Trend recenti: AI Coin. Scopri AI Coin, i token crypto e i trend dell’IA.">
-  <meta name="keywords" lang="it" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="pt" content="Tendências recentes: AI Coin. Saiba mais sobre AI Coin, criptoativos e tendências de IA.">
-  <meta name="keywords" lang="pt" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="ja" content="最新トレンド: AI Coin。AI Coin、暗号トークン、AIトレンドについて。">
-  <meta name="keywords" lang="ja" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
-  <meta name="keywords" lang="zh" content="AI Coin, AI Coin, crypto, blockchain, Web3">
 </head>
 <body>
   <!-- three.js фон -->
-  <div id="stage"><div id="app" aria-hidden="true"></div></div>
+  <div id="stage"><div id="app"></div></div>
 
+  <!-- Верхние кнопки -->
+  <div class="topbar">
+    <button id="btnMotion" class="chip">Enable Motion</button>
+    <label class="chip">Center Mode:
+      <select id="centerMode">
+        <option value="visual" selected>Visual</option>
+        <option value="math">Math</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- Контент -->
   <main class="wrap" aria-label="Hero">
     <h1 class="title">$Get Ai Coin</h1>
-    <div id="typed" class="subtitle typing" aria-live="polite"></div>
+    <div id="typed" class="subtitle"></div>
 
     <div class="row">
-      <a class="pill" href="https://x.com/aicoin_eth" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.39 2H21l-6.54 7.47L22 22h-6.83l-4.8-6.27L4.8 22H2.2l7.04-8.04L2 2h6.9l4.33 5.73L18.39 2Zm-1.2 18h1.67L7.93 4h-1.7l10.96 16Z"/></svg>
-        Twitter X
-      </a>
+      <a class="pill" href="https://x.com/aicoin_eth" target="_blank" rel="noopener">Twitter X</a>
       <span class="sep">|</span>
-      <a class="pill" href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.04 15.3 8.9 19.7c.31 0 .44-.13 .6-.29l2.88-2.76 5.98 4.38c1.1 .61 1.88 .29 2.18-1.02l3.95-18.5h0c.35-1.63-.59-2.26-1.66-1.87L1.06 9.7C-.53 10.35-.51 11.23 .78 11.63l5.64 1.76 13.11-8.25c.62-.37 1.19-.17 .72 .2L9.04 15.3Z"/></svg>
-        Telegram
-      </a>
+      <a class="pill" href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">Telegram</a>
     </div>
 
     <div class="row">
@@ -202,20 +167,17 @@
     <section class="panel" role="document">
       <h3 id="contactTitle">Contact us</h3>
       <p>Send us a message — we’ll get back to you.</p>
-
       <div class="field">
         <label for="cSubj">Subject</label>
         <input id="cSubj" type="text" placeholder="Topic of your message">
       </div>
-
       <div class="field" style="grid-template-columns:minmax(0,1fr);">
         <label for="cBody">Message</label>
         <textarea id="cBody" placeholder="Your text"></textarea>
       </div>
-
-      <div class="actions">
+      <div class="row" style="justify-content:flex-end">
         <button class="btn" id="contactClose">Close</button>
-        <button class="btn primary" id="contactSend">Send</button>
+        <button class="btn" id="contactSend">Send</button>
       </div>
     </section>
   </div>
@@ -225,26 +187,22 @@
     <div class="veil"></div>
     <section class="panel" role="document">
       <h3 id="donateTitle">For sponsors</h3>
-
       <div class="field">
         <label>ETH (ERC-20)</label>
         <div class="copybox" id="ethAddr">0x5Daf8D49b5cc17e4f5C575BeFc9880Fdc6A76037</div>
         <button class="btn" data-copy="#ethAddr">Copy</button>
       </div>
-
       <div class="field">
         <label>BTC (bech32)</label>
         <div class="copybox" id="btcAddr">bc1q0572x8gusvkyh9we8qxtas90mdupgfhsc2al4q</div>
         <button class="btn" data-copy="#btcAddr">Copy</button>
       </div>
-
       <div class="field">
         <label>USDT (TRC-20)</label>
         <div class="copybox" id="usdtAddr">TSn6jiZydc4sKTKqJbyMJhypdtNdFcF64c</div>
         <button class="btn" data-copy="#usdtAddr">Copy</button>
       </div>
-
-      <div class="actions">
+      <div class="row" style="justify-content:flex-end">
         <button class="btn" id="donateClose">Close</button>
       </div>
     </section>
@@ -252,74 +210,108 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 
-  <!-- three.js: Sphere -->
+  <!-- three.js: центрированный шар + drag + автоспин + гироскоп + два режима центрирования -->
   <script>
-    const stage = document.getElementById('stage');
-    const app   = document.getElementById('app');
+    const app = document.getElementById('app');
 
-    // Base
+    // Сцена / камера / рендер
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
     const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
     app.appendChild(renderer.domElement);
-    renderer.domElement.style.touchAction = 'none';
+    renderer.domElement.style.touchAction='none';
 
-    // Sphere
-    const group = new THREE.Group(); scene.add(group);
-    const R = 2.2;
-    const sphereGeom = new THREE.SphereBufferGeometry(R, 40, 26);
-    const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
-    group.add(new THREE.Points(sphereGeom, dotsMat));
-    group.add(new THREE.LineSegments(
-      new THREE.WireframeGeometry(sphereGeom),
-      new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })
-    ));
-
-    // Lights
+    // Свет
     scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
     const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
 
-    // Controls: rotate with mouse/touch
-    const orbit = new THREE.OrbitControls(camera, renderer.domElement);
-    orbit.enableDamping = true; orbit.dampingFactor = 0.06;
-    orbit.rotateSpeed = 0.6; orbit.enablePan = false; orbit.enableZoom = false;
+    // Сфера
+    const R = 2.2;
+    const geom = new THREE.SphereBufferGeometry(R, 40, 26);
+    const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
+    const points = new THREE.Points(geom, dotsMat); scene.add(points);
+    const lines  = new THREE.LineSegments(new THREE.WireframeGeometry(geom),
+      new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })); scene.add(lines);
 
-    // Fit to viewport (100dvh) + slight right shift on wide screens
-    function sizeOf(el){ const r=el.getBoundingClientRect(); return { w:Math.round(r.width), h:Math.round(r.height) }; }
+    // OrbitControls
+    const orbit = new THREE.OrbitControls(camera, renderer.domElement);
+    orbit.enableDamping = true; orbit.dampingFactor = 0.06; orbit.rotateSpeed=0.6;
+    orbit.enablePan = false; orbit.enableZoom = false; orbit.target.set(0,0,0);
+
+    // Режимы центрирования
+    const centerModeSel = document.getElementById('centerMode');
+    let mode = centerModeSel.value; // 'visual' | 'math'
+    centerModeSel.addEventListener('change', ()=>{ mode = centerModeSel.value; fit(); });
+
     function fit(){
-      const {w,h} = sizeOf(stage);
+      const w = window.innerWidth, h = window.innerHeight;
       camera.aspect = w/h; camera.updateProjectionMatrix();
-      renderer.setSize(w,h,false);
+      renderer.setSize(w, h, false);
+
+      // коэффициенты заполнения (диаметр / высота экрана)
+      let fill, xOffset;
+      if (mode === 'math'){
+        fill = (w < 768) ? 0.42 : 0.50;
+        xOffset = 0.0;
+      }else{ // visual
+        fill = (w < 768) ? 0.36 : 0.42;
+        xOffset = -0.25;
+      }
 
       const fov = camera.fov * Math.PI/180;
-      const wide = w>900, isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      const fill = wide ? 0.62 : (isIOS ? 0.42 : 0.48); // меньше на iOS, чтобы не обрезало
       const dist = (R / fill) / Math.tan(fov/2);
 
       camera.position.set(0,0,dist);
       orbit.update();
 
-      const aspect = w/h;
-      group.position.x = aspect > 1.2 ? Math.min((aspect-1.2)*1.6, 1.6) : 0;
+      points.position.set(xOffset, 0, 0);
+      lines.position.copy(points.position);
     }
     addEventListener('resize', fit, { passive:true });
-    addEventListener('orientationchange', () => setTimeout(fit, 200));
+    addEventListener('orientationchange', ()=>setTimeout(fit,200), { passive:true });
     if (window.visualViewport) visualViewport.addEventListener('resize', fit, { passive:true });
     fit();
 
-    // Idle spin + breathing
+    // Гироскоп
+    let gyroOn=false, deviceControls=null;
+    const btn = document.getElementById('btnMotion');
+    btn.addEventListener('click', toggleMotion, { passive:true });
+
+    async function toggleMotion(){
+      if(!gyroOn){
+        try{
+          if (typeof DeviceOrientationEvent !== 'undefined' &&
+              typeof DeviceOrientationEvent.requestPermission === 'function') {
+            const st = await DeviceOrientationEvent.requestPermission();
+            if (st !== 'granted') throw new Error('denied');
+          }
+          if (typeof DeviceMotionEvent !== 'undefined' &&
+              typeof DeviceMotionEvent.requestPermission === 'function') {
+            try{ await DeviceMotionEvent.requestPermission(); }catch(_){}
+          }
+          deviceControls = new THREE.DeviceOrientationControls(camera);
+          deviceControls.connect();
+          gyroOn = true; orbit.enabled = false; btn.textContent = 'Gyro: ON';
+        }catch(e){ alert('Motion permission not granted. Rotate with finger.'); }
+      }else{
+        try{ deviceControls?.disconnect(); }catch(_){}
+        deviceControls=null; gyroOn=false; orbit.enabled=true; btn.textContent='Enable Motion';
+      }
+    }
+
+    // Рендер‑цикл
     let t=0, idle=true, idleTimer=null;
-    const pokeIdle=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true, 2200); };
-    renderer.domElement.addEventListener('pointerdown', pokeIdle, { passive:true });
-    renderer.domElement.addEventListener('pointermove', pokeIdle, { passive:true });
+    const poke=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true,2200); };
+    renderer.domElement.addEventListener('pointerdown', poke, { passive:true });
+    renderer.domElement.addEventListener('pointermove', poke, { passive:true });
 
     function tick(){
       requestAnimationFrame(tick);
-      if (idle) group.rotation.y += 0.0022;
-      t += 0.02; dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
-      orbit.update();
-      renderer.render(scene, camera);
+      if (gyroOn && deviceControls){ deviceControls.update(); }
+      else if (idle){ points.rotation.y+=0.0022; lines.rotation.y+=0.0022; }
+      t+=0.02; dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
+      orbit.update(); renderer.render(scene, camera);
     }
     tick();
   </script>
@@ -329,21 +321,14 @@
     const q = s => document.querySelector(s);
     const on = (el,ev,fn)=> el && el.addEventListener(ev,fn);
 
-    // Typed subtitle
-    (function () {
+    (function(){
       const full = "A social crypto project\nwhere people and AI decide together";
-      const typedEl = q('#typed'); let idx = 0;
-      (function step(){
-        if(idx <= full.length){ typedEl.textContent = full.slice(0, idx++); setTimeout(step, 18); }
-        else typedEl.classList.remove('typing');
-      })();
+      const el = q('#typed'); let i=0;
+      (function step(){ if(i<=full.length){ el.textContent=full.slice(0,i++); setTimeout(step,18); } })();
     })();
 
-    const contactOverlay=q('#contactOverlay');
-    const donateOverlay =q('#donateOverlay');
-    const show = el=>el.classList.add('show');
-    const hide = el=>el.classList.remove('show');
-
+    const contactOverlay=q('#contactOverlay'), donateOverlay=q('#donateOverlay');
+    const show = el=>el.classList.add('show'), hide=el=>el.classList.remove('show');
     on(q('#openContact'),'click',()=>show(contactOverlay));
     on(q('#openDonate'),'click',()=>show(donateOverlay));
     on(q('#contactClose'),'click',()=>hide(contactOverlay));
@@ -351,7 +336,6 @@
     [contactOverlay,donateOverlay].forEach(ov=>{
       on(ov,'click',e=>{ if(e.target===ov || e.target.classList.contains('veil')) hide(ov); });
     });
-    on(document,'keydown',e=>{ if(e.key==='Escape'){ hide(contactOverlay); hide(donateOverlay);} });
 
     const toast=q('#toast');
     function showToast(txt='Copied'){ toast.textContent=txt; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1100); }
