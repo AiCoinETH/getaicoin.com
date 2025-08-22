@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- фиксируем мобильный зум -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>coin stock — news &amp; insights on AI Coin</title>
   <link rel="canonical" href="https://getaicoin.com/">
@@ -24,7 +23,7 @@
   <meta property="og:description" content="A social crypto project where people and AI decide together on its future." />
   <meta property="og:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
 
-  <!-- Twitter Card (X) -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://getaicoin.com/" />
   <meta name="twitter:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain" />
@@ -32,7 +31,7 @@
   <meta name="twitter:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
   <meta name="twitter:site" content="@aicoin_eth" />
 
-  <!-- Preload превью -->
+  <!-- Preload -->
   <link rel="preload" as="image" href="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" imagesrcset="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2 1200w">
 
   <!-- Fonts -->
@@ -46,7 +45,7 @@
   </script>
   <script defer data-domain="getaicoin.com" src="https://plausible.io/js/script.js"></script>
 
-  <!-- three.js r121 (нужна эта версия для DeviceOrientationControls) -->
+  <!-- three.js r121 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
@@ -54,19 +53,13 @@
   <style>
     :root{
       --bg-0:#0b1220;
-      --text:#e8eefc;
-      --muted:#9fb2d1;
-      --radius:16px;
-      --radius-sm:12px;
-      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --text:#e8eefc; --muted:#9fb2d1;
+      --radius:16px; --radius-sm:12px; --shadow:0 20px 60px rgba(0,0,0,.35);
     }
-
     *{ box-sizing:border-box }
     html,body{ height:100% }
+    html{ touch-action:manipulation; -ms-touch-action:manipulation }
 
-    html{ touch-action: manipulation; -ms-touch-action: manipulation; }
-
-    /* Чистый тёмный фон, без старой сетки и радиального градиента (three.js будет подложкой) */
     body{
       margin:0; color:var(--text);
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -74,29 +67,30 @@
       overflow:hidden; position:relative; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       -webkit-text-size-adjust:100%; overscroll-behavior:none;
     }
-    body::before{ content:none !important; }
 
-    /* THREE.js сцена на заднем плане, ровно по 100dvh (устойчиво на iOS) */
-    #stage{ position:fixed; inset:0; height:100dvh; width:100%; z-index:0; }
+    /* THREE: слой сцены (ниже контента, но принимает жесты по всей площади) */
+    #stage{ position:fixed; inset:0; width:100%; height:100dvh; z-index:0; }
     #app{ position:absolute; inset:0; }
     canvas{ display:block; touch-action:none; -ms-touch-action:none; -webkit-user-select:none; -webkit-touch-callout:none; }
 
-    /* Поверх — твой контент */
+    /* Контент поверх (заглушаем pointer-events, чтобы свайпы уходили в канвас) */
     .wrap{
       position:relative; height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
       padding:24px 18px 28px; gap:18px; z-index:1;
+      pointer-events:none; /* ключ: весь слой пропускает жесты к канвасу */
     }
+    /* кроме кликабельных элементов — им возвращаем события */
+    .wrap .pill, .overlay, .panel, .btn, input, textarea, select, button { pointer-events:auto; }
 
     .title{
-      font-weight:800;
-      font-size:clamp(28px, 6.5vw, 56px);
+      font-weight:800; font-size:clamp(28px,6.5vw,56px);
       line-height:1.06; letter-spacing:.01em; text-align:center;
       text-shadow:0 2px 20px rgba(0,0,0,.55);
     }
     .subtitle{
       text-align:center; color:var(--muted);
-      font-size:clamp(16px, 3.7vw, 24px);
-      line-height:1.35; min-height:3.2em;
+      font-size:clamp(16px,3.7vw,24px);
+      line-height:1.35; min-height:3.0em;
       text-shadow:0 2px 14px rgba(0,0,0,.45);
     }
     .typing::after{
@@ -115,10 +109,9 @@
     }
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
-    .pill svg{ width:18px; height:18px; display:block; }
+    .pill svg{ width:18px; height:18px; display:block }
 
-    input, textarea, select, button { font-size:16px; }
-
+    /* Модалки/панели — как у тебя */
     .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10; }
     .overlay.show{ display:flex }
     .veil{ position:absolute; inset:0; background:rgba(2,8,18,.55); backdrop-filter: blur(4px); }
@@ -131,8 +124,7 @@
     .panel p{ margin:0 0 16px; color:var(--muted) }
 
     .field{
-      display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center;
-      margin:16px 0;
+      display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; margin:16px 0;
     }
     .field label{
       grid-column:1 / -1; margin-bottom:4px; color:#b9c6e4; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
@@ -142,11 +134,7 @@
     }
     textarea{ min-height:120px; resize:vertical }
 
-    .copybox{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: clamp(11px, 2.9vw, 13px);
-      line-height:1.3; overflow-wrap:anywhere; word-break: break-all; white-space: normal;
-    }
+    .copybox{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:clamp(11px,2.9vw,13px); line-height:1.3; overflow-wrap:anywhere; }
 
     .btn{
       border:1px solid #2a3860; background:#13203a; color:var(--text);
@@ -163,35 +151,7 @@
       border:1px solid #2b3961; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .15s;
     }
     .toast.show{ opacity:1 }
-
-    @media (max-height:720px){
-      .wrap{ padding-bottom:20px }
-      .subtitle{ font-size:clamp(15px, 3.6vw, 20px) }
-    }
-
-    /* Мелкие правки для мобилы */
-    @media (max-width: 640px){
-      /* можно скрыть dbg, если добавишь его */
-    }
   </style>
-
-  <!-- i18n keywords -->
-  <meta name="keywords" lang="ru" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="keywords" lang="de" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="keywords" lang="es" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="keywords" lang="fr" content="open ai, AI Coin, crypto, blockchain, Web3">
-  <meta name="keywords" lang="it" content="coin stock, AI Coin, crypto, blockchain, Web3">
-  <meta name="keywords" lang="pt" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="keywords" lang="ja" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="keywords" lang="zh" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="ru" content="Последние тренды: AI Coin. Узнайте об AI Coin, криптотокенах и нейротрендах сегодня.">
-  <meta name="description" lang="de" content="Aktuelle Trends: AI Coin. Erfahren Sie mehr über AI Coin, Kryptotoken und KI-Trends.">
-  <meta name="description" lang="es" content="Tendencias recientes: AI Coin. Conozca AI Coin, los criptoactivos y las tendencias de IA.">
-  <meta name="description" lang="fr" content="Tendances récentes : open ai. En savoir plus sur AI Coin, les cryptos et les tendances IA.">
-  <meta name="description" lang="it" content="Trend recenti: coin stock. Scopri AI Coin, i token crypto e i trend dell’IA.">
-  <meta name="description" lang="pt" content="Tendências recentes: AI Coin. Saiba mais sobre AI Coin, criptoativos e tendências de IA.">
-  <meta name="description" lang="ja" content="最新トレンド: AI Coin。AI Coin、暗号トークン、AIトレンドについて。">
-  <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
 </head>
 <body>
   <!-- three.js фон -->
@@ -276,12 +236,12 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 
-  <!-- three.js: Gyro Sphere -->
+  <!-- three.js: Sphere -->
   <script>
     const stage = document.getElementById('stage');
     const app   = document.getElementById('app');
 
-    // Сцена/камера/рендерер
+    // Base
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
     const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:'high-performance' });
@@ -289,7 +249,7 @@
     app.appendChild(renderer.domElement);
     renderer.domElement.style.touchAction = 'none';
 
-    // Сфера (точки + wireframe)
+    // Sphere
     const group = new THREE.Group(); scene.add(group);
     const R = 2.2;
     const sphereGeom = new THREE.SphereBufferGeometry(R, 40, 26);
@@ -300,16 +260,16 @@
       new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })
     ));
 
-    // Свет
+    // Lights
     scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
     const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
 
-    // OrbitControls: мышь/тач
+    // Controls: rotate with mouse/touch
     const orbit = new THREE.OrbitControls(camera, renderer.domElement);
     orbit.enableDamping = true; orbit.dampingFactor = 0.06;
     orbit.rotateSpeed = 0.6; orbit.enablePan = false; orbit.enableZoom = false;
 
-    // Fit: стабильный масштаб (100dvh), смещение вправо на ширинах
+    // Fit to viewport (100dvh) + slight right shift on wide screens
     function sizeOf(el){ const r=el.getBoundingClientRect(); return { w:Math.round(r.width), h:Math.round(r.height) }; }
     function fit(){
       const {w,h} = sizeOf(stage);
@@ -318,23 +278,23 @@
 
       const fov = camera.fov * Math.PI/180;
       const wide = w>900, isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      const fill = wide ? 0.62 : (isIOS ? 0.46 : 0.50); // доля высоты под диаметр
+      const fill = wide ? 0.62 : (isIOS ? 0.42 : 0.48); // меньше на iOS, чтобы не обрезало
       const dist = (R / fill) / Math.tan(fov/2);
 
       camera.position.set(0,0,dist);
       orbit.update();
 
       const aspect = w/h;
-      group.position.x = aspect > 1.2 ? Math.min((aspect-1.2)*1.6, 1.8) : 0;
+      group.position.x = aspect > 1.2 ? Math.min((aspect-1.2)*1.6, 1.6) : 0;
     }
     addEventListener('resize', fit, { passive:true });
     addEventListener('orientationchange', () => setTimeout(fit, 200));
     if (window.visualViewport) visualViewport.addEventListener('resize', fit, { passive:true });
     fit();
 
-    // Плавная «жизнь» точек + автоворот в простое
+    // Idle spin + breathing
     let t=0, idle=true, idleTimer=null;
-    const pokeIdle=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true, 2400); };
+    const pokeIdle=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true, 2200); };
     renderer.domElement.addEventListener('pointerdown', pokeIdle, { passive:true });
     renderer.domElement.addEventListener('pointermove', pokeIdle, { passive:true });
 
@@ -348,25 +308,19 @@
     tick();
   </script>
 
-  <!-- UI: модалки/копирование/контакты + тайпинг -->
+  <!-- UI: тайпинг + модалки/копирование -->
   <script>
     const q = s => document.querySelector(s);
     const on = (el,ev,fn)=> el && el.addEventListener(ev,fn);
 
-    // Тайпинг подзаголовка
+    // Typed subtitle
     (function () {
       const full = "A social crypto project\nwhere people and AI decide together";
-      const typedEl = q('#typed');
-      let idx = 0;
-      function typeStep(){
-        if(idx <= full.length){
-          typedEl.textContent = full.slice(0, idx++);
-          setTimeout(typeStep, 18);
-        } else {
-          typedEl.classList.remove('typing');
-        }
-      }
-      typeStep();
+      const typedEl = q('#typed'); let idx = 0;
+      (function step(){
+        if(idx <= full.length){ typedEl.textContent = full.slice(0, idx++); setTimeout(step, 18); }
+        else typedEl.classList.remove('typing');
+      })();
     })();
 
     const contactOverlay=q('#contactOverlay');
@@ -396,59 +350,6 @@
         });
       });
     });
-
-    const CONTACT_ENDPOINT = "";
-
-    function sendToSheet(payload){
-      return fetch(CONTACT_ENDPOINT, {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify(payload)
-      });
-    }
-
-    const hiddenEmail = atob('bWRrb3NkQGdtYWlsLmNvbQ=='); // mdkosd@gmail.com
-
-    on(q('#contactSend'),'click', async ()=>{
-      const subj=q('#cSubj').value.trim()||'Ai Coin — message';
-      const body=q('#cBody').value.trim();
-
-      if(CONTACT_ENDPOINT){
-        try{
-          const res = await sendToSheet({subject:subj, message:body, ts: new Date().toISOString()});
-          if(res.ok){ showToast('Sent'); hide(contactOverlay); q('#cSubj').value=''; q('#cBody').value=''; return; }
-        }catch(_){}
-        showToast('Error — fallback to mail');
-      }
-
-      location.href=`mailto:${hiddenEmail}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
-    });
-
-    // Блокировка жестов масштабирования (как было у тебя)
-    (function () {
-      document.addEventListener('touchstart', function (e) {
-        if (e.touches && e.touches.length > 1) e.preventDefault();
-      }, { passive: false });
-
-      document.addEventListener('touchmove', function (e) {
-        if (e.touches && e.touches.length > 1) e.preventDefault();
-      }, { passive: false });
-
-      let lastTouchEnd = 0;
-      document.addEventListener('touchend', function (e) {
-        const now = Date.now();
-        if (now - lastTouchEnd <= 300) e.preventDefault();
-        lastTouchEnd = now;
-      }, { passive: false });
-
-      ['gesturestart','gesturechange','gestureend'].forEach(ev=>{
-        document.addEventListener(ev, e => e.preventDefault(), { passive:false });
-      });
-
-      document.addEventListener('wheel', function(e){
-        if (e.ctrlKey || e.metaKey) e.preventDefault();
-      }, { passive:false });
-    })();
   </script>
 </body>
 </html>
