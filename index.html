@@ -1,48 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>ai stock — news &amp; insights on AI Coin</title>
+  <title>Get AI Coin — Gyro Sphere</title>
   <link rel="canonical" href="https://getaicoin.com/">
 
-  <!-- Favicon -->
+  <!-- Favicons -->
   <link rel="icon" href="/Logo.png" type="image/png">
-  <link rel="shortcut icon" href="/Logo.png" type="image/png">
   <link rel="apple-touch-icon" href="/Logo.png">
-
-  <!-- SEO -->
-  <meta name="description" content="Latest trends: ai stock, coin flip, google ai. Learn about AI Coin, crypto tokens, and AI trends today.">
-  <meta name="keywords" content="ai stock, coin flip, google ai, AI Coin, crypto, blockchain, Web3">
-
-  <!-- Open Graph / Twitter -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://getaicoin.com/" />
-  <meta property="og:site_name" content="Get AI Coin" />
-  <meta property="og:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain" />
-  <meta property="og:description" content="A social crypto project where people and AI decide together on its future." />
-  <meta property="og:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://getaicoin.com/" />
-  <meta name="twitter:title" content="Get AI Coin — Social cryptocurrency & AI-powered blockchain" />
-  <meta name="twitter:description" content="A social crypto project where people and AI decide together on its future." />
-  <meta name="twitter:image" content="https://getaicoin.com/A7F36992-0128-4434-8743-C5A344B4B527.png?v=2" />
-  <meta name="twitter:site" content="@aicoin_eth" />
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- three.js r121 -->
+  <!-- three.js r121 (важна версия для DeviceOrientationControls) -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
 
   <style>
     :root{
       --bg:#0b1220; --text:#e8eefc; --muted:#9fb2d1;
       --card:#121b2e; --border:#1e2a46;
       --radius:16px; --shadow:0 20px 60px rgba(0,0,0,.35);
-      --safe-bottom: max(env(safe-area-inset-bottom), 8px);
+      --safe-bottom:max(env(safe-area-inset-bottom), 8px);
     }
     *{ box-sizing:border-box }
     html,body{ height:100% }
@@ -53,12 +35,12 @@
       overflow:hidden; position:relative;
     }
 
-    /* three.js слой */
-    #stage{ position:fixed; inset:0; width:100%; height:100dvh; z-index:0 }
+    /* 3D слой */
+    #stage{ position:fixed; inset:0; z-index:0 }
     #app{ position:absolute; inset:0 }
-    canvas{ display:block; touch-action:none; -ms-touch-action:none; -webkit-user-select:none; -webkit-touch-callout:none; }
+    canvas{ display:block; touch-action:none; -ms-touch-action:none; }
 
-    /* Контент (пропускает свайпы к канвасу) */
+    /* Контент поверх; пропускаем свайпы к канвасу кроме кликабельного */
     .wrap{
       position:relative; height:100dvh;
       display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
@@ -67,18 +49,27 @@
     }
     .wrap .pill, .overlay, .panel, .btn { pointer-events:auto }
 
-    .title{ font-weight:800; font-size:clamp(32px,6.4vw,72px); line-height:1.05; text-align:center; text-shadow:0 2px 20px rgba(0,0,0,.55) }
-    .subtitle{ text-align:center; color:var(--muted); font-size:clamp(16px,3.6vw,24px); line-height:1.35; min-height:3em; text-shadow:0 2px 14px rgba(0,0,0,.45) }
-    .row{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; align-items:center }
+    .title{ font-weight:800; font-size:clamp(32px,6.2vw,64px); line-height:1.05; text-align:center; text-shadow:0 2px 20px rgba(0,0,0,.55) }
+    .subtitle{ text-align:center; color:var(--muted); font-size:clamp(16px,3.6vw,22px); line-height:1.35; min-height:3em; text-shadow:0 2px 14px rgba(0,0,0,.45) }
 
+    .row{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; justify-content:center }
     .pill{
       display:inline-flex; align-items:center; gap:10px; padding:12px 18px;
-      border-radius:999px; background:var(--card); color:var(--text);
-      border:1px solid var(--border); font-weight:600; text-decoration:none;
-      transition:transform .12s, background .12s, border-color .12s;
+      border-radius:999px; background:var(--card); color:var(--text); text-decoration:none;
+      border:1px solid var(--border);
+      box-shadow:0 6px 18px rgba(0,0,0,.25) inset, 0 6px 18px rgba(0,0,0,.15);
+      font-weight:600; transition:transform .12s, background .12s, border-color .12s;
     }
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
+
+    /* Кнопка гироскопа */
+    #btnMotion{
+      position:fixed; left:12px; bottom:calc(12px + var(--safe-bottom)); z-index:10;
+      padding:10px 14px; border-radius:12px; background:#06101a; color:#27e1ff;
+      border:1px solid #27e1ff33; font:600 14px/1 system-ui; cursor:pointer;
+      box-shadow:0 0 1px #000 inset, 0 6px 18px #0008;
+    }
 
     /* Модалки */
     .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10 }
@@ -112,13 +103,16 @@
   </style>
 </head>
 <body>
-  <!-- three.js фон -->
+  <!-- 3D фон -->
   <div id="stage"><div id="app"></div></div>
+
+  <!-- плавающая кнопка гироскопа -->
+  <button id="btnMotion">Enable Motion</button>
 
   <!-- Контент -->
   <main class="wrap" aria-label="Hero">
     <h1 class="title">$Get Ai Coin</h1>
-    <div id="typed" class="subtitle"></div>
+    <div id="typed" class="subtitle" aria-live="polite"></div>
 
     <div class="row">
       <a class="pill" href="https://x.com/aicoin_eth" target="_blank" rel="noopener">Twitter X</a>
@@ -182,89 +176,110 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 
-  <!-- three.js: только текстурированный глобус по центру -->
+  <!-- three.js: сцена со сферой -->
   <script>
     const app = document.getElementById('app');
 
-    // Сцена / камера / рендер
+    // База
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
     const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
     app.appendChild(renderer.domElement);
-    renderer.domElement.style.touchAction='none';
+    renderer.domElement.style.touchAction = 'none';
 
     // Свет
     scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
     const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
 
-    // Глобус (только текстура)
+    // Сфера (строго в центре мировой системы координат)
     const R = 2.2;
-    const globeGeom = new THREE.SphereGeometry(R, 64, 64);
-    const globeMat  = new THREE.MeshBasicMaterial({ map:null, transparent:true, opacity:1 });
-    const globe     = new THREE.Mesh(globeGeom, globeMat);
-    scene.add(globe); // центр сцены = центр шара
+    const sphereGeom = new THREE.SphereBufferGeometry(R, 40, 26);
+    const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
+    const points  = new THREE.Points(sphereGeom, dotsMat);
+    const lines   = new THREE.LineSegments(new THREE.WireframeGeometry(sphereGeom),
+                     new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 }));
+    points.position.set(0,0,0); lines.position.set(0,0,0);
+    scene.add(points); scene.add(lines);
 
-    // Загружаем текстуру из корня проекта: globe.png
-    new THREE.TextureLoader().load('globe.png', tex => {
-      tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-      globe.material.map = tex;
-      globe.material.needsUpdate = true;
-    }, undefined, () => {
-      // если нет текстуры — слегка подсветим шар
-      globe.material.color.set(0x0eaadc);
-    });
-
-    // Контролы: только вращение (без зума и панорамирования)
+    // Управление
     const orbit = new THREE.OrbitControls(camera, renderer.domElement);
-    orbit.enableDamping = true; orbit.dampingFactor = 0.06;
-    orbit.enableZoom = false;  orbit.enablePan = false;
-    orbit.rotateSpeed = 0.6;
-    orbit.target.set(0,0,0);
+    orbit.enableDamping = true; orbit.dampingFactor = 0.06; orbit.rotateSpeed = 0.6;
+    orbit.enablePan = false; orbit.enableZoom = false; orbit.target.set(0,0,0);
 
-    // Центр и масштаб: вписываем диаметр в высоту экрана
+    // Центрирование и масштаб под экран (матем. центр — (0,0,0), визуально по вертикали тоже центр)
     function fit(){
-      const w = innerWidth, h = innerHeight;
+      const w = window.innerWidth, h = window.innerHeight;
       camera.aspect = w/h; camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
 
-      const fov = camera.fov * Math.PI/180;
-      const fill = (w < 768) ? 0.66 : 0.62; // доля высоты экрана под диаметр
-      const dist = R / (fill * Math.tan(fov/2));
-      camera.position.set(0,0,dist);
+      // заполняем ~44% высоты (диаметр), без смещений
+      const fill = 0.44; // 0..1 доля высоты экрана, можно подрегулировать
+      const fov  = camera.fov * Math.PI/180;
+      const dist = (R / fill) / Math.tan(fov/2); // расстояние камеры для нужного видимого радиуса
+      camera.position.set(0, 0, dist);
       orbit.update();
+
+      // никаких x/y оффсетов — чистый центр
+      points.position.set(0,0,0);
+      lines.position.copy(points.position);
     }
     addEventListener('resize', fit, { passive:true });
-    addEventListener('orientationchange', ()=>setTimeout(fit,180), { passive:true });
+    addEventListener('orientationchange', () => setTimeout(fit, 220), { passive:true });
     if (window.visualViewport) visualViewport.addEventListener('resize', fit, { passive:true });
     fit();
 
-    // Рендер
-    let idle = true, t = 0, timer = null;
-    const wake = () => { idle=false; clearTimeout(timer); timer=setTimeout(()=>idle=true, 2000); };
-    renderer.domElement.addEventListener('pointerdown', wake, { passive:true });
-    renderer.domElement.addEventListener('pointermove', wake, { passive:true });
+    // Гироскоп
+    let gyroOn = false, deviceControls = null;
+    const btn = document.getElementById('btnMotion');
+    btn.addEventListener('click', async () => {
+      if (gyroOn) { try{ deviceControls?.disconnect(); }catch(_){}
+        gyroOn=false; orbit.enabled=true; btn.textContent='Enable Motion'; return; }
+      try{
+        if (typeof DeviceOrientationEvent !== 'undefined' &&
+            typeof DeviceOrientationEvent.requestPermission === 'function') {
+          const st = await DeviceOrientationEvent.requestPermission();
+          if (st !== 'granted') throw new Error('denied');
+        }
+        if (typeof DeviceMotionEvent !== 'undefined' &&
+            typeof DeviceMotionEvent.requestPermission === 'function') {
+          try{ await DeviceMotionEvent.requestPermission(); }catch(_){}
+        }
+        deviceControls = new THREE.DeviceOrientationControls(camera);
+        deviceControls.connect();
+        gyroOn = true; orbit.enabled = false; btn.textContent = 'Gyro: ON';
+      }catch(e){ alert('Motion permission not granted. Rotate with finger.'); }
+    }, { passive:true });
 
-    (function tick(){
+    // Анимация
+    let t=0, idle=true, idleTimer=null;
+    const poke=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true, 2000); };
+    renderer.domElement.addEventListener('pointerdown', poke, { passive:true });
+    renderer.domElement.addEventListener('pointermove', poke, { passive:true });
+
+    function tick(){
       requestAnimationFrame(tick);
-      if (idle) globe.rotation.y += 0.0022;
-      t += 0.02;
-      orbit.update();
-      renderer.render(scene, camera);
-    })();
+      if (gyroOn && deviceControls) deviceControls.update();
+      else if (idle){ points.rotation.y += 0.0021; lines.rotation.y += 0.0021; }
+      t += 0.02; dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
+      orbit.update(); renderer.render(scene, camera);
+    }
+    tick();
   </script>
 
-  <!-- UI: тайпинг + модалки/копирование -->
+  <!-- UI: тайпинг + модалки + копирование -->
   <script>
     const q = s => document.querySelector(s);
     const on = (el,ev,fn)=> el && el.addEventListener(ev,fn);
 
+    // typing subtitle
     (function(){
       const full = "A social crypto project\nwhere people and AI decide together";
       const el = q('#typed'); let i=0;
-      (function step(){ if(i<=full.length){ el.textContent=full.slice(0,i++); setTimeout(step,18); } })();
+      (function step(){ if(i<=full.length){ el.textContent = full.slice(0,i++); setTimeout(step,18); } })();
     })();
 
+    // overlays
     const contactOverlay=q('#contactOverlay'), donateOverlay=q('#donateOverlay');
     const show = el=>el.classList.add('show'), hide=el=>el.classList.remove('show');
     on(q('#openContact'),'click',()=>show(contactOverlay));
@@ -274,18 +289,23 @@
     [contactOverlay,donateOverlay].forEach(ov=>{
       on(ov,'click',e=>{ if(e.target===ov || e.target.classList.contains('veil')) hide(ov); });
     });
+    on(document,'keydown',e=>{ if(e.key==='Escape'){ hide(contactOverlay); hide(donateOverlay);} });
 
+    // copy buttons + toast
     const toast=q('#toast');
     function showToast(txt='Copied'){ toast.textContent=txt; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1100); }
     document.querySelectorAll('[data-copy]').forEach(btn=>{
       on(btn,'click',()=>{
         const el=q(btn.getAttribute('data-copy')); if(!el) return;
         const text=el.textContent.replace(/\s+/g,'').trim();
-        (navigator.clipboard?.writeText(text) || Promise.reject()).then(()=>showToast()).catch(()=>{
-          const ta=document.createElement('textarea'); ta.value=text; ta.style.position:'fixed'; ta.style.opacity:'0'; document.body.appendChild(ta);
-          ta.select(); try{ document.execCommand('copy'); showToast(); }catch(_){}
-          ta.remove();
-        });
+        (navigator.clipboard?.writeText(text) || Promise.reject())
+          .then(()=>showToast())
+          .catch(()=>{
+            const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+            document.body.appendChild(ta); ta.select();
+            try{ document.execCommand('copy'); showToast(); }catch(_){}
+            ta.remove();
+          });
       });
     });
   </script>
