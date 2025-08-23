@@ -43,7 +43,6 @@
       --bg:#0b1220; --text:#e8eefc; --muted:#9fb2d1;
       --card:#121b2e; --border:#1e2a46;
       --radius:16px; --shadow:0 20px 60px rgba(0,0,0,.35);
-      --safe-top: max(env(safe-area-inset-top), 8px);
       --safe-bottom: max(env(safe-area-inset-bottom), 8px);
     }
     *{ box-sizing:border-box }
@@ -82,7 +81,7 @@
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
 
-    /* Плавающая кнопка гироскопа */
+    /* Кнопка гироскопа */
     #btnMotion{
       position:fixed; left:12px; bottom:calc(12px + var(--safe-bottom));
       z-index:10; padding:10px 14px; border-radius:12px;
@@ -126,7 +125,6 @@
   <!-- three.js фон -->
   <div id="stage"><div id="app"></div></div>
 
-  <!-- Плавающая кнопка гироскопа -->
   <button id="btnMotion">Enable Motion</button>
 
   <!-- Контент -->
@@ -212,43 +210,46 @@
     scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
     const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
 
-    // Сфера (визуальная коррекция по X)
+    // Группа с шаром (центр в 0,0,0)
+    const group = new THREE.Group(); scene.add(group);
     const R = 2.2;
     const geom = new THREE.SphereBufferGeometry(R, 40, 26);
     const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
-    const points = new THREE.Points(geom, dotsMat); scene.add(points);
+    const points = new THREE.Points(geom, dotsMat); group.add(points);
     const lines  = new THREE.LineSegments(new THREE.WireframeGeometry(geom),
-      new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })); scene.add(lines);
+      new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })); group.add(lines);
 
     // OrbitControls
     const orbit = new THREE.OrbitControls(camera, renderer.domElement);
     orbit.enableDamping = true; orbit.dampingFactor = 0.06; orbit.rotateSpeed=0.6;
     orbit.enablePan = false; orbit.enableZoom = false; orbit.target.set(0,0,0);
 
-    // Адаптив + «визуальный центр»
+    // Геометрический центр — без смещений
+    group.position.set(0,0,0);
+
+    // Подгон камеры: вписываем диаметр в меньшую сторону экрана, шар строго по центру
     function fit(){
-      const w = window.innerWidth, h = window.innerHeight;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
       camera.aspect = w/h; camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
 
-      const mobile = w < 768;
-      const fill = mobile ? 0.33 : 0.44;     // доля высоты экрана под диаметр сферы
-      const fov  = camera.fov * Math.PI/180;
-      const dist = (R / fill) / Math.tan(fov/2);
-      camera.position.set(0,0,dist);
-      orbit.update();
+      const s = Math.min(w, h);           // меньшая сторона экрана
+      const fill = (w < 768) ? 0.86 : 0.92; // доля меньшей стороны под диаметр
+      const radiusPx = (s * fill) / 2;    // желаемый радиус в пикселях (на экране)
+      const fov = camera.fov * Math.PI/180;
 
-      // лёгкий сдвиг «на глаз», чтобы с текстом выглядело по центру
-      const xOffset = mobile ? -0.20 : -0.24;
-      points.position.set(xOffset, 0, 0);
-      lines.position.copy(points.position);
+      // проекция по вертикали: radius_px = (R / d) * (h/2) / tan(fov/2)
+      const d = (R * h) / (2 * radiusPx * Math.tan(fov/2));
+      camera.position.set(0, 0, d);
+      orbit.update();
     }
     addEventListener('resize', fit, { passive:true });
     addEventListener('orientationchange', ()=>setTimeout(fit,200), { passive:true });
     if (window.visualViewport) visualViewport.addEventListener('resize', fit, { passive:true });
     fit();
 
-    // Гироскоп (требует HTTPS и не работает в некоторых iframe без allow)
+    // Гироскоп (HTTPS/не в каждом iframe)
     let gyroOn=false, deviceControls=null;
     const btn = document.getElementById('btnMotion');
     btn.addEventListener('click', async ()=>{
@@ -280,7 +281,7 @@
     function tick(){
       requestAnimationFrame(tick);
       if (gyroOn && deviceControls){ deviceControls.update(); }
-      else if (idle){ points.rotation.y+=0.0022; lines.rotation.y+=0.0022; }
+      else if (idle){ group.rotation.y+=0.0022; }
       t+=0.02; dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
       orbit.update(); renderer.render(scene, camera);
     }
@@ -315,7 +316,7 @@
         const el=q(btn.getAttribute('data-copy')); if(!el) return;
         const text=el.textContent.replace(/\s+/g,'').trim();
         (navigator.clipboard?.writeText(text) || Promise.reject()).then(()=>showToast()).catch(()=>{
-          const ta=document.createElement('textarea'); ta.value=text; ta.style.position:'fixed'; ta.style.opacity:'0'; document.body.appendChild(ta);
+          const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity:'0'; document.body.appendChild(ta);
           ta.select(); try{ document.execCommand('copy'); showToast(); }catch(_){}
           ta.remove();
         });
