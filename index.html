@@ -212,22 +212,30 @@
     orbit.enablePan = false; orbit.enableZoom = false;
     orbit.target.copy(group.position);
 
-    // Центрирование и масштаб под экран
+    // --- ИДЕАЛЬНОЕ ЦЕНТРИРОВАНИЕ (visualViewport для iOS) ---
     function fit(){
-      const w = window.innerWidth, h = window.innerHeight;
-      camera.aspect = w/h; camera.updateProjectionMatrix();
-      renderer.setSize(w, h, false);
+      const vw = (window.visualViewport && visualViewport.width ) ? Math.round(visualViewport.width ) : innerWidth;
+      const vh = (window.visualViewport && visualViewport.height) ? Math.round(visualViewport.height) : innerHeight;
+
+      camera.aspect = vw / vh;
+      camera.updateProjectionMatrix();
+      renderer.setSize(vw, vh, false);
+
+      // Доля высоты экрана, которую занимает диаметр сферы
+      const fill = 0.50; // меняй размер, центр не сдвинется
 
       const fov  = camera.fov * Math.PI/180;
-      const fill = 0.48; // доля высоты экрана под диаметр сферы (точно по центру)
       const dist = (R / fill) / Math.tan(fov/2);
 
       camera.position.set(0, 0, dist);
-      orbit.target.copy(group.position);
+      camera.lookAt(0, 0, 0);
+
+      orbit.target.set(0,0,0);
       orbit.update();
 
-      // никаких оффсетов: визуально и математически центр совпадают
       group.position.set(0,0,0);
+      points.position.set(0,0,0);
+      lines.position.set(0,0,0);
     }
     addEventListener('resize', fit, { passive:true });
     addEventListener('orientationchange', () => setTimeout(fit, 220), { passive:true });
