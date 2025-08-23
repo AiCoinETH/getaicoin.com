@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>ai stock — news & insights on AI Coin</title>
+  <title>ai stock — news &amp; insights on AI Coin</title>
   <link rel="canonical" href="https://getaicoin.com/">
 
   <!-- Favicon -->
@@ -12,11 +12,11 @@
   <link rel="shortcut icon" href="/Logo.png" type="image/png">
   <link rel="apple-touch-icon" href="/Logo.png">
 
-  <!-- SEO (сжатый набор) -->
+  <!-- SEO -->
   <meta name="description" content="Latest trends: ai stock, coin flip, google ai. Learn about AI Coin, crypto tokens, and AI trends today.">
   <meta name="keywords" content="ai stock, coin flip, google ai, AI Coin, crypto, blockchain, Web3">
 
-  <!-- OG/Twitter -->
+  <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://getaicoin.com/" />
   <meta property="og:site_name" content="Get AI Coin" />
@@ -33,7 +33,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- three.js r121 (важна версия для DeviceOrientationControls) -->
+  <!-- three.js r121 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
@@ -43,6 +43,8 @@
       --bg:#0b1220; --text:#e8eefc; --muted:#9fb2d1;
       --card:#121b2e; --border:#1e2a46;
       --radius:16px; --shadow:0 20px 60px rgba(0,0,0,.35);
+      --safe-top: max(env(safe-area-inset-top), 8px);
+      --safe-bottom: max(env(safe-area-inset-bottom), 8px);
     }
     *{ box-sizing:border-box }
     html,body{ height:100% }
@@ -56,38 +58,21 @@
     /* three.js слой */
     #stage{ position:fixed; inset:0; width:100%; height:100dvh; z-index:0 }
     #app{ position:absolute; inset:0 }
-    canvas{
-      display:block; touch-action:none; -ms-touch-action:none;
-      -webkit-user-select:none; -webkit-touch-callout:none;
-    }
+    canvas{ display:block; touch-action:none; -ms-touch-action:none; -webkit-user-select:none; -webkit-touch-callout:none; }
 
-    /* Кнопки поверх */
-    .topbar{
-      position:fixed; left:12px; top:12px; z-index:10; display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .chip{
-      padding:10px 14px; border-radius:10px;
-      border:1px solid #27e1ff33; background:#06101a; color:#27e1ff;
-      font:600 14px/1 system-ui; box-shadow:0 0 1px #000 inset, 0 6px 18px #0008;
-      cursor:pointer; -webkit-tap-highlight-color:transparent;
-      user-select:none;
-    }
-    .chip select{
-      background:transparent; color:#27e1ff; border:none; font:inherit; outline:none; cursor:pointer;
-    }
-
-    /* Контент (пропускает свайпы в канвас) */
+    /* Контент (пропускает свайпы к канвасу) */
     .wrap{
       position:relative; height:100dvh;
       display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-      padding:24px 18px 28px; gap:18px; z-index:1; pointer-events:none;
+      padding:24px 18px calc(28px + var(--safe-bottom));
+      gap:18px; z-index:1; pointer-events:none;
     }
     .wrap .pill, .overlay, .panel, .btn { pointer-events:auto }
 
-    .title{ font-weight:800; font-size:clamp(32px,6.4vw,72px); line-height:1.05; text-align:center }
-    .subtitle{ text-align:center; color:var(--muted); font-size:clamp(16px,3.6vw,24px); line-height:1.35; min-height:3em }
-
+    .title{ font-weight:800; font-size:clamp(32px,6.4vw,72px); line-height:1.05; text-align:center; text-shadow:0 2px 20px rgba(0,0,0,.55) }
+    .subtitle{ text-align:center; color:var(--muted); font-size:clamp(16px,3.6vw,24px); line-height:1.35; min-height:3em; text-shadow:0 2px 14px rgba(0,0,0,.45) }
     .row{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; align-items:center }
+
     .pill{
       display:inline-flex; align-items:center; gap:10px; padding:12px 18px;
       border-radius:999px; background:var(--card); color:var(--text);
@@ -96,6 +81,15 @@
     }
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
+
+    /* Плавающая кнопка гироскопа */
+    #btnMotion{
+      position:fixed; left:12px; bottom:calc(12px + var(--safe-bottom));
+      z-index:10; padding:10px 14px; border-radius:12px;
+      border:1px solid #27e1ff33; background:#06101a; color:#27e1ff;
+      font:600 14px/1 system-ui; box-shadow:0 0 1px #000 inset, 0 6px 18px #0008;
+      cursor:pointer; -webkit-tap-highlight-color:transparent;
+    }
 
     /* Модалки */
     .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10 }
@@ -132,16 +126,8 @@
   <!-- three.js фон -->
   <div id="stage"><div id="app"></div></div>
 
-  <!-- Верхние кнопки -->
-  <div class="topbar">
-    <button id="btnMotion" class="chip">Enable Motion</button>
-    <label class="chip">Center Mode:
-      <select id="centerMode">
-        <option value="visual" selected>Visual</option>
-        <option value="math">Math</option>
-      </select>
-    </label>
-  </div>
+  <!-- Плавающая кнопка гироскопа -->
+  <button id="btnMotion">Enable Motion</button>
 
   <!-- Контент -->
   <main class="wrap" aria-label="Hero">
@@ -210,7 +196,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 
-  <!-- three.js: центрированный шар + drag + автоспин + гироскоп + два режима центрирования -->
+  <!-- three.js -->
   <script>
     const app = document.getElementById('app');
 
@@ -226,7 +212,7 @@
     scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
     const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
 
-    // Сфера
+    // Сфера (визуальная коррекция по X)
     const R = 2.2;
     const geom = new THREE.SphereBufferGeometry(R, 40, 26);
     const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
@@ -239,32 +225,21 @@
     orbit.enableDamping = true; orbit.dampingFactor = 0.06; orbit.rotateSpeed=0.6;
     orbit.enablePan = false; orbit.enableZoom = false; orbit.target.set(0,0,0);
 
-    // Режимы центрирования
-    const centerModeSel = document.getElementById('centerMode');
-    let mode = centerModeSel.value; // 'visual' | 'math'
-    centerModeSel.addEventListener('change', ()=>{ mode = centerModeSel.value; fit(); });
-
+    // Адаптив + «визуальный центр»
     function fit(){
       const w = window.innerWidth, h = window.innerHeight;
       camera.aspect = w/h; camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
 
-      // коэффициенты заполнения (диаметр / высота экрана)
-      let fill, xOffset;
-      if (mode === 'math'){
-        fill = (w < 768) ? 0.42 : 0.50;
-        xOffset = 0.0;
-      }else{ // visual
-        fill = (w < 768) ? 0.36 : 0.42;
-        xOffset = -0.25;
-      }
-
-      const fov = camera.fov * Math.PI/180;
+      const mobile = w < 768;
+      const fill = mobile ? 0.33 : 0.44;     // доля высоты экрана под диаметр сферы
+      const fov  = camera.fov * Math.PI/180;
       const dist = (R / fill) / Math.tan(fov/2);
-
       camera.position.set(0,0,dist);
       orbit.update();
 
+      // лёгкий сдвиг «на глаз», чтобы с текстом выглядело по центру
+      const xOffset = mobile ? -0.20 : -0.24;
       points.position.set(xOffset, 0, 0);
       lines.position.copy(points.position);
     }
@@ -273,32 +248,28 @@
     if (window.visualViewport) visualViewport.addEventListener('resize', fit, { passive:true });
     fit();
 
-    // Гироскоп
+    // Гироскоп (требует HTTPS и не работает в некоторых iframe без allow)
     let gyroOn=false, deviceControls=null;
     const btn = document.getElementById('btnMotion');
-    btn.addEventListener('click', toggleMotion, { passive:true });
-
-    async function toggleMotion(){
-      if(!gyroOn){
-        try{
-          if (typeof DeviceOrientationEvent !== 'undefined' &&
-              typeof DeviceOrientationEvent.requestPermission === 'function') {
-            const st = await DeviceOrientationEvent.requestPermission();
-            if (st !== 'granted') throw new Error('denied');
-          }
-          if (typeof DeviceMotionEvent !== 'undefined' &&
-              typeof DeviceMotionEvent.requestPermission === 'function') {
-            try{ await DeviceMotionEvent.requestPermission(); }catch(_){}
-          }
-          deviceControls = new THREE.DeviceOrientationControls(camera);
-          deviceControls.connect();
-          gyroOn = true; orbit.enabled = false; btn.textContent = 'Gyro: ON';
-        }catch(e){ alert('Motion permission not granted. Rotate with finger.'); }
-      }else{
+    btn.addEventListener('click', async ()=>{
+      if(gyroOn){
         try{ deviceControls?.disconnect(); }catch(_){}
-        deviceControls=null; gyroOn=false; orbit.enabled=true; btn.textContent='Enable Motion';
+        gyroOn=false; orbit.enabled=true; btn.textContent='Enable Motion'; return;
       }
-    }
+      try{
+        if (typeof DeviceOrientationEvent !== 'undefined' &&
+            typeof DeviceOrientationEvent.requestPermission === 'function') {
+          const st = await DeviceOrientationEvent.requestPermission();
+          if (st !== 'granted') throw new Error('denied');
+        }
+        if (typeof DeviceMotionEvent !== 'undefined' &&
+            typeof DeviceMotionEvent.requestPermission === 'function') {
+          try{ await DeviceMotionEvent.requestPermission(); }catch(_){}
+        }
+        deviceControls = new THREE.DeviceOrientationControls(camera);
+        deviceControls.connect(); gyroOn=true; orbit.enabled=false; btn.textContent='Gyro: ON';
+      }catch(e){ alert('Motion permission not granted. Rotate with finger.'); }
+    }, { passive:true });
 
     // Рендер‑цикл
     let t=0, idle=true, idleTimer=null;
@@ -344,7 +315,7 @@
         const el=q(btn.getAttribute('data-copy')); if(!el) return;
         const text=el.textContent.replace(/\s+/g,'').trim();
         (navigator.clipboard?.writeText(text) || Promise.reject()).then(()=>showToast()).catch(()=>{
-          const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+          const ta=document.createElement('textarea'); ta.value=text; ta.style.position:'fixed'; ta.style.opacity:'0'; document.body.appendChild(ta);
           ta.select(); try{ document.execCommand('copy'); showToast(); }catch(_){}
           ta.remove();
         });
