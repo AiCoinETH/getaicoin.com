@@ -36,7 +36,6 @@
   <!-- three.js r121 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
 
   <style>
     :root{
@@ -81,15 +80,6 @@
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
 
-    /* Кнопка гироскопа */
-    #btnMotion{
-      position:fixed; left:12px; bottom:calc(12px + var(--safe-bottom));
-      z-index:10; padding:10px 14px; border-radius:12px;
-      border:1px solid #27e1ff33; background:#06101a; color:#27e1ff;
-      font:600 14px/1 system-ui; box-shadow:0 0 1px #000 inset, 0 6px 18px #0008;
-      cursor:pointer; -webkit-tap-highlight-color:transparent;
-    }
-
     /* Модалки */
     .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10 }
     .overlay.show{ display:flex }
@@ -124,8 +114,6 @@
 <body>
   <!-- three.js фон -->
   <div id="stage"><div id="app"></div></div>
-
-  <button id="btnMotion">Enable Motion</button>
 
   <!-- Контент -->
   <main class="wrap" aria-label="Hero">
@@ -194,7 +182,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 
-  <!-- three.js -->
+  <!-- three.js: только текстурированный глобус по центру -->
   <script>
     const app = document.getElementById('app');
 
@@ -210,82 +198,60 @@
     scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
     const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
 
-    // Группа с шаром (центр в 0,0,0)
-    const group = new THREE.Group(); scene.add(group);
+    // Глобус (только текстура)
     const R = 2.2;
-    const geom = new THREE.SphereBufferGeometry(R, 40, 26);
-    const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
-    const points = new THREE.Points(geom, dotsMat); group.add(points);
-    const lines  = new THREE.LineSegments(new THREE.WireframeGeometry(geom),
-      new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })); group.add(lines);
+    const globeGeom = new THREE.SphereGeometry(R, 64, 64);
+    const globeMat  = new THREE.MeshBasicMaterial({ map:null, transparent:true, opacity:1 });
+    const globe     = new THREE.Mesh(globeGeom, globeMat);
+    scene.add(globe); // центр сцены = центр шара
 
-    // OrbitControls
+    // Загружаем текстуру из корня проекта: globe.png
+    new THREE.TextureLoader().load('globe.png', tex => {
+      tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      globe.material.map = tex;
+      globe.material.needsUpdate = true;
+    }, undefined, () => {
+      // если нет текстуры — слегка подсветим шар
+      globe.material.color.set(0x0eaadc);
+    });
+
+    // Контролы: только вращение (без зума и панорамирования)
     const orbit = new THREE.OrbitControls(camera, renderer.domElement);
-    orbit.enableDamping = true; orbit.dampingFactor = 0.06; orbit.rotateSpeed=0.6;
-    orbit.enablePan = false; orbit.enableZoom = false; orbit.target.set(0,0,0);
+    orbit.enableDamping = true; orbit.dampingFactor = 0.06;
+    orbit.enableZoom = false;  orbit.enablePan = false;
+    orbit.rotateSpeed = 0.6;
+    orbit.target.set(0,0,0);
 
-    // Геометрический центр — без смещений
-    group.position.set(0,0,0);
-
-    // Подгон камеры: вписываем диаметр в меньшую сторону экрана, шар строго по центру
+    // Центр и масштаб: вписываем диаметр в высоту экрана
     function fit(){
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      const w = innerWidth, h = innerHeight;
       camera.aspect = w/h; camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
 
-      const s = Math.min(w, h);           // меньшая сторона экрана
-      const fill = (w < 768) ? 0.86 : 0.92; // доля меньшей стороны под диаметр
-      const radiusPx = (s * fill) / 2;    // желаемый радиус в пикселях (на экране)
       const fov = camera.fov * Math.PI/180;
-
-      // проекция по вертикали: radius_px = (R / d) * (h/2) / tan(fov/2)
-      const d = (R * h) / (2 * radiusPx * Math.tan(fov/2));
-      camera.position.set(0, 0, d);
+      const fill = (w < 768) ? 0.66 : 0.62; // доля высоты экрана под диаметр
+      const dist = R / (fill * Math.tan(fov/2));
+      camera.position.set(0,0,dist);
       orbit.update();
     }
     addEventListener('resize', fit, { passive:true });
-    addEventListener('orientationchange', ()=>setTimeout(fit,200), { passive:true });
+    addEventListener('orientationchange', ()=>setTimeout(fit,180), { passive:true });
     if (window.visualViewport) visualViewport.addEventListener('resize', fit, { passive:true });
     fit();
 
-    // Гироскоп (HTTPS/не в каждом iframe)
-    let gyroOn=false, deviceControls=null;
-    const btn = document.getElementById('btnMotion');
-    btn.addEventListener('click', async ()=>{
-      if(gyroOn){
-        try{ deviceControls?.disconnect(); }catch(_){}
-        gyroOn=false; orbit.enabled=true; btn.textContent='Enable Motion'; return;
-      }
-      try{
-        if (typeof DeviceOrientationEvent !== 'undefined' &&
-            typeof DeviceOrientationEvent.requestPermission === 'function') {
-          const st = await DeviceOrientationEvent.requestPermission();
-          if (st !== 'granted') throw new Error('denied');
-        }
-        if (typeof DeviceMotionEvent !== 'undefined' &&
-            typeof DeviceMotionEvent.requestPermission === 'function') {
-          try{ await DeviceMotionEvent.requestPermission(); }catch(_){}
-        }
-        deviceControls = new THREE.DeviceOrientationControls(camera);
-        deviceControls.connect(); gyroOn=true; orbit.enabled=false; btn.textContent='Gyro: ON';
-      }catch(e){ alert('Motion permission not granted. Rotate with finger.'); }
-    }, { passive:true });
+    // Рендер
+    let idle = true, t = 0, timer = null;
+    const wake = () => { idle=false; clearTimeout(timer); timer=setTimeout(()=>idle=true, 2000); };
+    renderer.domElement.addEventListener('pointerdown', wake, { passive:true });
+    renderer.domElement.addEventListener('pointermove', wake, { passive:true });
 
-    // Рендер‑цикл
-    let t=0, idle=true, idleTimer=null;
-    const poke=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true,2200); };
-    renderer.domElement.addEventListener('pointerdown', poke, { passive:true });
-    renderer.domElement.addEventListener('pointermove', poke, { passive:true });
-
-    function tick(){
+    (function tick(){
       requestAnimationFrame(tick);
-      if (gyroOn && deviceControls){ deviceControls.update(); }
-      else if (idle){ group.rotation.y+=0.0022; }
-      t+=0.02; dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
-      orbit.update(); renderer.render(scene, camera);
-    }
-    tick();
+      if (idle) globe.rotation.y += 0.0022;
+      t += 0.02;
+      orbit.update();
+      renderer.render(scene, camera);
+    })();
   </script>
 
   <!-- UI: тайпинг + модалки/копирование -->
@@ -316,7 +282,7 @@
         const el=q(btn.getAttribute('data-copy')); if(!el) return;
         const text=el.textContent.replace(/\s+/g,'').trim();
         (navigator.clipboard?.writeText(text) || Promise.reject()).then(()=>showToast()).catch(()=>{
-          const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity:'0'; document.body.appendChild(ta);
+          const ta=document.createElement('textarea'); ta.value=text; ta.style.position:'fixed'; ta.style.opacity:'0'; document.body.appendChild(ta);
           ta.select(); try{ document.execCommand('copy'); showToast(); }catch(_){}
           ta.remove();
         });
