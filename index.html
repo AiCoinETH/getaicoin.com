@@ -14,7 +14,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- three.js r121 (важна версия для DeviceOrientationControls) -->
+  <!-- three.js r121 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
@@ -85,11 +85,11 @@
     .field{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; margin:16px 0 }
     .field label{ grid-column:1 / -1; margin-bottom:4px; color:#b9c6e4; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700 }
     .copybox, input[type="text"], textarea{
-      background:#0e1628; color:var(--text); border:1px solid #273455; border-radius:12px; padding:10px 12px; font:inherit;
+      background:#0e1628; color:#fff; border:1px solid #273455; border-radius:12px; padding:10px 12px; font:inherit;
     }
     textarea{ min-height:120px; resize:vertical }
     .btn{
-      border:1px solid #2a3860; background:#13203a; color:var(--text);
+      border:1px solid #2a3860; background:#13203a; color:#fff;
       padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700; min-height:40px;
       transition:transform .12s, background .12s, border-color .12s, opacity .12s;
     }
@@ -192,37 +192,42 @@
     scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
     const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
 
-    // Сфера (строго в центре мировой системы координат)
+    // === Сфера: единая группа в центре ===
     const R = 2.2;
+    const group = new THREE.Group(); scene.add(group);
+
     const sphereGeom = new THREE.SphereBufferGeometry(R, 40, 26);
     const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
     const points  = new THREE.Points(sphereGeom, dotsMat);
-    const lines   = new THREE.LineSegments(new THREE.WireframeGeometry(sphereGeom),
-                     new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 }));
-    points.position.set(0,0,0); lines.position.set(0,0,0);
-    scene.add(points); scene.add(lines);
+    const lines   = new THREE.LineSegments(
+      new THREE.WireframeGeometry(sphereGeom),
+      new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })
+    );
+    group.add(points, lines);
+    group.position.set(0,0,0); // геометрический центр сцены
 
     // Управление
     const orbit = new THREE.OrbitControls(camera, renderer.domElement);
     orbit.enableDamping = true; orbit.dampingFactor = 0.06; orbit.rotateSpeed = 0.6;
-    orbit.enablePan = false; orbit.enableZoom = false; orbit.target.set(0,0,0);
+    orbit.enablePan = false; orbit.enableZoom = false;
+    orbit.target.copy(group.position);
 
-    // Центрирование и масштаб под экран (матем. центр — (0,0,0), визуально по вертикали тоже центр)
+    // Центрирование и масштаб под экран
     function fit(){
       const w = window.innerWidth, h = window.innerHeight;
       camera.aspect = w/h; camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
 
-      // заполняем ~44% высоты (диаметр), без смещений
-      const fill = 0.44; // 0..1 доля высоты экрана, можно подрегулировать
       const fov  = camera.fov * Math.PI/180;
-      const dist = (R / fill) / Math.tan(fov/2); // расстояние камеры для нужного видимого радиуса
+      const fill = 0.48; // доля высоты экрана под диаметр сферы (точно по центру)
+      const dist = (R / fill) / Math.tan(fov/2);
+
       camera.position.set(0, 0, dist);
+      orbit.target.copy(group.position);
       orbit.update();
 
-      // никаких x/y оффсетов — чистый центр
-      points.position.set(0,0,0);
-      lines.position.copy(points.position);
+      // никаких оффсетов: визуально и математически центр совпадают
+      group.position.set(0,0,0);
     }
     addEventListener('resize', fit, { passive:true });
     addEventListener('orientationchange', () => setTimeout(fit, 220), { passive:true });
@@ -233,8 +238,10 @@
     let gyroOn = false, deviceControls = null;
     const btn = document.getElementById('btnMotion');
     btn.addEventListener('click', async () => {
-      if (gyroOn) { try{ deviceControls?.disconnect(); }catch(_){}
-        gyroOn=false; orbit.enabled=true; btn.textContent='Enable Motion'; return; }
+      if (gyroOn) {
+        try{ deviceControls?.disconnect(); }catch(_){}
+        gyroOn=false; orbit.enabled=true; btn.textContent='Enable Motion'; return;
+      }
       try{
         if (typeof DeviceOrientationEvent !== 'undefined' &&
             typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -260,7 +267,7 @@
     function tick(){
       requestAnimationFrame(tick);
       if (gyroOn && deviceControls) deviceControls.update();
-      else if (idle){ points.rotation.y += 0.0021; lines.rotation.y += 0.0021; }
+      else if (idle){ group.rotation.y += 0.0021; }
       t += 0.02; dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
       orbit.update(); renderer.render(scene, camera);
     }
