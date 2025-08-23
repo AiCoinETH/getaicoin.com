@@ -12,6 +12,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- three.js r121 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
@@ -60,6 +61,14 @@
     .pill:hover{ transform:translateY(-1px); background:#162241; border-color:#2a3a63 }
     .sep{ opacity:.35 }
 
+    /* Плавающая кнопка гироскопа */
+    #btnMotion{
+      position:fixed; left:12px; bottom:calc(12px + var(--safe-bottom)); z-index:10;
+      padding:10px 14px; border-radius:12px; background:#06101a; color:#27e1ff;
+      border:1px solid #27e1ff33; font:600 14px/1 system-ui; cursor:pointer;
+      box-shadow:0 0 1px #000 inset, 0 6px 18px #0008;
+    }
+
     /* Модалки */
     .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10 }
     .overlay.show{ display:flex }
@@ -94,6 +103,9 @@
 <body>
   <div id="stage"><div id="app"></div></div>
 
+  <!-- кнопка включения гироскопа -->
+  <button id="btnMotion">Enable Motion</button>
+
   <main class="wrap" aria-label="Hero">
     <h1 class="title">$Get Ai Coin</h1>
     <div id="typed" class="subtitle" aria-live="polite"></div>
@@ -111,6 +123,7 @@
     </div>
   </main>
 
+  <!-- Contact -->
   <div id="contactOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
     <div class="veil"></div>
     <section class="panel" role="document">
@@ -131,6 +144,7 @@
     </section>
   </div>
 
+  <!-- Sponsors -->
   <div id="donateOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
     <div class="veil"></div>
     <section class="panel" role="document">
@@ -158,39 +172,44 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 
+  <!-- three.js -->
   <script>
     const app = document.getElementById('app');
 
-    // База
+    // Сцена/камера/рендер
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
     const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
     app.appendChild(renderer.domElement);
-    renderer.domElement.style.touchAction = 'none';
+    renderer.domElement.style.touchAction='none';
 
     // Свет
     scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
     const key = new THREE.DirectionalLight(0x1fd3ff, 0.45); key.position.set(2,3,4); scene.add(key);
 
-    // === Сфера: единая группа в центре ===
+    // Сфера в группе (идеальный центр)
     const R = 2.2;
     const group = new THREE.Group(); scene.add(group);
 
     const sphereGeom = new THREE.SphereBufferGeometry(R, 40, 26);
     const dotsMat = new THREE.PointsMaterial({ color:0x27e1ff, size:0.034, transparent:true, opacity:0.95 });
     const points  = new THREE.Points(sphereGeom, dotsMat);
-    const lines   = new THREE.LineSegments(
-      new THREE.WireframeGeometry(sphereGeom),
-      new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 })
-    );
+    const lines   = new THREE.LineSegments(new THREE.WireframeGeometry(sphereGeom),
+                     new THREE.LineBasicMaterial({ color:0x1287a5, transparent:true, opacity:0.35 }));
     group.add(points, lines);
-    group.position.set(0,0,0); // геометрический центр сцены
+    group.position.set(0,0,0);
 
-    // Управление
-    let controls;
+    // OrbitControls по умолчанию
+    const orbit = new THREE.OrbitControls(camera, renderer.domElement);
+    orbit.enableDamping = true;
+    orbit.dampingFactor = 0.06;
+    orbit.rotateSpeed = 0.6;
+    orbit.enablePan = false;
+    orbit.enableZoom = false;
+    orbit.target.set(0,0,0);
 
-    // --- ИДЕАЛЬНОЕ ЦЕНТРИРОВАНИЕ (visualViewport для iOS) ---
+    // Центрирование (без оффсетов — чистая геометрия)
     function fit(){
       const vw = (window.visualViewport && visualViewport.width ) ? Math.round(visualViewport.width ) : innerWidth;
       const vh = (window.visualViewport && visualViewport.height) ? Math.round(visualViewport.height) : innerHeight;
@@ -199,74 +218,69 @@
       camera.updateProjectionMatrix();
       renderer.setSize(vw, vh, false);
 
-      // Доля высоты экрана, которую занимает диаметр сферы
-      const fill = 0.50; // меняй размер, центр не сдвинется
-
+      const fill = 0.48;                 // доля высоты под диаметр сферы
       const fov  = camera.fov * Math.PI/180;
       const dist = (R / fill) / Math.tan(fov/2);
 
-      // --- ВАЖНОЕ ИЗМЕНЕНИЕ ---
-      // Рассчитываем и применяем вертикальное смещение для визуального центрирования
-      const uiHeight = document.querySelector('.wrap').offsetHeight;
-      const offset = (uiHeight / 2) / vh; // Смещение в долях высоты экрана
+      camera.position.set(0, 0, dist);
+      camera.lookAt(0,0,0);
 
-      camera.position.set(0, -dist * offset, dist);
-      camera.lookAt(0, 0, 0);
-
-      if (controls) {
-        controls.target.set(0,0,0);
-        controls.update();
-      }
+      orbit.target.set(0,0,0);
+      orbit.update();
 
       group.position.set(0,0,0);
       points.position.set(0,0,0);
       lines.position.set(0,0,0);
     }
-
     addEventListener('resize', fit, { passive:true });
-    addEventListener('orientationchange', () => setTimeout(fit, 220), { passive:true });
+    addEventListener('orientationchange', ()=>setTimeout(fit,220), { passive:true });
     if (window.visualViewport) visualViewport.addEventListener('resize', fit, { passive:true });
     fit();
 
-    // Гироскоп
-    async function initControls() {
-        try {
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                const st = await DeviceOrientationEvent.requestPermission();
-                if (st !== 'granted') throw new Error('denied');
-            }
-            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                try { await DeviceMotionEvent.requestPermission(); } catch (_) {}
-            }
-            controls = new THREE.DeviceOrientationControls(camera);
-            controls.connect();
-        } catch (e) {
-            // Если гироскоп недоступен, используем OrbitControls
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.06;
-            controls.rotateSpeed = 0.6;
-            controls.enablePan = false;
-            controls.enableZoom = false;
-            controls.target.copy(group.position);
-        }
-        fit();
-    }
-    initControls();
+    // Гироскоп включается по кнопке (для iOS — по жесту)
+    let gyroOn = false, deviceControls = null;
+    const btn = document.getElementById('btnMotion');
 
+    btn.addEventListener('click', async ()=>{
+      if (gyroOn){
+        try{ deviceControls?.disconnect(); }catch(_){}
+        gyroOn=false; orbit.enabled=true; btn.textContent='Enable Motion';
+        return;
+      }
+      try{
+        if (typeof DeviceOrientationEvent !== 'undefined' &&
+            typeof DeviceOrientationEvent.requestPermission === 'function') {
+          const st = await DeviceOrientationEvent.requestPermission();
+          if (st !== 'granted') throw new Error('denied');
+        }
+        if (typeof DeviceMotionEvent !== 'undefined' &&
+            typeof DeviceMotionEvent.requestPermission === 'function') {
+          try{ await DeviceMotionEvent.requestPermission(); }catch(_){}
+        }
+        deviceControls = new THREE.DeviceOrientationControls(camera);
+        deviceControls.connect();
+        gyroOn = true; orbit.enabled = false; btn.textContent='Gyro: ON';
+      }catch(e){
+        alert('Motion permission not granted. Rotate with finger.');
+      }
+    }, { passive:true });
 
     // Анимация
     let t=0, idle=true, idleTimer=null;
-    const poke=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true, 2000); };
+    const poke=()=>{ idle=false; clearTimeout(idleTimer); idleTimer=setTimeout(()=>idle=true,2000); };
     renderer.domElement.addEventListener('pointerdown', poke, { passive:true });
     renderer.domElement.addEventListener('pointermove', poke, { passive:true });
 
     function tick(){
       requestAnimationFrame(tick);
-      if (controls && controls.isDamping) controls.update(); // Для OrbitControls
-      else if (controls && controls.update) controls.update(); // Для DeviceOrientationControls
-      else if (idle){ group.rotation.y += 0.0021; } // Поворот по умолчанию, если нет гироскопа
-      t += 0.02; dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
+      if (gyroOn && deviceControls){
+        deviceControls.update();
+      }else{
+        orbit.update();
+        if (idle) group.rotation.y += 0.0021;
+      }
+      t += 0.02;
+      dotsMat.size = 0.03 + 0.01*(1+Math.sin(t));
       renderer.render(scene, camera);
     }
     tick();
@@ -315,4 +329,3 @@
   </script>
 </body>
 </html>
-
