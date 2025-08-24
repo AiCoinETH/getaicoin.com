@@ -12,7 +12,6 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- three.js r121 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/DeviceOrientationControls.js"></script>
@@ -103,7 +102,6 @@
 <body>
   <div id="stage"><div id="app"></div></div>
 
-  <!-- кнопка включения гироскопа -->
   <button id="btnMotion">Enable Motion</button>
 
   <main class="wrap" aria-label="Hero">
@@ -123,7 +121,6 @@
     </div>
   </main>
 
-  <!-- Contact -->
   <div id="contactOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
     <div class="veil"></div>
     <section class="panel" role="document">
@@ -144,7 +141,6 @@
     </section>
   </div>
 
-  <!-- Sponsors -->
   <div id="donateOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
     <div class="veil"></div>
     <section class="panel" role="document">
@@ -172,7 +168,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite">Copied</div>
 
-  <!-- three.js -->
   <script>
     const app = document.getElementById('app');
 
@@ -275,6 +270,14 @@
       requestAnimationFrame(tick);
       if (gyroOn && deviceControls){
         deviceControls.update();
+        
+        // --- Добавлено: Ограничение углов поворота камеры для удержания шара в пределах экрана ---
+        // Ограничение вращения камеры по оси X (вертикальный поворот)
+        camera.rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, camera.rotation.x));
+        // Ограничение вращения камеры по оси Y (горизонтальный поворот)
+        camera.rotation.y = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.y));
+        // --- Конец добавленного кода ---
+        
       }else{
         orbit.update();
         if (idle) group.rotation.y += 0.0021;
