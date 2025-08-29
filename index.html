@@ -1,658 +1,633 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ai stock — news &amp; insights on AI Coin</title>
-    <link rel="canonical" href="https://getaicoin.com/">
-    <link rel="icon" href="/Logo.png" type="image/png">
-    <link rel="apple-touch-icon" href="/Logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use Tailwind CSS for modern, responsive styling -->
-    <style>
-        :root {
-            --bg: #0b1220;
-            --text: #e8eefc;
-            --muted: #9fb2d1;
-            --card: #121b2e;
-            --border: #1e2a46;
-            --radius: 16px;
-            --shadow: 0 20px 60px rgba(0, 0, 0, .35);
-            --safe-bottom: max(env(safe-area-inset-bottom), 8px);
-        }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ai stock — news &amp; insights on AI Coin</title>
+    <link rel="canonical" href="https://getaicoin.com/">
+    <link rel="icon" href="/Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.121.1/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Tailwind CSS for modern, responsive styling -->
+    <style>
+        :root {
+            --bg: #0b1220;
+            --text: #e8eefc;
+            --muted: #9fb2d1;
+            --card: #121b2e;
+            --border: #1e2a46;
+            --radius: 16px;
+            --shadow: 0 20px 60px rgba(0, 0, 0, .35);
+            --safe-bottom: max(env(safe-area-inset-bottom), 8px);
+        }
 
-        body {
-            height: 100vh;
-            width: 100vw;
-            overflow-x: hidden;
-            font-family: 'Inter', sans-serif;
-        }
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
 
-        /* 3D stage and app containers */
-        #stage {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* Flexbox container for the sphere */
-        }
+        /* 3D stage and app containers */
+        #stage {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Flexbox container for the sphere */
+        }
 
-        /* The #app container holds the canvas and is pointer-events none to allow clicks to pass through */
-        #app {
-            position: relative;
-            /* changed to relative so it can be flex item */
-            width: 100%;
-            height: 100%;
-        }
+        /* The #app container holds the canvas and is pointer-events none to allow clicks to pass through */
+        #app {
+            position: relative;
+            /* changed to relative so it can be flex item */
+            width: 100%;
+            height: 100%;
+        }
 
-        /* The canvas inside #app is set to pointer-events all for interaction */
-        #app canvas {
-            pointer-events: all;
-            /* Correctly positioning the canvas */
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+        /* The canvas inside #app is set to pointer-events all for interaction */
+        #app canvas {
+            pointer-events: all;
+            /* Correctly positioning the canvas */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-        /* Main content container */
-        .content-container {
-            position: relative;
-            z-index: 10;
-            overflow-y: auto;
-            pointer-events: none; /* Block pointer events by default */
-        }
-        
-        /* Re-enable pointer events for interactive elements within the content container */
-        .content-container a,
-        .content-container button,
-        .content-container select,
-        .content-container input,
-        .content-container textarea,
-        .content-container .copybox {
-            pointer-events: auto;
-        }
+        /* Main content container */
+        .content-container {
+            position: relative;
+            z-index: 10;
+            overflow-y: auto;
+            pointer-events: none; /* Block pointer events by default */
+        }
+        
+        /* Re-enable pointer events for interactive elements within the content container */
+        .content-container a,
+        .content-container button,
+        .content-container select,
+        .content-container input,
+        .content-container textarea,
+        .content-container .copybox {
+            pointer-events: auto;
+        }
 
-        /* Corrected styling for perfect centering of the hero section */
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
+        /* Corrected styling for perfect centering of the hero section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 
-        canvas {
-            touch-action: none;
-            -ms-touch-action: none;
-        }
+        canvas {
+            touch-action: none;
+            -ms-touch-action: none;
+        }
 
-        /* Custom styles for elements that are difficult to replicate with Tailwind alone, or for better readability */
-        .panel h3 {
-            font-size: clamp(18px, 4.4vw, 24px);
-        }
+        /* Custom styles for elements that are difficult to replicate with Tailwind alone, or for better readability */
+        .panel h3 {
+            font-size: clamp(18px, 4.4vw, 24px);
+        }
 
-        .panel p {
-            margin: 0 0 16px;
-        }
+        .panel p {
+            margin: 0 0 16px;
+        }
 
-        /* Style for the toast notification */
-        #toast.show {
-            opacity: 1;
-        }
+        /* Style for the toast notification */
+        #toast.show {
+            opacity: 1;
+        }
 
-        .fade-out-text {
-            animation: fade-out 0.5s forwards;
-        }
+        .fade-out-text {
+            animation: fade-out 0.5s forwards;
+        }
 
-        @keyframes fade-out {
-            from {
-                opacity: 1;
-            }
+        @keyframes fade-out {
+            from {
+                opacity: 1;
+            }
 
-            to {
-                opacity: 0;
-            }
-        }
-    </style>
-    <!-- Multi-language meta descriptions -->
-    <meta name="description" content="Latest trends: ai stock, coin stock, ai stock price. Learn about AI Coin, crypto tokens, and AI trends today.">
-    <meta name="keywords" content="ai stock, coin stock, ai stock price, AI Coin, crypto, blockchain, Web3">
-    <meta name="description" lang="ru" content="Последние тренды: AI Coin. Узнайте об AI Coin, криптотокенах и нейротрендах сегодня.">
-    <meta name="keywords" lang="ru" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="de" content="Aktuelle Trends: ai coins, bio protocol coin. Erfahren Sie mehr über AI Coin, Kryptotoken und KI-Trends.">
-  <meta name="keywords" lang="de" content="ai coins, bio protocol coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="es" content="Tendencias recientes: AI Coin. Conozca AI Coin, los criptoactivos y las tendencias de IA.">
-  <meta name="keywords" lang="es" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="fr" content="Tendances récentes : open ai. En savoir plus sur AI Coin, les cryptos et les tendances IA.">
-  <meta name="keywords" lang="fr" content="open ai, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="it" content="Trend recenti: AI Coin. Scopri AI Coin, i token crypto e i trend dell’IA.">
-  <meta name="keywords" lang="it" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="pt" content="Tendências recentes: AI Coin. Saiba mais sobre AI Coin, criptoativos e tendências de IA.">
-  <meta name="keywords" lang="pt" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="ja" content="最新トレンド: AI Coin。AI Coin、暗号トークン、AIトレンドについて。">
-  <meta name="keywords" lang="ja" content="AI Coin, AI Coin, crypto, blockchain, Web3">
-  <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
-  <meta name="keywords" lang="zh" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <!-- Multi-language meta descriptions -->
+    <meta name="description" content="Latest trends: ai stock, coin stock, ai stock price. Learn about AI Coin, crypto tokens, and AI trends today.">
+    <meta name="keywords" content="ai stock, coin stock, ai stock price, AI Coin, crypto, blockchain, Web3">
+    <meta name="description" lang="ru" content="Последние тренды: AI Coin. Узнайте об AI Coin, криптотокенах и нейротрендах сегодня.">
+    <meta name="keywords" lang="ru" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="description" lang="de" content="Aktuelle Trends: ai coins, bio protocol coin. Erfahren Sie mehr über AI Coin, Kryptotoken und KI-Trends.">
+  <meta name="keywords" lang="de" content="ai coins, bio protocol coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="description" lang="es" content="Tendencias recientes: AI Coin. Conozca AI Coin, los criptoactivos y las tendencias de IA.">
+  <meta name="keywords" lang="es" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="description" lang="fr" content="Tendances récentes : open ai. En savoir plus sur AI Coin, les cryptos et les tendances IA.">
+  <meta name="keywords" lang="fr" content="open ai, AI Coin, crypto, blockchain, Web3">
+  <meta name="description" lang="it" content="Trend recenti: AI Coin. Scopri AI Coin, i token crypto e i trend dell’IA.">
+  <meta name="keywords" lang="it" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="description" lang="pt" content="Tendências recentes: AI Coin. Saiba mais sobre AI Coin, criptoativos e tendências de IA.">
+  <meta name="keywords" lang="pt" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="description" lang="ja" content="最新トレンド: AI Coin。AI Coin、暗号トークン、AIトレンドについて。">
+  <meta name="keywords" lang="ja" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+  <meta name="description" lang="zh" content="最新趋势：AI Coin。了解 AI Coin、加密代币与人工智能趋势。">
+  <meta name="keywords" lang="zh" content="AI Coin, AI Coin, crypto, blockchain, Web3">
+
+    <!-- Google tag (gtag.js) for Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8J5398GPX0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-8J5398GPX0');
+    </script>
+
 </head>
 
 <body class="bg-[#0b1220] text-[#e8eefc] font-sans antialiased text-rendering-optimizeLegibility flex flex-col min-h-screen">
-    <!-- The fixed 3D background stage -->
-    <div id="stage">
-        <div id="app"></div>
-    </div>
+    <!-- The fixed 3D background stage -->
+    <div id="stage">
+        <div id="app"></div>
+    </div>
 
-    <!-- Main scrollable content container. It now sits on top of the 3D stage. -->
-    <div class="content-container flex-grow flex flex-col items-center p-6 sm:p-4">
-        <header class="hero-section flex flex-col items-center justify-center min-h-screen box-border py-[20vh] px-4 text-center gap-4 w-full max-w-4xl" aria-label="Hero">
-            <!-- The hero section now contains only the title and description, which are positioned below the 3D sphere -->
-            <div class="flex flex-col items-center justify-center pointer-events-auto">
-                <h1 id="heroTitle" class="font-extrabold text-[clamp(28px,5.5vw,56px)] leading-[1.05] text-shadow-[0_2px_20px_rgba(0,0,0,.55)]">
-                    $Get Ai Coin
-                </h1>
-                <div id="typed" class="text-[#9fb2d1] text-[clamp(14px,3vw,20px)] leading-tight min-h-[3em] text-shadow-[0_2px_14px_rgba(0,0,0,.45)]" aria-live="polite"></div>
+    <!-- Main scrollable content container. It now sits on top of the 3D stage. -->
+    <div class="content-container flex-grow flex flex-col items-center p-6 sm:p-4">
+        <header class="hero-section flex flex-col items-center justify-center min-h-screen box-border py-[20vh] px-4 text-center gap-4 w-full max-w-4xl" aria-label="Hero">
+            <!-- The hero section now contains only the title and description, which are positioned below the 3D sphere -->
+            <div class="flex flex-col items-center justify-center pointer-events-auto">
+                <h1 id="heroTitle" class="font-extrabold text-[clamp(28px,5.5vw,56px)] leading-[1.05] text-shadow-[0_2px_20px_rgba(0,0,0,.55)]">
+                    $Get Ai Coin
+                </h1>
+                <div id="typed" class="text-[#9fb2d1] text-[clamp(14px,3vw,20px)] leading-tight min-h-[3em] text-shadow-[0_2px_14px_rgba(0,0,0,.45)]" aria-live="polite"></div>
 
-                <div class="flex flex-wrap items-center justify-center gap-4">
-                    <a class="flex items-center gap-2.5 p-3 rounded-[999px] bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] shadow-[0_6px_18px_rgba(0,0,0,.25)_inset,0_6px_18px_rgba(0,0,0,.15)] font-semibold transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#162241] hover:border-[#2a3a63]" href="https://x.com/aicoin_eth" target="_blank" rel="noopener">Twitter X</a>
-                    <span class="opacity-35">|</span>
-                    <a class="flex items-center gap-2.5 p-3 rounded-[999px] bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] shadow-[0_6px_18px_rgba(0,0,0,.25)_inset,0_6-18px_rgba(0,0,0,.15)] font-semibold transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#162241] hover:border-[#2a3a63]" href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">Telegram</a>
-                </div>
-            </div>
-        </header>
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <a class="flex items-center gap-2.5 p-3 rounded-[999px] bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] shadow-[0_6px_18px_rgba(0,0,0,.25)_inset,0_6px_18px_rgba(0,0,0,.15)] font-semibold transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#162241] hover:border-[#2a3a63]" href="https://x.com/aicoin_eth" target="_blank" rel="noopener">Twitter X</a>
+                    <span class="opacity-35">|</span>
+                    <a class="flex items-center gap-2.5 p-3 rounded-[999px] bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] shadow-[0_6px_18px_rgba(0,0,0,.25)_inset,0_6-18px_rgba(0,0,0,.15)] font-semibold transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#162241] hover:border-[#2a3a63]" href="https://t.me/AiCoin_ETH" target="_blank" rel="noopener">Telegram</a>
+                </div>
+            </div>
+        </header>
 
-        <main class="w-full max-w-4xl">
-            <article class="content-section py-16 px-4" id="about-us-section">
-                <section class="panel bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]">
-                    <h2 id="aboutTitle" class="text-[clamp(20px,5vw,28px)] mb-3"></h2>
-                    <p id="aboutText1" class="text-base leading-[1.6] text-[#e8eefc]"></p>
-                    <p id="aboutText2" class="text-base leading-[1.6] text-[#e8eefc]"></p>
-                </section>
-            </article>
+        <main class="w-full max-w-4xl">
+            <article class="content-section py-16 px-4" id="about-us-section">
+                <section class="panel bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]">
+                    <h2 id="aboutTitle" class="text-[clamp(20px,5vw,28px)] mb-3"></h2>
+                    <p id="aboutText1" class="text-base leading-[1.6] text-[#e8eefc]"></p>
+                    <p id="aboutText2" class="text-base leading-[1.6] text-[#e8eefc]"></p>
+                </section>
+            </article>
 
-            <article class="content-section py-16 px-4" id="advantages-section">
-                <section class="panel bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]">
-                    <h2 id="advantagesTitle" class="text-[clamp(20px,5vw,28px)] mb-3"></h2>
-                    <ul id="advantagesList" class="list-none p-0"></ul>
-                </section>
-            </article>
+            <article class="content-section py-16 px-4" id="advantages-section">
+                <section class="panel bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]">
+                    <h2 id="advantagesTitle" class="text-[clamp(20px,5vw,28px)] mb-3"></h2>
+                    <ul id="advantagesList" class="list-none p-0"></ul>
+                </section>
+            </article>
 
-            <article class="content-section py-16 px-4" id="roadmap-section">
-                <section class="panel bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]">
-                    <h2 id="roadmapTitle" class="text-[clamp(20px,5vw,28px)] mb-3"></h2>
-                    <ul id="roadmapList" class="list-decimal pl-5"></ul>
-                </section>
-            </article>
-        </main>
+            <article class="content-section py-16 px-4" id="roadmap-section">
+                <section class="panel bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]">
+                    <h2 id="roadmapTitle" class="text-[clamp(20px,5vw,28px)] mb-3"></h2>
+                    <ul id="roadmapList" class="list-decimal pl-5"></ul>
+                </section>
+            </article>
+        </main>
 
-        <footer class="mt-10 mb-[calc(24px+var(--safe-bottom))] flex justify-center items-center">
-            <div class="flex flex-wrap items-center justify-center gap-4">
-                <button class="pill flex items-center gap-2.5 p-3 rounded-[999px] bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] shadow-[0_6px_18px_rgba(0,0,0,.25)_inset,0_6px_18px_rgba(0,0,0,.15)] font-semibold transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#162241] hover:border-[#2a3a63]" id="openContact"></button>
-                <span class="opacity-35">|</span>
-                <button class="pill flex items-center gap-2.5 p-3 rounded-[999px] bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] shadow-[0_6px_18px_rgba(0,0,0,.25)_inset,0_6px_18px_rgba(0,0,0,.15)] font-semibold transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#162241] hover:border-[#2a3a63]" id="openDonate"></button>
-            </div>
-        </footer>
+        <footer class="mt-10 mb-[calc(24px+var(--safe-bottom))] flex justify-center items-center">
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <button class="pill flex items-center gap-2.5 p-3 rounded-[999px] bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] shadow-[0_6px_18px_rgba(0,0,0,.25)_inset,0_6px_18px_rgba(0,0,0,.15)] font-semibold transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#162241] hover:border-[#2a3a63]" id="openContact"></button>
+                <span class="opacity-35">|</span>
+                <button class="pill flex items-center gap-2.5 p-3 rounded-[999px] bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] shadow-[0_6px_18px_rgba(0,0,0,.25)_inset,0_6px_18px_rgba(0,0,0,.15)] font-semibold transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#162241] hover:border-[#2a3a63]" id="openDonate"></button>
+            </div>
+        </footer>
 
-        <!-- Language Switcher -->
-        <div class="fixed top-4 right-4 z-20">
-            <select id="language-switcher" class="bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] rounded-xl p-2.5 shadow-md pointer-events-auto">
-                <option value="en">English</option>
-                <option value="ru">Русский</option>
-            </select>
-        </div>
-    </div>
+        <!-- Language Switcher -->
+        <div class="fixed top-4 right-4 z-20">
+            <select id="language-switcher" class="bg-[#121b2e] text-[#e8eefc] border border-solid border-[#1e2a46] rounded-xl p-2.5 shadow-md pointer-events-auto">
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+            </select>
+        </div>
+    </div>
 
-    <!-- Contact and Donate Overlays (Modals) -->
-    <div id="contactOverlay" class="fixed inset-0 hidden items-center justify-center z-20" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
-        <div class="veil absolute inset-0 bg-[rgba(2,8,18,.55)] backdrop-blur-sm"></div>
-        <section class="panel relative w-[min(740px,94vw)] max-h-[min(80vh,760px)] overflow-auto bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]" role="document">
-            <h3 id="contactTitle" class="mt-0 mb-3 text-[clamp(18px,4.4vw,24px)]"></h3>
-            <p id="contactSubtitle" class="m-0 mb-4 text-[#9fb2d1]"></p>
-            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 items-center my-4">
-                <label for="cSubj" id="contactLabelSubj" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
-                <input id="cSubj" type="text" placeholder="" class="bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans">
-            </div>
-            <div class="grid grid-cols-[minmax(0,1fr)] gap-2.5 items-center my-4">
-                <label for="cBody" id="contactLabelBody" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
-                <textarea id="cBody" placeholder="" class="bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans min-h-[120px] resize-y"></textarea>
-            </div>
-            <div class="flex justify-end gap-4">
-                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" id="contactClose"></button>
-                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" id="contactSend"></button>
-            </div>
-        </section>
-    </div>
+    <!-- Contact and Donate Overlays (Modals) -->
+    <div id="contactOverlay" class="fixed inset-0 hidden items-center justify-center z-20" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+        <div class="veil absolute inset-0 bg-[rgba(2,8,18,.55)] backdrop-blur-sm"></div>
+        <section class="panel relative w-[min(740px,94vw)] max-h-[min(80vh,760px)] overflow-auto bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]" role="document">
+            <h3 id="contactTitle" class="mt-0 mb-3 text-[clamp(18px,4.4vw,24px)]"></h3>
+            <p id="contactSubtitle" class="m-0 mb-4 text-[#9fb2d1]"></p>
+            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 items-center my-4">
+                <label for="cSubj" id="contactLabelSubj" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
+                <input id="cSubj" type="text" placeholder="" class="bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans">
+            </div>
+            <div class="grid grid-cols-[minmax(0,1fr)] gap-2.5 items-center my-4">
+                <label for="cBody" id="contactLabelBody" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
+                <textarea id="cBody" placeholder="" class="bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans min-h-[120px] resize-y"></textarea>
+            </div>
+            <div class="flex justify-end gap-4">
+                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" id="contactClose"></button>
+                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" id="contactSend"></button>
+            </div>
+        </section>
+    </div>
 
-    <div id="donateOverlay" class="fixed inset-0 hidden items-center justify-center z-20" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
-        <div class="veil absolute inset-0 bg-[rgba(2,8,18,.55)] backdrop-blur-sm"></div>
-        <section class="panel relative w-[min(740px,94vw)] max-h-[min(80vh,760px)] overflow-auto bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]" role="document">
-            <h3 id="donateTitle" class="mt-0 mb-3 text-[clamp(18px,4.4vw,24px)]"></h3>
-            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 items-center my-4">
-                <label id="donateLabelETH" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
-                <div class="copybox bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans" id="ethAddr">0x5Daf8D49b5cc17e4f5C575BeFc9880Fdc6A76037</div>
-                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" data-copy="#ethAddr"></button>
-            </div>
-            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 items-center my-4">
-                <label id="donateLabelBTC" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
-                <div class="copybox bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans" id="btcAddr">bc1q0572x8gusvkyh9we8qxtas90mdupgfhsc2al4q</div>
-                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" data-copy="#btcAddr"></button>
-            </div>
-            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 items-center my-4">
-                <label id="donateLabelUSDT" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
-                <div class="copybox bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans" id="usdtAddr">TSn6jiZydc4sKTKqJbyMJhypdtNdFcF64c</div>
-                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" data-copy="#usdtAddr"></button>
-            </div>
-            <div class="flex justify-end gap-4">
-                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" id="donateClose"></button>
-            </div>
-        </section>
-    </div>
+    <div id="donateOverlay" class="fixed inset-0 hidden items-center justify-center z-20" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
+        <div class="veil absolute inset-0 bg-[rgba(2,8,18,.55)] backdrop-blur-sm"></div>
+        <section class="panel relative w-[min(740px,94vw)] max-h-[min(80vh,760px)] overflow-auto bg-[linear-gradient(180deg,rgba(20,29,48,.92),rgba(14,22,39,.92))] border border-solid border-[#253252] rounded-[var(--radius)] p-5 shadow-[var(--shadow)]" role="document">
+            <h3 id="donateTitle" class="mt-0 mb-3 text-[clamp(18px,4.4vw,24px)]"></h3>
+            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 items-center my-4">
+                <label id="donateLabelETH" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
+                <div class="copybox bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans" id="ethAddr">0x5Daf8D49b5cc17e4f5C575BeFc9880Fdc6A76037</div>
+                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" data-copy="#ethAddr"></button>
+            </div>
+            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 items-center my-4">
+                <label id="donateLabelBTC" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
+                <div class="copybox bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans" id="btcAddr">bc1q0572x8gusvkyh9we8qxtas90mdupgfhsc2al4q</div>
+                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" data-copy="#btcAddr"></button>
+            </div>
+            <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 items-center my-4">
+                <label id="donateLabelUSDT" class="col-span-full mb-1 text-[#b9c6e4] text-xs tracking-wider uppercase font-bold"></label>
+                <div class="copybox bg-[#0e1628] text-white border border-solid border-[#273455] rounded-xl p-3 font-sans" id="usdtAddr">TSn6jiZydc4sKTKqJbyMJhypdtNdFcF64c</div>
+                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" data-copy="#usdtAddr"></button>
+            </div>
+            <div class="flex justify-end gap-4">
+                <button class="btn border border-solid border-[#2a3860] bg-[#13203a] text-white p-2.5 rounded-xl cursor-pointer font-bold min-h-10 transition-transform duration-100 hover:translate-y-[-1px] hover:bg-[#18284d] hover:border-[#395298]" id="donateClose"></button>
+            </div>
+        </section>
+    </div>
 
-    <!-- Toast notification for actions like copying text -->
-    <div id="toast" class="fixed left-1/2 bottom-4 -translate-x-1/2 bg-[#0f1a2e] text-white py-2 px-3.5 rounded-[999px] text-sm z-20 border border-solid border-[#2b3961] shadow-[var(--shadow)] opacity-0 pointer-events-none transition-opacity duration-150" role="status" aria-live="polite"></div>
+    <!-- Toast notification for actions like copying text -->
+    <div id="toast" class="fixed left-1/2 bottom-4 -translate-x-1/2 bg-[#0f1a2e] text-white py-2 px-3.5 rounded-[999px] text-sm z-20 border border-solid border-[#2b3961] shadow-[var(--shadow)] opacity-0 pointer-events-none transition-opacity duration-150" role="status" aria-live="polite"></div>
 
-    <!-- Hidden content for SEO purposes -->
-    <div class="hidden">
-        <p>AI Coin is an innovative social crypto project where people and AI decide together. Our token, Get Ai Coin, is built on Ethereum and empowers the community to make key decisions. We bring together blockchain and artificial intelligence to create a decentralized, transparent, and fair platform. Learn about the latest trends in the world of AI, crypto tokens, Web3, and how our project is changing the rules of the crypto industry. Our project is also looking for sponsors and partners to accelerate development. Follow our roadmap and news on Twitter and Telegram.</p>
-        <ul>
-            <li>Keywords: AI Coin, Get Ai Coin, social crypto, blockchain, Web3, artificial intelligence, cryptocurrency, AI tokens, crypto project, Ethereum, decentralization.</li>
-        </ul>
-    </div>
+    <!-- Hidden content for SEO purposes -->
+    <div class="hidden">
+        <p>AI Coin is an innovative social crypto project where people and AI decide together. Our token, Get Ai Coin, is built on Ethereum and empowers the community to make key decisions. We bring together blockchain and artificial intelligence to create a decentralized, transparent, and fair platform. Learn about the latest trends in the world of AI, crypto tokens, Web3, and how our project is changing the rules of the crypto industry. Our project is also looking for sponsors and partners to accelerate development. Follow our roadmap and news on Twitter and Telegram.</p>
+        <ul>
+            <li>Keywords: AI Coin, Get Ai Coin, social crypto, blockchain, Web3, artificial intelligence, cryptocurrency, AI tokens, crypto project, Ethereum, decentralization.</li>
+        </ul>
+    </div>
 
-    <script>
-        // Data for multi-language support
-        const translations = {
-            en: {
-                typedText: "A social crypto project\nwhere people and AI decide together",
-                aboutTitle: "About AI Coin",
-                aboutText1: "AI Coin is an innovative social crypto project where key decisions about the project's development, funding, and direction are made collectively — through community voting and analysis conducted by artificial intelligence. Our approach creates a unique ecosystem where decentralization and AI work together to achieve a common goal.",
-                aboutText2: "We aim to unite a community that believes in a future where blockchain and AI technologies will serve the good of all.",
-                advantagesTitle: "AI Coin Advantages",
-                advantagesList: [
-                    "Decentralized Governance: Decisions are made by the community, ensuring transparency and fairness.",
-                    "AI Integration: Artificial intelligence helps analyze data and propose optimal solutions for project development.",
-                    "Active Community: We are building a strong and engaged community where every voice matters.",
-                    "Innovative Technologies: Using cutting-edge blockchain and AI solutions to create a sustainable and scalable platform."
-                ],
-                roadmapTitle: "Roadmap",
-                roadmapList: [
-                    "Phase 1: Launch and Community Building (Q4 2023): Token launch, forming a core community via social media and Telegram. Initial marketing campaigns.",
-                    "Phase 2: Voting Platform and AI Integration Development (Q1-Q2 2024): Developing a decentralized community voting platform. Integrating the first AI models for proposal analysis.",
-                    "Phase 3: Ecosystem Expansion and Partnerships (Q3-Q4 2024): Listing on additional exchanges, forming strategic partnerships in the AI and blockchain sectors. Launching pilot projects.",
-                    "Phase 4: Global Growth and Autonomy (2025+): Further scaling, improving AI algorithms, and transitioning to full governance decentralization."
-                ],
-                contactBtn: "Contact us",
-                donateBtn: "For sponsors",
-                contactTitle: "Contact us",
-                contactSubtitle: "Send us a message — we’ll get back to you.",
-                contactLabelSubj: "Subject",
-                contactLabelBody: "Message",
-                contactCloseBtn: "Close",
-                contactSendBtn: "Send",
-                donateTitle: "For sponsors",
-                donateLabelETH: "ETH (ERC-20)",
-                donateLabelBTC: "BTC (bech32)",
-                donateLabelUSDT: "USDT (TRC-20)",
-                copyBtn: "Copy",
-                toastMessage: "Copied"
-            },
-            ru: {
-                typedText: "Социальный криптопроект,\nгде люди и AI решают вместе",
-                aboutTitle: "О проекте AI Coin",
-                aboutText1: "AI Coin — это инновационный социальный криптопроект, где принятие ключевых решений о развитии, финансировании и направлении проекта осуществляется коллективно — с помощью голосования сообщества и анализа, проводимого искусственным интеллектом. Наш подход создает уникальную экосистему, в которой децентрализация и искусственный интеллект работают вместе для достижения общей цели.",
-                aboutText2: "Мы стремимся объединить сообщество, которое верит в будущее, где технологии блокчейна и ИИ будут служить на благо каждого.",
-                advantagesTitle: "Преимущества AI Coin",
-                advantagesList: [
-                    "Децентрализованное управление: Решения принимаются сообществом, что обеспечивает прозрачность и справедливость.",
-                    "Интеграция с AI: Искусственный интеллект помогает анализировать данные и предлагать оптимальные решения для развития проекта.",
-                    "Активное сообщество: Мы строим крепкое и вовлеченное сообщество, где каждый голос имеет значение.",
-                    "Инновационные технологии: Использование передовых решений блокчейна и ИИ для создания устойчивой и масштабируемой платформы."
-                ],
-                roadmapTitle: "Дорожная карта",
-                roadmapList: [
-                    "Фаза 1: Запуск и формирование сообщества (Q4 2023): Запуск токена AI Coin, формирование базового сообщества через социальные сети и Telegram. Первые маркетинговые кампании.",
-                    "Фаза 2: Разработка платформы голосования и AI-интеграции (Q1-Q2 2024): Разработка децентрализованной платформы для голосования сообщества. Интеграция первых AI-моделей для анализа предложений.",
-                    "Фаза 3: Расширение экосистемы и партнерства (Q3-Q4 2024): Листинг на дополнительных биржах, формирование стратегических партнерств в сфере AI и блокчейна. Запуск пилотных проектов.",
-                    "Фаза 4: Глобальное развитие и автономность (2025+): Дальнейшее масштабирование, совершенствование AI-алгоритмов, переход к полной децентрализации управления."
-                ],
-                contactBtn: "Связаться",
-                donateBtn: "Для спонсоров",
-                contactTitle: "Связаться с нами",
-                contactSubtitle: "Отправьте нам сообщение — мы свяжемся с вами.",
-                contactLabelSubj: "Тема",
-                contactLabelBody: "Сообщение",
-                contactCloseBtn: "Закрыть",
-                contactSendBtn: "Отправить",
-                donateTitle: "Для спонсоров",
-                donateLabelETH: "ETH (ERC-20)",
-                donateLabelBTC: "BTC (bech32)",
-                donateLabelUSDT: "USDT (TRC-20)",
-                copyBtn: "Копировать",
-                toastMessage: "Скопировано"
-            }
-        };
+    <script>
+        // Data for multi-language support
+        const translations = {
+            en: {
+                typedText: "A social crypto project\nwhere people and AI decide together",
+                aboutTitle: "About AI Coin",
+                aboutText1: "AI Coin is an innovative social crypto project where key decisions about the project's development, funding, and direction are made collectively — through community voting and analysis conducted by artificial intelligence. Our approach creates a unique ecosystem where decentralization and AI work together to achieve a common goal.",
+                aboutText2: "We aim to unite a community that believes in a future where blockchain and AI technologies will serve the good of all.",
+                advantagesTitle: "AI Coin Advantages",
+                advantagesList: [
+                    "Decentralized Governance: Decisions are made by the community, ensuring transparency and fairness.",
+                    "AI Integration: Artificial intelligence helps analyze data and propose optimal solutions for project development.",
+                    "Active Community: We are building a strong and engaged community where every voice matters.",
+                    "Innovative Technologies: Using cutting-edge blockchain and AI solutions to create a sustainable and scalable platform."
+                ],
+                roadmapTitle: "Roadmap",
+                roadmapList: [
+                    "Phase 1: Launch and Community Building (Q4 2023): Token launch, forming a core community via social media and Telegram. Initial marketing campaigns.",
+                    "Phase 2: Voting Platform and AI Integration Development (Q1-Q2 2024): Developing a decentralized community voting platform. Integrating the first AI models for proposal analysis.",
+                    "Phase 3: Ecosystem Expansion and Partnerships (Q3-Q4 2024): Listing on additional exchanges, forming strategic partnerships in the AI and blockchain sectors. Launching pilot projects.",
+                    "Phase 4: Global Growth and Autonomy (2025+): Further scaling, improving AI algorithms, and transitioning to full governance decentralization."
+                ],
+                contactBtn: "Contact us",
+                donateBtn: "For sponsors",
+                contactTitle: "Contact us",
+                contactSubtitle: "Send us a message — we’ll get back to you.",
+                contactLabelSubj: "Subject",
+                contactLabelBody: "Message",
+                contactCloseBtn: "Close",
+                contactSendBtn: "Send",
+                donateTitle: "For sponsors",
+                donateLabelETH: "ETH (ERC-20)",
+                donateLabelBTC: "BTC (bech32)",
+                donateLabelUSDT: "USDT (TRC-20)",
+                copyBtn: "Copy",
+                toastMessage: "Copied"
+            },
+            ru: {
+                typedText: "Социальный криптопроект,\nгде люди и AI решают вместе",
+                aboutTitle: "О проекте AI Coin",
+                aboutText1: "AI Coin — это инновационный социальный криптопроект, где принятие ключевых решений о развитии, финансировании и направлении проекта осуществляется коллективно — с помощью голосования сообщества и анализа, проводимого искусственным интеллектом. Наш подход создает уникальную экосистему, в которой децентрализация и искусственный интеллект работают вместе для достижения общей цели.",
+                aboutText2: "Мы стремимся объединить сообщество, которое верит в будущее, где технологии блокчейна и ИИ будут служить на благо каждого.",
+                advantagesTitle: "Преимущества AI Coin",
+                advantagesList: [
+                    "Децентрализованное управление: Решения принимаются сообществом, что обеспечивает прозрачность и справедливость.",
+                    "Интеграция с AI: Искусственный интеллект помогает анализировать данные и предлагать оптимальные решения для развития проекта.",
+                    "Активное сообщество: Мы строим крепкое и вовлеченное сообщество, где каждый голос имеет значение.",
+                    "Инновационные технологии: Использование передовых решений блокчейна и ИИ для создания устойчивой и масштабируемой платформы."
+                ],
+                roadmapTitle: "Дорожная карта",
+                roadmapList: [
+                    "Фаза 1: Запуск и формирование сообщества (Q4 2023): Запуск токена AI Coin, формирование базового сообщества через социальные сети и Telegram. Первые маркетинговые кампании.",
+                    "Фаза 2: Разработка платформы голосования и AI-интеграции (Q1-Q2 2024): Разработка децентрализованной платформы для голосования сообщества. Интеграция первых AI-моделей для анализа предложений.",
+                    "Фаза 3: Расширение экосистемы и партнерства (Q3-Q4 2024): Листинг на дополнительных биржах, формирование стратегических партнерств в сфере AI и блокчейна. Запуск пилотных проектов.",
+                    "Фаза 4: Глобальное развитие и автономность (2025+): Дальнейшее масштабирование, совершенствование AI-алгоритмов, переход к полной децентрализации управления."
+                ],
+                contactBtn: "Связаться",
+                donateBtn: "Для спонсоров",
+                contactTitle: "Связаться с нами",
+                contactSubtitle: "Отправьте нам сообщение — мы свяжемся с вами.",
+                contactLabelSubj: "Тема",
+                contactLabelBody: "Сообщение",
+                contactCloseBtn: "Закрыть",
+                contactSendBtn: "Отправить",
+                donateTitle: "Для спонсоров",
+                donateLabelETH: "ETH (ERC-20)",
+                donateLabelBTC: "BTC (bech32)",
+                donateLabelUSDT: "USDT (TRC-20)",
+                copyBtn: "Копировать",
+                toastMessage: "Скопировано"
+            }
+        };
 
-        const q = selector => document.querySelector(selector);
-        const on = (el, event, fn) => el && el.addEventListener(event, fn);
-        const languageSwitcher = q('#language-switcher');
-        const typedElement = q('#typed');
-        let currentLang = 'en';
+        const q = selector => document.querySelector(selector);
+        const on = (el, event, fn) => el && el.addEventListener(event, fn);
+        const languageSwitcher = q('#language-switcher');
+        const typedElement = q('#typed');
+        let currentLang = 'en';
 
-        // Function to update all text content based on the selected language
-        function updateLanguage(lang) {
-            const t = translations[lang];
+        // Function to update all text content based on the selected language
+        function updateLanguage(lang) {
+            const t = translations[lang];
 
-            // Update main content
-            q('#aboutTitle').textContent = t.aboutTitle;
-            q('#aboutText1').textContent = t.aboutText1;
-            q('#aboutText2').textContent = t.aboutText2;
-            q('#advantagesTitle').textContent = t.advantagesTitle;
-            q('#roadmapTitle').textContent = t.roadmapTitle;
-            q('#openContact').textContent = t.contactBtn;
-            q('#openDonate').textContent = t.donateBtn;
+            // Update main content
+            q('#aboutTitle').textContent = t.aboutTitle;
+            q('#aboutText1').textContent = t.aboutText1;
+            q('#aboutText2').textContent = t.aboutText2;
+            q('#advantagesTitle').textContent = t.advantagesTitle;
+            q('#roadmapTitle').textContent = t.roadmapTitle;
+            q('#openContact').textContent = t.contactBtn;
+            q('#openDonate').textContent = t.donateBtn;
 
-            // Update modal content
-            q('#contactTitle').textContent = t.contactTitle;
-            q('#contactSubtitle').textContent = t.contactSubtitle;
-            q('#contactLabelSubj').textContent = t.contactLabelSubj;
-            q('#cSubj').placeholder = t.contactLabelSubj; // Update placeholder too
-            q('#contactLabelBody').textContent = t.contactLabelBody;
-            q('#cBody').placeholder = t.contactLabelBody; // Update placeholder too
-            q('#contactClose').textContent = t.contactCloseBtn;
-            q('#contactSend').textContent = t.contactSendBtn;
+            // Update modal content
+            q('#contactTitle').textContent = t.contactTitle;
+            q('#contactSubtitle').textContent = t.contactSubtitle;
+            q('#contactLabelSubj').textContent = t.contactLabelSubj;
+            q('#cSubj').placeholder = t.contactLabelSubj; // Update placeholder too
+            q('#contactLabelBody').textContent = t.contactLabelBody;
+            q('#cBody').placeholder = t.contactLabelBody; // Update placeholder too
+            q('#contactClose').textContent = t.contactCloseBtn;
+            q('#contactSend').textContent = t.contactSendBtn;
 
-            q('#donateTitle').textContent = t.donateTitle;
-            q('#donateLabelETH').textContent = t.donateLabelETH;
-            q('#donateLabelBTC').textContent = t.donateLabelBTC;
-            q('#donateLabelUSDT').textContent = t.donateLabelUSDT;
+            q('#donateTitle').textContent = t.donateTitle;
+            q('#donateLabelETH').textContent = t.donateLabelETH;
+            q('#donateLabelBTC').textContent = t.donateLabelBTC;
+            q('#donateLabelUSDT').textContent = t.donateLabelUSDT;
 
-            document.querySelectorAll('[data-copy]').forEach(btn => btn.textContent = t.copyBtn);
+            document.querySelectorAll('[data-copy]').forEach(btn => btn.textContent = t.copyBtn);
 
-            q('#toast').textContent = t.toastMessage;
+            q('#toast').textContent = t.toastMessage;
 
-            // Update lists
-            const advantagesListEl = q('#advantagesList');
-            advantagesListEl.innerHTML = '';
-            t.advantagesList.forEach(itemText => {
-                const li = document.createElement('li');
-                li.className = 'text-base leading-[1.6] text-[#e8eefc] mb-2.5';
-                const parts = itemText.split(':');
-                if (parts.length > 1) {
-                    const boldPart = document.createElement('span');
-                    boldPart.className = 'font-bold';
-                    boldPart.textContent = parts[0] + ':';
-                    li.appendChild(boldPart);
-                    li.appendChild(document.createTextNode(parts.slice(1).join(':')));
-                } else {
-                    li.textContent = itemText;
-                }
-                advantagesListEl.appendChild(li);
-            });
+            // Update lists
+            const advantagesListEl = q('#advantagesList');
+            advantagesListEl.innerHTML = '';
+            t.advantagesList.forEach(itemText => {
+                const li = document.createElement('li');
+                li.className = 'text-base leading-[1.6] text-[#e8eefc] mb-2.5';
+                const parts = itemText.split(':');
+                if (parts.length > 1) {
+                    const boldPart = document.createElement('span');
+                    boldPart.className = 'font-bold';
+                    boldPart.textContent = parts[0] + ':';
+                    li.appendChild(boldPart);
+                    li.appendChild(document.createTextNode(parts.slice(1).join(':')));
+                } else {
+                    li.textContent = itemText;
+                }
+                advantagesListEl.appendChild(li);
+            });
 
-            const roadmapListEl = q('#roadmapList');
-            roadmapListEl.innerHTML = '';
-            t.roadmapList.forEach(itemText => {
-                const li = document.createElement('li');
-                li.className = 'text-base leading-[1.6] text-[#e8eefc] mb-2.5';
-                const parts = itemText.split(':');
-                const p = document.createElement('p');
-                p.className = 'mt-1.5 mb-1.5 text-[#9fb2d1]';
+            const roadmapListEl = q('#roadmapList');
+            roadmapListEl.innerHTML = '';
+            t.roadmapList.forEach(itemText => {
+                const li = document.createElement('li');
+                li.className = 'text-base leading-[1.6] text-[#e8eefc] mb-2.5';
+                const parts = itemText.split(':');
+                const p = document.createElement('p');
+                p.className = 'mt-1.5 mb-1.5 text-[#9fb2d1]';
 
-                const titlePart = parts[0];
-                const contentPart = parts.slice(1).join(':');
+                const titlePart = parts[0];
+                const contentPart = parts.slice(1).join(':');
 
-                const boldTitle = document.createElement('span');
-                boldTitle.className = 'font-bold';
-                boldTitle.textContent = titlePart;
+                const boldTitle = document.createElement('span');
+                boldTitle.className = 'font-bold';
+                boldTitle.textContent = titlePart;
 
-                p.textContent = contentPart;
+                p.textContent = contentPart;
 
-                li.appendChild(boldTitle);
-                li.appendChild(p);
-                roadmapListEl.appendChild(li);
-            });
-        }
+                li.appendChild(boldTitle);
+                li.appendChild(p);
+                roadmapListEl.appendChild(li);
+            });
+        }
 
-        // Function for the typing effect
-        function startTypingEffect(text) {
-            let index = 0;
-            // Clear existing content and animation
-            typedElement.innerHTML = '';
-            // Make sure to remove any existing animation class
-            typedElement.classList.remove('fade-out-text');
+        // Function for the typing effect
+        function startTypingEffect(text) {
+            let index = 0;
+            // Clear existing content and animation
+            typedElement.innerHTML = '';
+            // Make sure to remove any existing animation class
+            typedElement.classList.remove('fade-out-text');
 
-            function step() {
-                if (index <= text.length) {
-                    typedElement.textContent = text.slice(0, index++);
-                    setTimeout(step, 18);
-                }
-            }
-            step();
-        }
+            function step() {
+                if (index <= text.length) {
+                    typedElement.textContent = text.slice(0, index++);
+                    setTimeout(step, 18);
+                }
+            }
+            step();
+        }
 
-        // Initialize language based on browser preference or default to English
-        function getInitialLanguage() {
-            const userLang = navigator.language || navigator.userLanguage;
-            if (userLang.startsWith('ru')) {
-                return 'ru';
-            }
-            return 'en';
-        }
+        // Initialize language based on browser preference or default to English
+        function getInitialLanguage() {
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.startsWith('ru')) {
+                return 'ru';
+            }
+            return 'en';
+        }
 
-        // Main Three.js application logic
-        window.onload = function () {
-            // Set initial language and populate content
-            currentLang = getInitialLanguage();
-            languageSwitcher.value = currentLang;
-            updateLanguage(currentLang);
-            startTypingEffect(translations[currentLang].typedText);
+        // Main Three.js application logic
+        window.onload = function () {
+            // Set initial language and populate content
+            currentLang = getInitialLanguage();
+            languageSwitcher.value = currentLang;
+            updateLanguage(currentLang);
+            startTypingEffect(translations[currentLang].typedText);
 
-            // Language switcher event listener
-            on(languageSwitcher, 'change', (e) => {
-                currentLang = e.target.value;
-                updateLanguage(currentLang);
-                // Restart typing effect for new language
-                startTypingEffect(translations[currentLang].typedText);
-            });
+            // Language switcher event listener
+            on(languageSwitcher, 'change', (e) => {
+                currentLang = e.target.value;
+                updateLanguage(currentLang);
+                // Restart typing effect for new language
+                startTypingEffect(translations[currentLang].typedText);
+            });
 
-            const app = document.getElementById('app');
+            const app = document.getElementById('app');
 
-            // Scene, Camera, and Renderer setup
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
-            const renderer = new THREE.WebGLRenderer({
-                antialias: true,
-                alpha: false,
-                powerPreference: 'high-performance'
-            });
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-            app.appendChild(renderer.domElement);
+            // Scene, Camera, and Renderer setup
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+            const renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: false,
+                powerPreference: 'high-performance'
+            });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            app.appendChild(renderer.domElement);
 
-            // Lighting
-            scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
-            const keyLight = new THREE.DirectionalLight(0x1fd3ff, 0.45);
-            keyLight.position.set(2, 3, 4);
-            scene.add(keyLight);
+            // Lighting
+            scene.add(new THREE.AmbientLight(0x0f2a3a, 0.9));
+            const keyLight = new THREE.DirectionalLight(0x1fd3ff, 0.45);
+            keyLight.position.set(2, 3, 4);
+            scene.add(keyLight);
 
-            // 3D Sphere Group
-            const R = 2.2;
-            const group = new THREE.Group();
-            scene.add(group);
+            // 3D Sphere Group
+            const R = 2.2;
+            const group = new THREE.Group();
+            scene.add(group);
 
-            const sphereGeom = new THREE.SphereBufferGeometry(R, 40, 26);
-            const dotsMat = new THREE.PointsMaterial({
-                color: 0x27e1ff,
-                size: 0.034,
-                transparent: true,
-                opacity: 0.95
-            });
-            const points = new THREE.Points(sphereGeom, dotsMat);
-            const lines = new THREE.LineSegments(new THREE.WireframeGeometry(sphereGeom),
-                new THREE.LineBasicMaterial({
-                    color: 0x1287a5,
-                    transparent: true,
-                    opacity: 0.35
-                }));
-            group.add(points, lines);
-            group.position.set(0, 0, 0);
+            const sphereGeom = new THREE.SphereBufferGeometry(R, 40, 26);
+            const dotsMat = new THREE.PointsMaterial({
+                color: 0x27e1ff,
+                size: 0.034,
+                transparent: true,
+                opacity: 0.95
+            });
+            const points = new THREE.Points(sphereGeom, dotsMat);
+            const lines = new THREE.LineSegments(new THREE.WireframeGeometry(sphereGeom),
+                new THREE.LineBasicMaterial({
+                    color: 0x1287a5,
+                    transparent: true,
+                    opacity: 0.35
+                }));
+            group.add(points, lines);
+            group.position.set(0, 0, 0);
 
-            // OrbitControls for mouse interaction
-            const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
-            orbitControls.enableDamping = true;
-            orbitControls.dampingFactor = 0.06;
-            orbitControls.rotateSpeed = 0.6;
-            orbitControls.enablePan = false;
-            orbitControls.enableZoom = false;
-            orbitControls.target.set(0, 0, 0);
-            orbitControls.enabled = true; // Ensure controls are enabled
+            // OrbitControls for mouse interaction
+            const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+            orbitControls.enableDamping = true;
+            orbitControls.dampingFactor = 0.06;
+            orbitControls.rotateSpeed = 0.6;
+            orbitControls.enablePan = false;
+            orbitControls.enableZoom = false;
+            orbitControls.target.set(0, 0, 0);
+            orbitControls.enabled = true; // Ensure controls are enabled
 
-            // Function to fit the 3D scene to the screen size
-            function fit() {
-                const vw = window.visualViewport?.width ?? innerWidth;
-                const vh = window.visualViewport?.height ?? innerHeight;
+            // Function to fit the 3D scene to the screen size
+            function fit() {
+                const vw = window.visualViewport?.width ?? innerWidth;
+                const vh = window.visualViewport?.height ?? innerHeight;
 
-                camera.aspect = vw / vh;
-                camera.updateProjectionMatrix();
-                renderer.setSize(vw, vh, false);
+                camera.aspect = vw / vh;
+                camera.updateProjectionMatrix();
+                renderer.setSize(vw, vh, false);
 
-                const fill = 0.48; // How much the sphere fills the screen
-                const fov = camera.fov * Math.PI / 180;
-                const distance = (R / fill) / Math.tan(fov / 2);
+                const fill = 0.48; // How much the sphere fills the screen
+                const fov = camera.fov * Math.PI / 180;
+                const distance = (R / fill) / Math.tan(fov / 2);
 
-                camera.position.set(0, 0, distance);
-                camera.lookAt(0, 0, 0);
-                orbitControls.target.set(0, 0, 0);
-                orbitControls.update();
-            }
-            window.addEventListener('resize', fit, {
-                passive: true
-            });
-            window.addEventListener('orientationchange', () => setTimeout(fit, 220), {
-                passive: true
-            });
-            if (window.visualViewport) visualViewport.addEventListener('resize', fit, {
-                passive: true
-            });
-            fit();
+                camera.position.set(0, 0, distance);
+                camera.lookAt(0, 0, 0);
+                orbitControls.target.set(0, 0, 0);
+                orbitControls.update();
+            }
+            window.addEventListener('resize', fit, {
+                passive: true
+            });
+            window.addEventListener('orientationchange', () => setTimeout(fit, 220), {
+                passive: true
+            });
+            if (window.visualViewport) visualViewport.addEventListener('resize', fit, {
+                passive: true
+            });
+            fit();
 
-            // Animation loop
-            let animationTime = 0,
-                isIdle = true,
-                idleTimer = null;
-            const poke = () => {
-                isIdle = false;
-                clearTimeout(idleTimer);
-                idleTimer = setTimeout(() => isIdle = true, 2000);
-            };
-            // The event listener for interaction is crucial
-            renderer.domElement.addEventListener('pointerdown', poke, {
-                passive: true
-            });
-            renderer.domElement.addEventListener('pointermove', poke, {
-                passive: true
-            });
-            renderer.domElement.addEventListener('pointerup', poke, {
-                passive: true
-            }); // Adding this for touch events
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                orbitControls.update();
+                group.rotation.y += 0.0005;
+                renderer.render(scene, camera);
+            }
+            animate();
 
-            function tick() {
-                requestAnimationFrame(tick);
-                // We only need to update the orbit controls, as there's no gyro logic now
-                orbitControls.update();
-                if (isIdle) group.rotation.y += 0.0021;
-                animationTime += 0.02;
-                dotsMat.size = 0.03 + 0.01 * (1 + Math.sin(animationTime));
-                renderer.render(scene, camera);
-            }
-            tick();
-        }; // End of window.onload
-    </script>
+            // Language switcher and modal functionality
+            const contactOverlay = q('#contactOverlay');
+            const donateOverlay = q('#donateOverlay');
+            const closeButtons = document.querySelectorAll('#contactClose, #donateClose');
+            const openContactBtn = q('#openContact');
+            const openDonateBtn = q('#openDonate');
 
-    <script>
-        // UI and Event Handling Logic
-        const q = selector => document.querySelector(selector);
-        const on = (el, event, fn) => el && el.addEventListener(event, fn);
+            function closeOverlay(overlay) {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
 
-        // Overlay/Modal functionality
-        const contactOverlay = q('#contactOverlay');
-        const donateOverlay = q('#donateOverlay');
-        const show = el => {
-            el.classList.remove('hidden');
-            el.classList.add('flex');
-        };
-        const hide = el => {
-            el.classList.remove('flex');
-            el.classList.add('hidden');
-        };
+            function openOverlay(overlay) {
+                overlay.classList.add('flex');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
 
-        on(q('#openContact'), 'click', () => show(contactOverlay));
-        on(q('#openDonate'), 'click', () => show(donateOverlay));
-        on(q('#contactClose'), 'click', () => hide(contactOverlay));
-        on(q('#donateClose'), 'click', () => hide(donateOverlay));
+            on(openContactBtn, 'click', () => openOverlay(contactOverlay));
+            on(openDonateBtn, 'click', () => openOverlay(donateOverlay));
 
-        // Close modals when clicking the backdrop or pressing Escape
-        [contactOverlay, donateOverlay].forEach(overlay => {
-            on(overlay, 'click', e => {
-                if (e.target === overlay || e.target.classList.contains('veil')) {
-                    hide(overlay);
-                }
-            });
-        });
-        on(document, 'keydown', e => {
-            if (e.key === 'Escape') {
-                hide(contactOverlay);
-                hide(donateOverlay);
-            }
-        });
+            closeButtons.forEach(btn => on(btn, 'click', () => {
+                closeOverlay(contactOverlay);
+                closeOverlay(donateOverlay);
+            }));
+            on(contactOverlay, 'click', (e) => {
+                if (e.target.classList.contains('veil')) {
+                    closeOverlay(contactOverlay);
+                }
+            });
+            on(donateOverlay, 'click', (e) => {
+                if (e.target.classList.contains('veil')) {
+                    closeOverlay(donateOverlay);
+                }
+            });
 
-        // Toast notification
-        const toast = q('#toast');
-        function showToast(text) {
-            toast.textContent = text;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 1100);
-        }
+            // Copy to clipboard functionality
+            document.querySelectorAll('[data-copy]').forEach(btn => {
+                on(btn, 'click', () => {
+                    const targetId = btn.getAttribute('data-copy');
+                    const copybox = q(targetId);
+                    if (copybox) {
+                        const textToCopy = copybox.textContent || copybox.value;
+                        const tempTextarea = document.createElement('textarea');
+                        tempTextarea.value = textToCopy.trim();
+                        document.body.appendChild(tempTextarea);
+                        tempTextarea.select();
+                        tempTextarea.setSelectionRange(0, 99999);
+                        try {
+                            document.execCommand('copy');
+                            showToast(translations[currentLang].toastMessage);
+                        } catch (err) {
+                            console.error('Failed to copy text: ', err);
+                        }
+                        document.body.removeChild(tempTextarea);
+                    }
+                });
+            });
 
-        // Copy buttons logic
-        document.querySelectorAll('[data-copy]').forEach(btn => {
-            on(btn, 'click', () => {
-                const elementToCopy = q(btn.getAttribute('data-copy'));
-                if (!elementToCopy) return;
-
-                const text = elementToCopy.textContent.replace(/\s+/g, '').trim();
-
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(text)
-                        .then(() => showToast(translations[currentLang].toastMessage))
-                        .catch(() => fallbackCopy(text));
-                } else {
-                    fallbackCopy(text);
-                }
-            });
-        });
-
-        // Fallback copy function for older browsers
-        function fallbackCopy(text) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.opacity = '0';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast(translations[currentLang].toastMessage);
-            } catch (err) {
-                console.error('Fallback copy failed:', err);
-            }
-            textArea.remove();
-        }
-    </script>
+            function showToast(message) {
+                const toast = q('#toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000); // 2 seconds
+            }
+        };
+    </script>
 </body>
 </html>
